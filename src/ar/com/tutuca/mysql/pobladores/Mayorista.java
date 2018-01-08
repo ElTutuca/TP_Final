@@ -4,12 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class Mayorista implements IntPoblar {
+public class Mayorista {
 
 	String mayoristas[] = { "Distribuidora informatica", "Electrodomesticos plus", "Sound's Owners",
 			"Games for y'all" };
 
-	@Override
 	public void poblar(Connection c) throws ClassNotFoundException, SQLException {
 
 		PreparedStatement ps = c.prepareStatement("INSERT INTO Mayorista (idMayorista,Nombre) VALUES (?,?)");

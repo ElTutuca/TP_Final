@@ -4,14 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class Categoria implements IntPoblar {
+public class Categoria {
 
 	String categorias[] = { "Informatica", "Electrodomesticos", "Consolas y videojuegos", "Sonido" };
 	String subCategorias[][] = { { "Componentes", "Notebooks", "Teclados", "Mouse" },
 			{ "Heladeras", "Lavavajillas", "De cocina" }, { "PlayStation", "PC", "Xbox", "Nintendo", "Arcade" },
 			{ "Microfonos", "Parlantes", "Auriculares", "Tocadiscos" } };
+ 
 
-	@Override
 	public void poblar(Connection c) throws ClassNotFoundException, SQLException {
 		PreparedStatement ps1 = c.prepareStatement("INSERT INTO Categoria (idCategoria,Categoria) VALUES (?,?)");
 		PreparedStatement ps2 = c.prepareStatement("INSERT INTO Subcategoria (idSubcategoria,Subcategoria,idCategoria) VALUES (?,?,?)");
