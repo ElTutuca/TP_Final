@@ -34,7 +34,6 @@ public class Clientes {
 			String dni = random(8);
 			
 			System.out.printf("INSERT INTO Clientes (idCliente,Nombre,Apellido,Direccion,Telefono,DNI) VALUES (%s,'%s','%s','%s','%s','%s');\n",i,nombres[aux1],apellidos[aux2],(calles[aux3] + " " + aux4),tel,dni);
-
 		}
 	}
 	

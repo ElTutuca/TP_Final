@@ -42,7 +42,6 @@ CREATE TABLE IF NOT EXISTS `Sucursal`.`Categoria` (
   `Categoria` VARCHAR(45) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' NOT NULL,
   PRIMARY KEY (`idCategoria`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
 
@@ -249,7 +248,6 @@ CREATE TABLE IF NOT EXISTS `Sucursal`.`Subcategoria` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_ci;
 
