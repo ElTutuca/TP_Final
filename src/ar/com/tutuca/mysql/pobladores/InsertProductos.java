@@ -23,8 +23,7 @@ public class InsertProductos {
 	static int idSucursal = 1;
 	static int idMarca;
 	static int idSubcategoria;
-	static int contador = 30;
-	static int aux = 1;
+	static int contador = 43;
 	static boolean done = false;
 
 	public static void main(String[] args) throws IOException {
@@ -67,7 +66,7 @@ public class InsertProductos {
 			puntosReq = (int) ((precio / 2) * 1.2);
 
 			idMayorista = 3;
-			idSubcategoria = 10;
+			idSubcategoria = 9;
 
 			String in1 = "INSERT INTO `Sucursal`.`Productos` (`Precio`, `Nombre`, `Deposito`, `StockMaximo`, `StockMinimo`, `StockIdeal`, `Stock`, `Descuento`, `PuntosReq`, `idMayorista`, `idSucursal`, `idMarca`)"
 					+ " VALUES ('" + precio + "', '" + nombre + "', '" + deposito + "', '" + stockMaximo + "', '"
