@@ -10,4 +10,3 @@ INSERT INTO `Sucursal`.`Sucursal` (`Telefono`, `Ubicacion`, `IP`) VALUES ('35439
 INSERT INTO `Sucursal`.`Mayorista` (`Nombre`) VALUES ('Distribuidora informatica');
 INSERT INTO `Sucursal`.`Mayorista` (`Nombre`) VALUES ('Electrodomesticos Plus');
 INSERT INTO `Sucursal`.`Mayorista` (`Nombre`) VALUES ('Sound\'s Owners');
-INSERT INTO `Sucursal`.`Mayorista` (`Nombre`) VALUES ('Games for y\'all');
