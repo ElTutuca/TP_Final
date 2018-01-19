@@ -10,6 +10,16 @@ ADD CONSTRAINT `fk_Productos_has_Subcategoria_Subcategoria1`
   ON UPDATE NO ACTION;
 
 DELETE FROM `Sucursal`.`Marca` WHERE `idMarca`='9';
+
+ALTER TABLE `Sucursal`.`Ordenes` 
+CHANGE COLUMN `Fecha` `Fecha` DATETIME NOT NULL DEFAULT NOW() ;
+
+ALTER TABLE `Sucursal`.`Archivos` 
+CHANGE COLUMN `Tamaño` `Tamaño` DECIMAL NOT NULL ;
+
+ALTER TABLE `Sucursal`.`Archivos` 
+CHANGE COLUMN `Tamaño` `Tamaño` DECIMAL(10,3) NOT NULL ;
+
   
 INSERT INTO `Sucursal`.`Productos` (`Precio`, `Nombre`, `Deposito`, `StockMaximo`, `StockMinimo`, `StockIdeal`, `Stock`, `Descuento`, `PuntosReq`, `idMayorista`, `idSucursal`, `idMarca`) VALUES ('7669', 'SSD de 128GB TOSHIBA', '0', '58', '25', '41', '59', '0', '4600', '1', '1', '1');
 INSERT INTO `Sucursal`.`Subcategorias_Productos` (`idProductos`, `idSubcategoria`) VALUES ('1', '1');

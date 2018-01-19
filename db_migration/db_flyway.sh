@@ -26,4 +26,4 @@ else
 fi
 
 
-flyway -configFile=flyway.conf -locations=filesystem:. $var1
+flyway -configFiles=flyway.conf -locations=filesystem:. $var1
