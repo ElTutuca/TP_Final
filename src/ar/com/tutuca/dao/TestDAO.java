@@ -10,7 +10,7 @@ public class TestDAO {
 
 	public static void main(String[] args) throws PersistenciaException {
 		MayoristaDAO mayDAO = new MayoristaDAO();
-		ProductoDAO proDAO = new ProductoDAO();
+		ProductoDAO proDAO = new ProductoDAO(mayDAO);
 		MarcaDAO marDAO = new MarcaDAO();
 		SubcategoriaDAO subDAO = new SubcategoriaDAO();
 		CategoriaDAO catDAO = new CategoriaDAO();
@@ -24,6 +24,7 @@ public class TestDAO {
 		marco("producto");
 		for (Producto p : proDAO.list()) {
 			System.out.println(p);
+			p.mostrarMayoristas();
 		}
 		
 		marco("marca");
@@ -40,6 +41,8 @@ public class TestDAO {
 		for (Categoria c : catDAO.list()) {
 			System.out.println(c);
 		}
+		
+		proDAO.delete(proDAO.load(5));
 		
 	}
 	

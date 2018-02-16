@@ -1,15 +1,15 @@
 ALTER TABLE `Sucursal`.`Archivos` 
 CHANGE COLUMN `Contenido` `Contenido` VARCHAR(255) NOT NULL ;
 
+ALTER TABLE `Sucursal`.`Productos_has_Archivos` 
+CHANGE COLUMN `Orden` `Orden` INT(11) NULL ;
+
 INSERT INTO `Sucursal`.`Archivos` (`Contenido`, `mimeType`, `Tamaño`) VALUES ('/home/mateo/Workspaces/Workspace_Eclipse/T.P. Final/extra/Imagenes/Heladera/im1.jpg', 'image/jpeg', '64 ');
 INSERT INTO `Sucursal`.`Archivos` (`Contenido`, `mimeType`, `Tamaño`) VALUES ('/home/mateo/Workspaces/Workspace_Eclipse/T.P. Final/extra/Imagenes/Heladera/im2.jpg', 'image/jpeg', '42 ');
 INSERT INTO `Sucursal`.`Archivos` (`Contenido`, `mimeType`, `Tamaño`) VALUES ('/home/mateo/Workspaces/Workspace_Eclipse/T.P. Final/extra/Imagenes/Heladera/im3.jpg', 'image/jpeg', '26 ');
 INSERT INTO `Sucursal`.`Archivos` (`Contenido`, `mimeType`, `Tamaño`) VALUES ('/home/mateo/Workspaces/Workspace_Eclipse/T.P. Final/extra/Imagenes/Heladera/im4.jpg', 'image/jpeg', '566 ');
 INSERT INTO `Sucursal`.`Archivos` (`Contenido`, `mimeType`, `Tamaño`) VALUES ('/home/mateo/Workspaces/Workspace_Eclipse/T.P. Final/extra/Imagenes/Heladera/im5.jpg', 'image/jpeg', '17 ');
 INSERT INTO `Sucursal`.`Archivos` (`Contenido`, `mimeType`, `Tamaño`) VALUES ('/home/mateo/Workspaces/Workspace_Eclipse/T.P. Final/extra/Imagenes/Heladera/im6.jpg', 'image/jpeg', '157 ');
-
-ALTER TABLE `Sucursal`.`Productos_has_Archivos` 
-CHANGE COLUMN `Orden` `Orden` INT(11) NULL ;
 
 INSERT INTO `Sucursal`.`Productos_has_Archivos` (`idProductos`, `idArchivos`) VALUES ('26', '0');
 INSERT INTO `Sucursal`.`Productos_has_Archivos` (`idProductos`, `idArchivos`) VALUES ('26', '1');

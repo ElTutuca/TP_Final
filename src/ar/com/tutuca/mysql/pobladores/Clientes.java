@@ -23,7 +23,7 @@ public class Clientes {
 
 	public void poblar() {
 
-		int lim = 100;
+		int lim = 200;
 		for (int i = 1; i <= lim; i++) {
 
 			int aux1 = random(0, nombres.length);

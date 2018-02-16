@@ -10,6 +10,53 @@ import ar.com.tutuca.model.Mayorista;
 
 public class MayoristaDAO implements GenericDAO<Mayorista, Integer> {
 
+	public void deleteEnMayProd(int idProducto) {
+		try {
+			List<Mayorista> mayorista;
+			mayorista = listPorProducto(idProducto);
+			for (int i = 0; i < mayorista.size(); i++) {
+				PreparedStatement ps1 = Util.prepareStatement(
+						"DELETE FROM `Sucursal`.`Mayorista_Productos` WHERE `idMayorista`=? and`idProductos`=?;");
+				ps1.setInt(1, mayorista.get(i).getIdMayorista());
+				ps1.setInt(2, idProducto);
+				ps1.execute();
+			}
+		} catch (PersistenciaException | ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void insertEnMayProd(int id, List<Mayorista> mayoristas) {
+		for (Mayorista may : mayoristas) {
+			try {
+				PreparedStatement ps = Util.prepareStatement("INSERT INTO `Sucursal`.`Mayorista_Productos` (`idMayorista`, `idProductos`) VALUES (?, ?);");
+				ps.setInt(1, may.getIdMayorista());
+				ps.setInt(2, id);
+				ps.execute();	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public List<Mayorista> listPorProducto(int id) throws PersistenciaException {
+		List<Mayorista> mayoristas = new ArrayList<Mayorista>();
+		try {
+			PreparedStatement ps = Util.prepareStatement(
+					"SELECT mp.idMayorista, may.Nombre FROM Mayorista may INNER JOIN Mayorista_Productos mp ON may.idMayorista=mp.idMayorista WHERE mp.idProductos=?;");
+			ps.setInt(1, id);
+			ResultSet rs1 = ps.executeQuery();
+			while (rs1.next()) {
+				Mayorista mayorista = new Mayorista(rs1.getInt("idMayorista"), rs1.getString("Nombre"));
+				mayoristas.add(mayorista);
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
+		}
+		return mayoristas;
+	}
+
 	@Override
 	public List<Mayorista> list() throws PersistenciaException {
 		List<Mayorista> r = new ArrayList<Mayorista>();
@@ -72,7 +119,7 @@ public class MayoristaDAO implements GenericDAO<Mayorista, Integer> {
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-				 r = new Mayorista(rs.getInt("idMayorista"), rs.getString("Mayorista"));
+				r = new Mayorista(rs.getInt("idMayorista"), rs.getString("Mayorista"));
 			}
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new PersistenciaException(e.getMessage(), e);

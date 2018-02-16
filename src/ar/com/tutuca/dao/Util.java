@@ -3,6 +3,7 @@ package ar.com.tutuca.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -24,6 +25,12 @@ public class Util {
 	public static PreparedStatement prepareStatement(String sql) throws ClassNotFoundException, SQLException {
 		return getConnection().prepareStatement(sql);
 
+	}
+	
+	public static int lastId() throws SQLException, ClassNotFoundException {
+		ResultSet rs = Util.createStatement().executeQuery("SELECT LAST_INSERT_ID();");
+		rs.next();
+		return rs.getInt(1);
 	}
 
 }
