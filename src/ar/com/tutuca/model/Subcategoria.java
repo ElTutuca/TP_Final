@@ -2,7 +2,7 @@ package ar.com.tutuca.model;
 
 public class Subcategoria {
 	private int idSubcategoria;
-	private int idCategoria;
+	private Categoria categoria;
 	private String subcategoria;
 	
 	public int getIdSubcategoria() {
@@ -11,11 +11,11 @@ public class Subcategoria {
 	public void setIdSubcategoria(int idSubcategoria) {
 		this.idSubcategoria = idSubcategoria;
 	}
-	public int getIdCategoria() {
-		return idCategoria;
+	public Categoria getCategoria() {
+		return categoria;
 	}
-	public void setIdCategoria(int idCategoria) {
-		this.idCategoria = idCategoria;
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
 	}
 	public String getSubcategoria() {
 		return subcategoria;
@@ -28,9 +28,14 @@ public class Subcategoria {
 	public Subcategoria() {
 	}
 
-	public Subcategoria(int idSubcategoria, int idCategoria, String subcategoria) {
-		setIdCategoria(idCategoria);
+	public Subcategoria(int idSubcategoria, Categoria categoria, String subcategoria) {
+		setCategoria(categoria);
 		setIdSubcategoria(idSubcategoria);
 		setSubcategoria(subcategoria);
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("(%s) %s ; [%s]", getIdSubcategoria(),getSubcategoria(),getCategoria().getIdCategoria());
 	}
 }

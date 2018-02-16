@@ -13,9 +13,33 @@ public class Producto {
 	private int stock;
 	private int descuento;
 	private int puntosReq;
-	private int idMayorista;
-	private int idSucursal;
-	private int idMarca;
+	private Mayorista mayorista;
+	private Sucursal sucursal;
+	private Marca marca;
+
+	public Mayorista getMayorista() {
+		return mayorista;
+	}
+
+	public void setMayorista(Mayorista mayorista) {
+		this.mayorista = mayorista;
+	}
+
+	public Sucursal getSucursal() {
+		return sucursal;
+	}
+
+	public void setSucursal(Sucursal sucursal) {
+		this.sucursal = sucursal;
+	}
+
+	public Marca getMarca() {
+		return marca;
+	}
+
+	public void setMarca(Marca marca) {
+		this.marca = marca;
+	}
 
 	public int getIdProductos() {
 		return idProductos;
@@ -97,33 +121,10 @@ public class Producto {
 		this.puntosReq = puntosReq;
 	}
 
-	public int getIdMayorista() {
-		return idMayorista;
-	}
-
-	public void setIdMayorista(int idMayorista) {
-		this.idMayorista = idMayorista;
-	}
-
-	public int getIdSucursal() {
-		return idSucursal;
-	}
-
-	public void setIdSucursal(int idSucursal) {
-		this.idSucursal = idSucursal;
-	}
-
-	public int getIdMarca() {
-		return idMarca;
-	}
-
-	public void setIdMarca(int idMarca) {
-		this.idMarca = idMarca;
-	}
 
 	// Constructores
 	public Producto(int idProductos, double precio, String nombre, boolean deposito, int stockMaximo, int stockMinimo,
-			int stockIdeal, int stock, int descuento, int puntosReq, int idMayorista, int idSucursal, int idMarca) {
+			int stockIdeal, int stock, int descuento, int puntosReq, Mayorista mayorista, Sucursal sucursal, Marca marca) {
 		setIdProductos(idProductos);
 		setPrecio(precio);
 		setNombre(nombre);
@@ -134,9 +135,9 @@ public class Producto {
 		setStock(stock);
 		setDescuento(descuento);
 		setPuntosReq(puntosReq);
-		setIdMayorista(idMayorista);
-		setIdSucursal(idSucursal);
-		setIdMarca(idMarca);
+		setMayorista(mayorista);
+		setSucursal(sucursal);
+		setMarca(marca);
 	}
 
 	public Producto() {
@@ -144,10 +145,10 @@ public class Producto {
 
 	@Override
 	public String toString() {
-		return String.format("(%s) %s - $%s ; %s ; %s - %s - %s - [%s] ; [% %s] ; %s p. ; {%s} / {%s} / {%s}",
+		return String.format("(%s) %s - $%s ; %s ; %s - %s - %s - [%s] ; [%s] ; %s p ; [%s] | [%s] | [%s]",
 				getIdProductos(), getNombre(), getPrecio(), isDeposito(), getStockMaximo(), getStockMinimo(),
-				getStockIdeal(), getStock(), getDescuento(), getPuntosReq(), getIdMayorista(), getIdSucursal(),
-				getIdMarca());
+				getStockIdeal(), getStock(), getDescuento(), getPuntosReq(), getMayorista().getIdMayorista(), getSucursal().getIdSucursal(),
+				getMarca().getIdMarca());
 	}
 
 }
