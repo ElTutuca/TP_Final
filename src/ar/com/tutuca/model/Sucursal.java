@@ -32,7 +32,6 @@ public class Sucursal {
 		this.ip = ip;
 	}
 	
-	
 	//Constructores
 	public Sucursal() {
 	}
@@ -42,5 +41,10 @@ public class Sucursal {
 		setTelefono(telefono);
 		setUbicacion(ubicacion);
 		setIp(ip);
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("(%s) Tel: %s -- Ub: %s -- IP: %s", getIdSucursal(), getTelefono(), getUbicacion(), getIp());
 	}
 }

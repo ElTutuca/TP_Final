@@ -205,23 +205,23 @@ COLLATE = utf8mb4_unicode_ci;
 
 
 -- -----------------------------------------------------
--- Table `Sucursal`.`Productos_has_Archivos`
+-- Table `Sucursal`.`Productos_Archivos`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `Sucursal`.`Productos_has_Archivos` ;
+DROP TABLE IF EXISTS `Sucursal`.`Productos_Archivos` ;
 
-CREATE TABLE IF NOT EXISTS `Sucursal`.`Productos_has_Archivos` (
+CREATE TABLE IF NOT EXISTS `Sucursal`.`Productos_Archivos` (
   `idProductos` INT(11) NOT NULL,
   `idArchivos` INT(11) NOT NULL,
   `Orden` INT(11) NOT NULL,
   PRIMARY KEY (`idProductos`, `idArchivos`),
-  INDEX `fk_Productos_has_Archivos_Archivos1_idx` (`idArchivos` ASC),
-  INDEX `fk_Productos_has_Archivos_Productos1_idx` (`idProductos` ASC),
-  CONSTRAINT `fk_Productos_has_Archivos_Archivos1`
+  INDEX `fk_Productos_Archivos_Archivos1_idx` (`idArchivos` ASC),
+  INDEX `fk_Productos_Archivos_Productos1_idx` (`idProductos` ASC),
+  CONSTRAINT `fk_Productos_Archivos_Archivos1`
     FOREIGN KEY (`idArchivos`)
     REFERENCES `Sucursal`.`Archivos` (`idArchivos`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Productos_has_Archivos_Productos1`
+  CONSTRAINT `fk_Productos_Archivos_Productos1`
     FOREIGN KEY (`idProductos`)
     REFERENCES `Sucursal`.`Productos` (`idProductos`)
     ON DELETE NO ACTION

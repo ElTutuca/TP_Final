@@ -116,7 +116,7 @@ INSERT INTO `Sucursal`.`Subcategorias_Productos` (`idProductos`, `idSubcategoria
 INSERT INTO `Sucursal`.`Productos` (`Precio`, `Nombre`, `Deposito`, `StockMaximo`, `StockMinimo`, `StockIdeal`, `Stock`, `Descuento`, `PuntosReq`, `idMayorista`, `idSucursal`, `idMarca`) VALUES ('9564', 'NISUTA Microfono RGB', '1', '55', '23', '39', '45', '0', '5738', '3', '1', '21');
 INSERT INTO `Sucursal`.`Subcategorias_Productos` (`idProductos`, `idSubcategoria`) VALUES ('47', '9');
 
-
+INSERT INTO `Sucursal`.`Subcategorias_Productos` (`idProductos`, `idSubcategoria`) VALUES ('29', '7');
 
 
 

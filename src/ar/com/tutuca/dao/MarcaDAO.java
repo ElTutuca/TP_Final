@@ -5,6 +5,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import ar.com.tutuca.dao.extras.GenericDAO;
+import ar.com.tutuca.dao.extras.PersistenciaException;
+import ar.com.tutuca.dao.extras.Util;
 import ar.com.tutuca.model.Marca;
 
 public class MarcaDAO implements GenericDAO<Marca, Integer> {

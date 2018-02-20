@@ -16,40 +16,16 @@ public class Producto {
 	private int stock;
 	private int descuento;
 	private int puntosReq;
+	private boolean eliminado;
 	private List<Mayorista> mayoristas = new ArrayList<Mayorista>();
 	private List<Subcategoria> subcategoria = new ArrayList<Subcategoria>();
 	private List<Archivo> archivos = new ArrayList<Archivo>();
 	private Sucursal sucursal;
 	private Marca marca;
 	
-	/*
-	 * Mayorista -- DONE
-	 * Subcategoria -- ON PROGRESS
-	 * Archivo -- PENDING
-	 */
-	
-	public List<Archivo> getArchivos() {
-		return archivos;
-	}
-
-	public void setArchivos(List<Archivo> archivos) {
-		this.archivos = archivos;
-	}
-
-	public List<Subcategoria> getSubcategoria() {
-		return subcategoria;
-	}
-
-	public void setSubcategoria(List<Subcategoria> subcategoria) {
-		this.subcategoria = subcategoria;
-	}
-
-	public Producto() {
-	}
-
 	// Constructores
 	public Producto(int idProductos, double precio, String nombre, boolean deposito, int stockMaximo, int stockMinimo,
-			int stockIdeal, int stock, int descuento, int puntosReq, Sucursal sucursal, Marca marca) {
+			int stockIdeal, int stock, int descuento, int puntosReq, boolean eliminado, Sucursal sucursal, Marca marca) {
 		setIdProductos(idProductos);
 		setPrecio(precio);
 		setNombre(nombre);
@@ -60,11 +36,27 @@ public class Producto {
 		setStock(stock);
 		setDescuento(descuento);
 		setPuntosReq(puntosReq);
+		setEliminado(eliminado);
 		setSucursal(sucursal);
 		setMarca(marca);
 	}
 
+	public Producto() {
+	}
+
 	// Getters
+	public boolean isEliminado() {
+		return eliminado;
+	}
+	
+	public List<Subcategoria> getSubcategoria() {
+		return subcategoria;
+	}
+	
+	public List<Archivo> getArchivos() {
+		return archivos;
+	}
+	
 	public int getDescuento() {
 		return descuento;
 	}
@@ -118,6 +110,18 @@ public class Producto {
 	}
 
 	// Setters
+	public void setEliminado(boolean eliminado) {
+		this.eliminado = eliminado;
+	}
+	
+	public void setArchivos(List<Archivo> archivos) {
+		this.archivos = archivos;
+	}
+
+	public void setSubcategoria(List<Subcategoria> subcategoria) {
+		this.subcategoria = subcategoria;
+	}
+	
 	public void setDeposito(boolean deposito) {
 		this.deposito = deposito;
 	}
@@ -172,15 +176,27 @@ public class Producto {
 
 	@Override
 	public String toString() {
-		return String.format("(%s) %s - $%s ; %s ; %s - %s - %s - [%s] ; [%s] ; %s p ; [%s] | [%s]",
+		return String.format("(%s) %s - $%s ; %s ; %s - %s - %s - [%s] ; [%s] ; %s p ; [%s] | [%s] -----%s",
 				getIdProductos(), getNombre(), getPrecio(), isDeposito(), getStockMaximo(), getStockMinimo(),
 				getStockIdeal(), getStock(), getDescuento(), getPuntosReq(), getSucursal().getIdSucursal(),
-				getMarca().getIdMarca());
+				getMarca().getIdMarca(), (isEliminado()?"Eliminado":"OKEY"));
 	}
 	
 	public void mostrarMayoristas() {
 		for (Mayorista mayorista : getMayoristas()) {
-			System.out.printf("(%s) ----> %s\n",idProductos,mayorista.getIdMayorista());
+			System.out.printf("May: (%s) ----> %s\n",idProductos,mayorista.getIdMayorista());
+		}
+	}
+	
+	public void mostrarSubcategorias() {
+		for (Subcategoria sc : getSubcategoria()) {
+			System.out.printf("Sub: (%s) ----> %s\n",idProductos,sc.getIdSubcategoria());
+		}
+	}
+	
+	public void mostrarArchivos() {
+		for (Archivo ar : getArchivos()) {
+			System.out.printf("Arch: (%s) ----> %s\n",idProductos,ar.getIdArchivo());
 		}
 	}
 

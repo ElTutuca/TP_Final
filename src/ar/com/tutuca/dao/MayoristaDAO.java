@@ -6,33 +6,34 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import ar.com.tutuca.dao.extras.GenericDAO;
+import ar.com.tutuca.dao.extras.PersistenciaException;
+import ar.com.tutuca.dao.extras.Util;
 import ar.com.tutuca.model.Mayorista;
 
 public class MayoristaDAO implements GenericDAO<Mayorista, Integer> {
 
-	public void deleteEnMayProd(int idProducto) {
+	public void deleteEnMayProd(int idProducto, List<Mayorista> mayoristas) {
 		try {
-			List<Mayorista> mayorista;
-			mayorista = listPorProducto(idProducto);
-			for (int i = 0; i < mayorista.size(); i++) {
+			for (Mayorista may : mayoristas) {
 				PreparedStatement ps1 = Util.prepareStatement(
 						"DELETE FROM `Sucursal`.`Mayorista_Productos` WHERE `idMayorista`=? and`idProductos`=?;");
-				ps1.setInt(1, mayorista.get(i).getIdMayorista());
+				ps1.setInt(1, may.getIdMayorista());
 				ps1.setInt(2, idProducto);
 				ps1.execute();
 			}
-		} catch (PersistenciaException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
+		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void insertEnMayProd(int id, List<Mayorista> mayoristas) {
+	public void insertEnMayProd(int idProducto, List<Mayorista> mayoristas) {
 		for (Mayorista may : mayoristas) {
 			try {
 				PreparedStatement ps = Util.prepareStatement("INSERT INTO `Sucursal`.`Mayorista_Productos` (`idMayorista`, `idProductos`) VALUES (?, ?);");
 				ps.setInt(1, may.getIdMayorista());
-				ps.setInt(2, id);
+				ps.setInt(2, idProducto);
 				ps.execute();	
 			} catch (Exception e) {
 				e.printStackTrace();

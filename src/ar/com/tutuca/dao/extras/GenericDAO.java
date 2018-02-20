@@ -1,4 +1,4 @@
-package ar.com.tutuca.dao;
+package ar.com.tutuca.dao.extras;
 
 import java.util.List;
 
