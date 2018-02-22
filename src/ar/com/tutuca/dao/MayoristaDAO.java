@@ -115,7 +115,7 @@ public class MayoristaDAO implements GenericDAO<Mayorista, Integer> {
 	public Mayorista load(Integer id) throws PersistenciaException {
 		Mayorista r = null;
 		try {
-			PreparedStatement ps = Util.prepareStatement("SELECT * FROM Mayorista WHERE idMayorista=? ORDER BY Nombre");
+			PreparedStatement ps = Util.prepareStatement("SELECT * FROM Mayorista WHERE idMayorista=?;");
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 

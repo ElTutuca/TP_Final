@@ -1,0 +1,22 @@
++------------------------+----------------+----------------+---------------------+--------+----------+
+| email                  | Usuario        | Password       | create_time         | Puntos | idCuenta |
++------------------------+----------------+----------------+---------------------+--------+----------+
+| NULL                   | LocoMax        | contraFlash13  | 2018-02-20 17:57:50 |    500 |        1 |
+| machine@gmail.com      | KingOfTheNorth | thefbiisontous | 2018-02-20 17:57:50 |    700 |        2 |
+| NULL                   | MiracleMan     | parlantes5     | 2018-02-20 17:57:50 |    200 |        3 |
+| NULL                   | MineCrafter    | Wesalocura     | 2018-02-20 17:57:50 |   5000 |        4 |
+| lifesavior@hotmail.com | Rasparra       | Celcius87      | 2018-02-20 17:57:50 |   2550 |        5 |
+| lasagna@outlook.com    | Ringtone       | itsyaboy48     | 2018-02-20 17:57:50 |     50 |        6 |
+| NULL                   | RastaWoman     | Anaconda       | 2018-02-20 17:57:50 |      0 |        7 |
+| NULL                   | Heaven         | dubaiWasLit    | 2018-02-20 17:57:50 |    350 |        8 |
+| requester@gmail.com    | HideNSeek      | elDiegoteSape  | 2018-02-20 17:57:50 |   3000 |        9 |
+| NULL                   | NotGarbarino   | password1      | 2018-02-20 17:57:50 |  10000 |       10 |
+| NULL                   | GanjaRanch     | password2      | 2018-02-20 17:57:50 |      0 |       11 |
+| NULL                   | MineSweeper    | password3      | 2018-02-20 17:57:50 |    950 |       12 |
+| retrogamer@gmail.com   | TetrisGod      | password4      | 2018-02-20 17:57:50 |    700 |       13 |
+| NULL                   | Comandante     | password5      | 2018-02-20 17:57:50 |   5550 |       14 |
+| dingdong@gmail.com     | Alexa          | password6      | 2018-02-20 17:57:50 |  15000 |       15 |
+| NULL                   | Flashing       | password7      | 2018-02-20 17:57:50 |      0 |       16 |
++------------------------+----------------+----------------+---------------------+--------+----------+
+
+Esta tabla es con las contraseñas sin encripcion.

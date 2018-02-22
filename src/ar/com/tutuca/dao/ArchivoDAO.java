@@ -121,7 +121,9 @@ public class ArchivoDAO implements GenericDAO<Archivo, Integer> {
 	public Archivo load(Integer id) throws PersistenciaException {
 		Archivo r = null;
 		try {
-			ResultSet rs = Util.createStatement().executeQuery("SELECT * FROM Archivos;");
+			PreparedStatement ps = Util.prepareStatement("SELECT * FROM Archivos WHERE idArchivos=?;");
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				r = new Archivo(rs.getInt("idArchivos"), rs.getString("PATH"), rs.getString("Nombre"),
 						rs.getString("mimeType"), rs.getInt("Tamaño"));

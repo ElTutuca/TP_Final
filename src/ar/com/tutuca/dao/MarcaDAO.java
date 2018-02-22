@@ -69,7 +69,7 @@ public class MarcaDAO implements GenericDAO<Marca, Integer> {
 	public Marca load(Integer id) throws PersistenciaException {
 		Marca r = null;
 		try {
-			PreparedStatement ps = Util.prepareStatement("SELECT * FROM Marca WHERE idMarca=? ORDER BY Nombre");
+			PreparedStatement ps = Util.prepareStatement("SELECT * FROM Marca WHERE idMarca=?;");
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 

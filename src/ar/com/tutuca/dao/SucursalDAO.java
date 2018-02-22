@@ -31,7 +31,8 @@ public class SucursalDAO implements GenericDAO<Sucursal, Integer> {
 	@Override
 	public Sucursal insert(Sucursal entidad) throws PersistenciaException {
 		try {
-			PreparedStatement ps = Util.prepareStatement("INSERT INTO `Sucursal`.`Sucursal` (`Telefono`, `Ubicacion`, `IP`) VALUES (?, ?, ?);");
+			PreparedStatement ps = Util.prepareStatement(
+					"INSERT INTO `Sucursal`.`Sucursal` (`Telefono`, `Ubicacion`, `IP`) VALUES (?, ?, ?);");
 			ps.setString(1, entidad.getTelefono());
 			ps.setString(2, entidad.getUbicacion());
 			ps.setString(3, entidad.getIp());
@@ -45,7 +46,8 @@ public class SucursalDAO implements GenericDAO<Sucursal, Integer> {
 	@Override
 	public Sucursal update(Sucursal entidad) throws PersistenciaException {
 		try {
-			PreparedStatement ps = Util.prepareStatement("UPDATE `Sucursal`.`Sucursal` SET `Telefono`=?, `Ubicacion`=?, `IP`=? WHERE `idSucursal`=?;");
+			PreparedStatement ps = Util.prepareStatement(
+					"UPDATE `Sucursal`.`Sucursal` SET `Telefono`=?, `Ubicacion`=?, `IP`=? WHERE `idSucursal`=?;");
 			ps.setString(1, entidad.getTelefono());
 			ps.setString(2, entidad.getUbicacion());
 			ps.setString(3, entidad.getIp());
@@ -72,10 +74,13 @@ public class SucursalDAO implements GenericDAO<Sucursal, Integer> {
 	public Sucursal load(Integer id) throws PersistenciaException {
 		Sucursal r = null;
 		try {
-			ResultSet rs = Util.createStatement().executeQuery("SELECT * FROM Sucursal;");
+			PreparedStatement ps = Util.prepareStatement("SELECT * FROM Sucursal WHERE idSucursal=?;");
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				r = new Sucursal(rs.getInt("idSucursal"), rs.getString("Telefono"), rs.getString("Ubicacion"),
-						rs.getString("IP"));;
+						rs.getString("IP"));
+				;
 			}
 		} catch (Exception e) {
 			e.getStackTrace();

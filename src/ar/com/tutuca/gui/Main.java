@@ -1,6 +1,5 @@
 package ar.com.tutuca.gui;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,16 +15,11 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import java.awt.Component;
 import javax.swing.Box;
-import javax.swing.JList;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import java.awt.Font;
 import javax.swing.JScrollPane;
-import javax.swing.JProgressBar;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
 
 public class Main extends JFrame {
 
@@ -35,7 +29,6 @@ public class Main extends JFrame {
 	private int desde = minPrecio;
 	private int hasta = maxPrecio;
 
-	private JPanel contentPane;
 	private JTextField busqueda;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 
