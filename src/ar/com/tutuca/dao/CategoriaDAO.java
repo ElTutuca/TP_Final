@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.com.tutuca.dao.extras.GenericDAO;
-import ar.com.tutuca.dao.extras.PersistenciaException;
 import ar.com.tutuca.dao.extras.Util;
+import ar.com.tutuca.dao.extras.Exceptions.PersistenciaException;
 import ar.com.tutuca.model.Categoria;
 
 public class CategoriaDAO implements GenericDAO<Categoria, Integer> {

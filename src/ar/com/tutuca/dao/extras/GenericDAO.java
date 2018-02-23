@@ -2,6 +2,8 @@ package ar.com.tutuca.dao.extras;
 
 import java.util.List;
 
+import ar.com.tutuca.dao.extras.Exceptions.PersistenciaException;
+
 public interface GenericDAO<T, ID> {
 
 	public List<T> list() throws PersistenciaException;

@@ -3,7 +3,9 @@ package ar.com.tutuca.model;
 import java.sql.Timestamp;
 
 public class Cuenta {
-
+	
+	// TODO Hacer excepciones de el limite de caracteres para usuario, email y password
+	
 	private String email = null;
 	private String usuario;
 	private String password;
@@ -15,14 +17,13 @@ public class Cuenta {
 	public Cuenta() {
 	}
 
-	public Cuenta(String email, String usuario, String password, Timestamp createTime, int puntos, int idCuenta) {
-		super();
-		this.email = email;
-		this.usuario = usuario;
-		this.password = password;
-		this.createTime = createTime;
-		this.puntos = puntos;
-		this.idCuenta = idCuenta;
+	public Cuenta(String email, String usuario, String password, Timestamp createTime, int puntos, int idCuenta){
+		setEmail(email);
+		setUsuario(usuario);
+		setPassword(password);
+		setCreateTime(createTime);
+		setPuntos(puntos);
+		setIdCuenta(idCuenta);
 	}
 
 	// Getters

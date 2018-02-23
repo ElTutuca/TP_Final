@@ -2,13 +2,16 @@ package ar.com.tutuca.dao.extras;
 
 import ar.com.tutuca.dao.ArchivoDAO;
 import ar.com.tutuca.dao.CategoriaDAO;
+import ar.com.tutuca.dao.ClienteDAO;
 import ar.com.tutuca.dao.CuentaDAO;
 import ar.com.tutuca.dao.MarcaDAO;
 import ar.com.tutuca.dao.MayoristaDAO;
 import ar.com.tutuca.dao.ProductoDAO;
 import ar.com.tutuca.dao.SubcategoriaDAO;
 import ar.com.tutuca.dao.SucursalDAO;
+import ar.com.tutuca.dao.extras.Exceptions.PersistenciaException;
 import ar.com.tutuca.model.Categoria;
+import ar.com.tutuca.model.Cliente;
 import ar.com.tutuca.model.Cuenta;
 import ar.com.tutuca.model.Marca;
 import ar.com.tutuca.model.Mayorista;
@@ -27,6 +30,7 @@ public class TestDAO {
 		ProductoDAO proDAO = new ProductoDAO(mayDAO, subDAO, arDAO);
 		SucursalDAO sucDAO = new SucursalDAO();
 		CuentaDAO cuentaDAO = new CuentaDAO();
+		ClienteDAO clienteDAO = new ClienteDAO(cuentaDAO);
 		
 		
 		marco("mayorista");
@@ -64,6 +68,11 @@ public class TestDAO {
 		
 		marco("cuenta");
 		for (Cuenta c : cuentaDAO.list()) {
+			System.out.println(c);
+		}
+		
+		marco("cliente");
+		for (Cliente c : clienteDAO.list()) {
 			System.out.println(c);
 		}
 		
