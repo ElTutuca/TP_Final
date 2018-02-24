@@ -1,12 +1,10 @@
 package ar.com.tutuca.model;
 
-import ar.com.tutuca.dao.extras.Exceptions.FueraDeRangoException;
-
 public class Cliente {
 
 	// TODO Preguntar a Mariano como crearia un Cliente nuevo
 
-	// TODO Hacer excepciones para: nombre, apellido, telefono, dni
+	// TODO Quitar excepciones a todos los modelos!
 
 	private int idCliente;
 	private String nombre;
@@ -22,7 +20,7 @@ public class Cliente {
 	}
 
 	public Cliente(int idCliente, String nombre, String apellido, int edad, String genero, String direccion,
-			String telefono, String dni, Cuenta cuenta) throws FueraDeRangoException {
+			String telefono, String dni, Cuenta cuenta) {
 		setIdCliente(idCliente);
 		setNombre(nombre);
 		setApellido(apellido);
@@ -76,31 +74,19 @@ public class Cliente {
 		this.cuenta = cuenta;
 	}
 
-	public void setApellido(String apellido) throws FueraDeRangoException {
-		if (!(apellido.length() >= 2 && apellido.length() <= 20)) {
-			throw new FueraDeRangoException("Apellido fuera de rango");
-		}
+	public void setApellido(String apellido) {
 		this.apellido = apellido;
 	}
 
-	public void setDireccion(String direccion) throws FueraDeRangoException {
-		if (!(direccion.length() >= 5 && direccion.length() <= 45)) {
-			throw new FueraDeRangoException("Direccion fuera de rango");
-		}
+	public void setDireccion(String direccion){
 		this.direccion = direccion;
 	}
 
-	public void setDni(String dni) throws FueraDeRangoException {
-		if (!(dni.length() >= 5 && dni.length() <= 8)) {
-			throw new FueraDeRangoException("DNI fuera de rango");
-		}
+	public void setDni(String dni) {
 		this.dni = dni;
 	}
 
-	public void setEdad(int edad) throws FueraDeRangoException {
-		if (!(edad >= 18 && edad <= 120)) {
-			throw new FueraDeRangoException("Edad fuera de rango");
-		}
+	public void setEdad(int edad) {
 		this.edad = edad;
 	}
 
@@ -112,17 +98,11 @@ public class Cliente {
 		this.idCliente = idCliente;
 	}
 
-	public void setNombre(String nombre) throws FueraDeRangoException {
-		if (!(nombre.length() >= 2 && nombre.length() <= 20)) {
-			throw new FueraDeRangoException("Nombre fuera de rango");
-		}
+	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 
-	public void setTelefono(String telefono) throws FueraDeRangoException {
-		if (telefono.length() != 10) {
-			throw new FueraDeRangoException("Telefono fuera de rango");
-		}
+	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
 

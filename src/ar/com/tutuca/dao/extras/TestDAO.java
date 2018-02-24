@@ -6,6 +6,7 @@ import ar.com.tutuca.dao.ClienteDAO;
 import ar.com.tutuca.dao.CuentaDAO;
 import ar.com.tutuca.dao.MarcaDAO;
 import ar.com.tutuca.dao.MayoristaDAO;
+import ar.com.tutuca.dao.MetodoPagoDAO;
 import ar.com.tutuca.dao.ProductoDAO;
 import ar.com.tutuca.dao.SubcategoriaDAO;
 import ar.com.tutuca.dao.SucursalDAO;
@@ -15,6 +16,7 @@ import ar.com.tutuca.model.Cliente;
 import ar.com.tutuca.model.Cuenta;
 import ar.com.tutuca.model.Marca;
 import ar.com.tutuca.model.Mayorista;
+import ar.com.tutuca.model.MetodoPago;
 import ar.com.tutuca.model.Producto;
 import ar.com.tutuca.model.Subcategoria;
 import ar.com.tutuca.model.Sucursal;
@@ -31,6 +33,7 @@ public class TestDAO {
 		SucursalDAO sucDAO = new SucursalDAO();
 		CuentaDAO cuentaDAO = new CuentaDAO();
 		ClienteDAO clienteDAO = new ClienteDAO(cuentaDAO);
+		MetodoPagoDAO mpDAO = new MetodoPagoDAO();
 		
 		
 		marco("mayorista");
@@ -76,6 +79,10 @@ public class TestDAO {
 			System.out.println(c);
 		}
 		
+		marco("metodos de pago");
+		for (MetodoPago mp : mpDAO.list()) {
+			System.out.println(mp);
+		}
 	}
 	
 	public static void marco(String titulo) {

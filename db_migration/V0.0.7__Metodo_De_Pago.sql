@@ -43,3 +43,5 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 INSERT INTO `Sucursal`.`Metodo_Pago` (`Descripcion`) VALUES ('Efectivo');
 INSERT INTO `Sucursal`.`Metodo_Pago` (`Descripcion`) VALUES ('Tarjeta');
+INSERT INTO `Sucursal`.`Metodo_Pago` (`Descripcion`) VALUES ('Cuenta corriente');
+INSERT INTO `Sucursal`.`Metodo_Pago` (`Descripcion`) VALUES ('Transferencia');

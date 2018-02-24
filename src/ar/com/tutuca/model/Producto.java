@@ -22,10 +22,11 @@ public class Producto {
 	private List<Archivo> archivos = new ArrayList<Archivo>();
 	private Sucursal sucursal;
 	private Marca marca;
-	
+	private float porcentajeIva;
+
 	// Constructores
 	public Producto(int idProductos, double precio, String nombre, boolean deposito, int stockMaximo, int stockMinimo,
-			int stockIdeal, int stock, int descuento, int puntosReq, boolean eliminado, Sucursal sucursal, Marca marca) {
+			int stockIdeal, int stock, int descuento, int puntosReq, boolean eliminado, Sucursal sucursal, Marca marca, float porcentajeIva) {
 		setIdProductos(idProductos);
 		setPrecio(precio);
 		setNombre(nombre);
@@ -39,12 +40,17 @@ public class Producto {
 		setEliminado(eliminado);
 		setSucursal(sucursal);
 		setMarca(marca);
+		setPorcentajeIva(porcentajeIva);
 	}
 
 	public Producto() {
 	}
 
 	// Getters
+	public float getPorcentajeIva() {
+		return porcentajeIva;
+	}
+	
 	public boolean isEliminado() {
 		return eliminado;
 	}
@@ -110,6 +116,10 @@ public class Producto {
 	}
 
 	// Setters
+	public void setPorcentajeIva(float porcentajeIva) {
+		this.porcentajeIva = porcentajeIva;
+	}
+
 	public void setEliminado(boolean eliminado) {
 		this.eliminado = eliminado;
 	}
@@ -176,10 +186,10 @@ public class Producto {
 
 	@Override
 	public String toString() {
-		return String.format("(%s) %s - $%s ; %s ; %s - %s - %s - [%s] ; [%s] ; %s p ; [%s] | [%s] -----%s",
+		return String.format("(%s) %s - $%s ; %s ; %s - %s - %s - [%s] ; [%s] ; %s p ; [%s] | [%s] -----%s, IVA: %s",
 				getIdProductos(), getNombre(), getPrecio(), isDeposito(), getStockMaximo(), getStockMinimo(),
 				getStockIdeal(), getStock(), getDescuento(), getPuntosReq(), getSucursal().getIdSucursal(),
-				getMarca().getIdMarca(), (isEliminado()?"Eliminado":"OKEY"));
+				getMarca().getIdMarca(), (isEliminado()?"Eliminado":"OKEY"), getPorcentajeIva());
 	}
 	
 	public void mostrarMayoristas() {

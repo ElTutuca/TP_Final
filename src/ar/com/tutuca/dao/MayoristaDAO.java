@@ -76,7 +76,6 @@ public class MayoristaDAO implements GenericDAO<Mayorista, Integer> {
 	public Mayorista insert(Mayorista entidad) throws PersistenciaException {
 		try {
 			PreparedStatement ps = Util.prepareStatement("INSERT INTO `Sucursal`.`Mayorista` (`Nombre`) VALUES (?);");
-
 			ps.setString(1, entidad.getNombre());
 			ps.execute();
 		} catch (ClassNotFoundException | SQLException e) {
