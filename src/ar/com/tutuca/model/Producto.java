@@ -1,5 +1,6 @@
 package ar.com.tutuca.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,63 +8,53 @@ public class Producto {
 
 	// Atributos
 	private int idProductos;
+	private String codigo;
 	private double precio;
 	private String nombre;
-	private boolean deposito;
+	private String ubicacion;
 	private int stockMaximo;
 	private int stockMinimo;
 	private int stockIdeal;
 	private int stock;
-	private int descuento;
-	private int puntosReq;
+	private BigDecimal descuento;
 	private boolean eliminado;
+	private BigDecimal porcentajeIva;
+	private Marca marca;
 	private List<Mayorista> mayoristas = new ArrayList<Mayorista>();
 	private List<Subcategoria> subcategoria = new ArrayList<Subcategoria>();
-	private List<Archivo> archivos = new ArrayList<Archivo>();
-	private Sucursal sucursal;
-	private Marca marca;
-	private float porcentajeIva;
+	private List<ProdArchivos> prodArch = new ArrayList<ProdArchivos>();
 
 	// Constructores
-	public Producto(int idProductos, double precio, String nombre, boolean deposito, int stockMaximo, int stockMinimo,
-			int stockIdeal, int stock, int descuento, int puntosReq, boolean eliminado, Sucursal sucursal, Marca marca, float porcentajeIva) {
+	public Producto() {
+	}
+
+	public Producto(int idProductos, String codigo, double precio, String nombre, String ubicacion, int stockMaximo,
+			int stockMinimo, int stockIdeal, int stock, BigDecimal descuento, boolean eliminado,
+			BigDecimal porcentajeIva) {
 		setIdProductos(idProductos);
+		setCodigo(codigo);
 		setPrecio(precio);
 		setNombre(nombre);
-		setDeposito(deposito);
+		setUbicacion(ubicacion);
 		setStockMaximo(stockMaximo);
 		setStockMinimo(stockMinimo);
 		setStockIdeal(stockIdeal);
 		setStock(stock);
 		setDescuento(descuento);
-		setPuntosReq(puntosReq);
 		setEliminado(eliminado);
-		setSucursal(sucursal);
-		setMarca(marca);
 		setPorcentajeIva(porcentajeIva);
 	}
 
-	public Producto() {
+	// Getters
+	public List<ProdArchivos> getProdArch() {
+		return prodArch;
 	}
 
-	// Getters
-	public float getPorcentajeIva() {
-		return porcentajeIva;
+	public String getCodigo() {
+		return codigo;
 	}
-	
-	public boolean isEliminado() {
-		return eliminado;
-	}
-	
-	public List<Subcategoria> getSubcategoria() {
-		return subcategoria;
-	}
-	
-	public List<Archivo> getArchivos() {
-		return archivos;
-	}
-	
-	public int getDescuento() {
+
+	public BigDecimal getDescuento() {
 		return descuento;
 	}
 
@@ -83,12 +74,12 @@ public class Producto {
 		return nombre;
 	}
 
-	public double getPrecio() {
-		return precio;
+	public BigDecimal getPorcentajeIva() {
+		return porcentajeIva;
 	}
 
-	public int getPuntosReq() {
-		return puntosReq;
+	public double getPrecio() {
+		return precio;
 	}
 
 	public int getStock() {
@@ -107,37 +98,33 @@ public class Producto {
 		return stockMinimo;
 	}
 
-	public Sucursal getSucursal() {
-		return sucursal;
+	public List<Subcategoria> getSubcategoria() {
+		return subcategoria;
 	}
 
-	public boolean isDeposito() {
-		return deposito;
+	public String getUbicacion() {
+		return ubicacion;
+	}
+
+	public boolean isEliminado() {
+		return eliminado;
 	}
 
 	// Setters
-	public void setPorcentajeIva(float porcentajeIva) {
-		this.porcentajeIva = porcentajeIva;
+	public void setProdArch(List<ProdArchivos> prodArch) {
+		this.prodArch = prodArch;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public void setDescuento(BigDecimal descuento) {
+		this.descuento = descuento;
 	}
 
 	public void setEliminado(boolean eliminado) {
 		this.eliminado = eliminado;
-	}
-	
-	public void setArchivos(List<Archivo> archivos) {
-		this.archivos = archivos;
-	}
-
-	public void setSubcategoria(List<Subcategoria> subcategoria) {
-		this.subcategoria = subcategoria;
-	}
-	
-	public void setDeposito(boolean deposito) {
-		this.deposito = deposito;
-	}
-
-	public void setDescuento(int descuento) {
-		this.descuento = descuento;
 	}
 
 	public void setIdProductos(int idProductos) {
@@ -156,12 +143,12 @@ public class Producto {
 		this.nombre = nombre;
 	}
 
-	public void setPrecio(double precio) {
-		this.precio = precio;
+	public void setPorcentajeIva(BigDecimal porcentajeIva) {
+		this.porcentajeIva = porcentajeIva;
 	}
 
-	public void setPuntosReq(int puntosReq) {
-		this.puntosReq = puntosReq;
+	public void setPrecio(double precio) {
+		this.precio = precio;
 	}
 
 	public void setStock(int stock) {
@@ -180,33 +167,38 @@ public class Producto {
 		this.stockMinimo = stockMinimo;
 	}
 
-	public void setSucursal(Sucursal sucursal) {
-		this.sucursal = sucursal;
+	public void setSubcategoria(List<Subcategoria> subcategoria) {
+		this.subcategoria = subcategoria;
+	}
+
+	public void setUbicacion(String ubicacion) {
+		this.ubicacion = ubicacion;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("(%s) %s - $%s ; %s ; %s - %s - %s - [%s] ; [%s] ; %s p ; [%s] | [%s] -----%s, IVA: %s",
-				getIdProductos(), getNombre(), getPrecio(), isDeposito(), getStockMaximo(), getStockMinimo(),
-				getStockIdeal(), getStock(), getDescuento(), getPuntosReq(), getSucursal().getIdSucursal(),
-				getMarca().getIdMarca(), (isEliminado()?"Eliminado":"OKEY"), getPorcentajeIva());
+		return String.format(
+				"(%s) Cod: %s, Precio: %s, Name: %s, Ubic: %s, StckMax: %s, StckMin: %s, StckIdeal: %s, Stck: %s, Descto: %s, Elim: %s, PorcIVA: %s, Marca: %s",
+				getIdProductos(), getCodigo(), getPrecio(), getNombre(), getUbicacion(), getStockMaximo(),
+				getStockMinimo(), getStockIdeal(), getStock(), getDescuento(), isEliminado(), getPorcentajeIva(),
+				getMarca().getIdMarca());
 	}
-	
+
 	public void mostrarMayoristas() {
 		for (Mayorista mayorista : getMayoristas()) {
-			System.out.printf("May: (%s) ----> %s\n",idProductos,mayorista.getIdMayorista());
+			System.out.printf("May: (%s) ----> %s\n", idProductos, mayorista.getIdMayorista());
 		}
 	}
-	
+
 	public void mostrarSubcategorias() {
 		for (Subcategoria sc : getSubcategoria()) {
-			System.out.printf("Sub: (%s) ----> %s\n",idProductos,sc.getIdSubcategoria());
+			System.out.printf("Sub: (%s) ----> %s\n", idProductos, sc.getIdSubcategoria());
 		}
 	}
-	
+
 	public void mostrarArchivos() {
-		for (Archivo ar : getArchivos()) {
-			System.out.printf("Arch: (%s) ----> %s\n",idProductos,ar.getIdArchivo());
+		for (ProdArchivos ar : getProdArch()) {
+			System.out.println(ar);
 		}
 	}
 

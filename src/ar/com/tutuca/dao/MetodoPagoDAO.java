@@ -25,28 +25,26 @@ public class MetodoPagoDAO implements GenericDAO<MetodoPago, Integer> {
 		}
 		return r;
 	}
-
+	
+	// TODO Hacer insert, update, delete y load;
+	
 	@Override
 	public MetodoPago insert(MetodoPago entidad) throws PersistenciaException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public MetodoPago update(MetodoPago entidad) throws PersistenciaException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void delete(MetodoPago entidad) throws PersistenciaException {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public MetodoPago load(Integer id) throws PersistenciaException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

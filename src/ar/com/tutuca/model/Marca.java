@@ -1,6 +1,7 @@
 package ar.com.tutuca.model;
 
 public class Marca {
+	
 	private int idMarca;
 	private String nombre;
 

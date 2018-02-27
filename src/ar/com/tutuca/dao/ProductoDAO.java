@@ -1,6 +1,7 @@
 package ar.com.tutuca.dao;
 
 import java.sql.PreparedStatement;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,43 +10,39 @@ import java.util.List;
 import ar.com.tutuca.dao.extras.GenericDAO;
 import ar.com.tutuca.dao.extras.Util;
 import ar.com.tutuca.dao.extras.Exceptions.PersistenciaException;
-import ar.com.tutuca.model.Archivo;
 import ar.com.tutuca.model.Marca;
 import ar.com.tutuca.model.Producto;
-import ar.com.tutuca.model.Sucursal;;
 
 public class ProductoDAO implements GenericDAO<Producto, Integer> {
 
 	private MayoristaDAO mayoristaDAO;
 	private SubcategoriaDAO subcategoriaDAO;
 	private ArchivoDAO archivoDAO;
+	private ProdArchivosDAO prodArchDAO;
 
-	public ProductoDAO(MayoristaDAO mDAO, SubcategoriaDAO scDAO, ArchivoDAO aDAO) {
+	public ProductoDAO(MayoristaDAO mDAO, SubcategoriaDAO scDAO, ArchivoDAO aDAO, ProdArchivosDAO paDAO) {
 		mayoristaDAO = mDAO;
 		subcategoriaDAO = scDAO;
 		archivoDAO = aDAO;
+		prodArchDAO = paDAO;
 	}
-
-	// TODO Agregar porcentajeIva
 
 	public List<Producto> listNoEliminados() throws PersistenciaException {
 		List<Producto> r = new ArrayList<Producto>();
 		try {
 			ResultSet rs = Util.createStatement().executeQuery(
-					"SELECT p.*,sc.idSubcategoria, suc.*, mc.Nombre AS Marca FROM Productos p INNER JOIN Subcategorias_Productos sc ON p.idProductos=sc.idProductos INNER JOIN Sucursal suc ON suc.idSucursal=p.idSucursal INNER JOIN Marca mc ON mc.idMarca=p.idMarca WHERE p.Eliminado=0;");
+					"SELECT p.*, m.Nombre AS Marca FROM Productos p INNER JOIN Marca m ON p.idMarca=m.idMarca WHERE p.Eliminado=0;");
 			while (rs.next()) {
-				Sucursal sucursal = new Sucursal(rs.getInt("idSucursal"), rs.getString("Telefono"),
-						rs.getString("Ubicacion"), rs.getString("IP"));
 				Marca marca = new Marca(rs.getInt("idMarca"), rs.getString("Marca"));
-				Producto producto = new Producto(rs.getInt("idProductos"), rs.getDouble("Precio"),
-						rs.getString("Nombre"), rs.getBoolean("Deposito"), rs.getInt("StockMaximo"),
-						rs.getInt("StockMinimo"), rs.getInt("StockIdeal"), rs.getInt("Stock"), rs.getInt("Descuento"),
-						rs.getInt("PuntosReq"), rs.getBoolean("Eliminado"), sucursal, marca,
-						rs.getFloat("PorcentajeIVA"));
+				Producto producto = new Producto(rs.getInt("idProductos"), rs.getString("Codigo"),
+						rs.getDouble("Precio"), rs.getString("Nombre"), rs.getString("Ubicacion"),
+						rs.getInt("StockMaximo"), rs.getInt("StockMinimo"), rs.getInt("StockIdeal"), rs.getInt("Stock"),
+						rs.getBigDecimal("Descuento"), rs.getBoolean("Eliminado"), rs.getBigDecimal("porcentajeIva"));
 
+				producto.setMarca(marca);
 				producto.setMayoristas(mayoristaDAO.listPorProducto(producto.getIdProductos()));
 				producto.setSubcategoria(subcategoriaDAO.listPorProducto(producto.getIdProductos()));
-				producto.setArchivos(archivoDAO.listPorProducto(producto.getIdProductos()));
+				producto.setProdArch(prodArchDAO.listPorProducto(producto.getIdProductos()));
 				r.add(producto);
 			}
 		} catch (ClassNotFoundException | SQLException e) {
@@ -59,23 +56,18 @@ public class ProductoDAO implements GenericDAO<Producto, Integer> {
 		List<Producto> r = new ArrayList<Producto>();
 		try {
 			ResultSet rs = Util.createStatement().executeQuery(
-					"SELECT p.*,sc.idSubcategoria, suc.*, mc.Nombre AS Marca FROM Productos p INNER JOIN Subcategorias_Productos sc ON p.idProductos=sc.idProductos INNER JOIN Sucursal suc ON suc.idSucursal=p.idSucursal INNER JOIN Marca mc ON mc.idMarca=p.idMarca;");
+					"SELECT p.*, m.Nombre AS Marca FROM Productos p INNER JOIN Marca m ON p.idMarca=m.idMarca;");
 			while (rs.next()) {
-				Sucursal sucursal = new Sucursal(rs.getInt("idSucursal"), rs.getString("Telefono"),
-						rs.getString("Ubicacion"), rs.getString("IP"));
 				Marca marca = new Marca(rs.getInt("idMarca"), rs.getString("Marca"));
-				Producto producto = new Producto(rs.getInt("idProductos"), rs.getDouble("Precio"),
-						rs.getString("Nombre"), rs.getBoolean("Deposito"), rs.getInt("StockMaximo"),
-						rs.getInt("StockMinimo"), rs.getInt("StockIdeal"), rs.getInt("Stock"), rs.getInt("Descuento"),
-						rs.getInt("PuntosReq"), rs.getBoolean("Eliminado"), sucursal, marca,
-						rs.getFloat("PorcentajeIVA"));
+				Producto producto = new Producto(rs.getInt("idProductos"), rs.getString("Codigo"),
+						rs.getDouble("Precio"), rs.getString("Nombre"), rs.getString("Ubicacion"),
+						rs.getInt("StockMaximo"), rs.getInt("StockMinimo"), rs.getInt("StockIdeal"), rs.getInt("Stock"),
+						rs.getBigDecimal("Descuento"), rs.getBoolean("Eliminado"), rs.getBigDecimal("porcentajeIva"));
 
+				producto.setMarca(marca);
 				producto.setMayoristas(mayoristaDAO.listPorProducto(producto.getIdProductos()));
 				producto.setSubcategoria(subcategoriaDAO.listPorProducto(producto.getIdProductos()));
-
-				List<Archivo> arch = archivoDAO.listPorProducto(producto.getIdProductos());
-				producto.setArchivos(arch);
-
+				producto.setProdArch(prodArchDAO.listPorProducto(producto.getIdProductos()));
 				r.add(producto);
 			}
 		} catch (ClassNotFoundException | SQLException e) {
@@ -87,22 +79,20 @@ public class ProductoDAO implements GenericDAO<Producto, Integer> {
 	@Override
 	public Producto insert(Producto entidad) throws PersistenciaException {
 		try {
-			// Insert del producto
 			PreparedStatement ps = Util.prepareStatement(
-					"INSERT INTO `Sucursal`.`Productos` (`Precio`, `Nombre`, `Deposito`, `StockMaximo`, `StockMinimo`, `StockIdeal`, `Stock`, `Descuento`, `PuntosReq`, `Eliminado`, `idSucursal`, `idMarca`, `PorcentajeIVA`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);");
-			ps.setDouble(1, entidad.getPrecio());
-			ps.setString(2, entidad.getNombre());
-			ps.setBoolean(3, entidad.isDeposito());
-			ps.setInt(4, entidad.getStockMaximo());
-			ps.setInt(5, entidad.getStockMinimo());
-			ps.setInt(6, entidad.getStockIdeal());
-			ps.setInt(7, entidad.getStock());
-			ps.setInt(8, entidad.getDescuento());
-			ps.setInt(9, entidad.getPuntosReq());
+					"INSERT INTO `Sucursal`.`Productos` (`Codigo`, `Precio`, `Nombre`, `Ubicacion`, `StockMaximo`, `StockMinimo`, `StockIdeal`, `Stock`, `Descuento`, `Eliminado`, `PorcentajeIVA`, `idMarca`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+			ps.setString(1, entidad.getCodigo());
+			ps.setDouble(2, entidad.getPrecio());
+			ps.setString(3, entidad.getNombre());
+			ps.setString(4, entidad.getUbicacion());
+			ps.setInt(5, entidad.getStockMaximo());
+			ps.setInt(6, entidad.getStockMinimo());
+			ps.setInt(7, entidad.getStockIdeal());
+			ps.setInt(8, entidad.getStock());
+			ps.setBigDecimal(9, entidad.getDescuento());
 			ps.setBoolean(10, entidad.isEliminado());
-			ps.setInt(11, entidad.getSucursal().getIdSucursal());
+			ps.setBigDecimal(11, entidad.getPorcentajeIva());
 			ps.setInt(12, entidad.getMarca().getIdMarca());
-			ps.setFloat(13, entidad.getPorcentajeIva());
 			ps.execute();
 
 			int lastId = Util.lastId();
@@ -120,21 +110,20 @@ public class ProductoDAO implements GenericDAO<Producto, Integer> {
 	public Producto update(Producto entidad) throws PersistenciaException {
 		try {
 			PreparedStatement ps = Util.prepareStatement(
-					"UPDATE `Sucursal`.`Productos` SET `Precio`=?, `Nombre`=?, `Deposito`=?, `StockMaximo`=?, `StockMinimo`=?, `StockIdeal`=?, `Stock`=?, `Descuento`=?, `PuntosReq`=?, `Eliminado`=?, `idMayorista`=?, `idSucursal`=?, `idMarca`=?, `PorcentajeIVA`=? WHERE `idProductos`=?;");
-			ps.setDouble(1, entidad.getPrecio());
-			ps.setString(2, entidad.getNombre());
-			ps.setBoolean(3, entidad.isDeposito());
-			ps.setInt(4, entidad.getStockMaximo());
-			ps.setInt(5, entidad.getStockMinimo());
-			ps.setInt(6, entidad.getStockIdeal());
-			ps.setInt(7, entidad.getStock());
-			ps.setInt(8, entidad.getDescuento());
-			ps.setInt(9, entidad.getPuntosReq());
+					"UPDATE `Sucursal`.`Productos` SET `Codigo`=?, `Precio`=?', `Nombre`=?, `Ubicacion`=?, `StockMaximo`=?', `StockMinimo`=?, `StockIdeal`=?, `Stock`=?, `Descuento`=?, `Eliminado`=?, `PorcentajeIVA`=?, `idMarca`=? WHERE `idProductos`=?;");
+			ps.setString(1, entidad.getCodigo());
+			ps.setDouble(2, entidad.getPrecio());
+			ps.setString(3, entidad.getNombre());
+			ps.setString(4, entidad.getUbicacion());
+			ps.setInt(5, entidad.getStockMaximo());
+			ps.setInt(6, entidad.getStockMinimo());
+			ps.setInt(7, entidad.getStockIdeal());
+			ps.setInt(8, entidad.getStock());
+			ps.setBigDecimal(9, entidad.getDescuento());
 			ps.setBoolean(10, entidad.isEliminado());
-			ps.setInt(11, entidad.getSucursal().getIdSucursal());
+			ps.setBigDecimal(11, entidad.getPorcentajeIva());
 			ps.setInt(12, entidad.getMarca().getIdMarca());
-			ps.setFloat(13, entidad.getPorcentajeIva());
-			ps.setInt(14, entidad.getIdProductos());
+			ps.setInt(13, entidad.getIdProductos());
 			ps.execute();
 
 			mayoristaDAO.deleteEnMayProd(entidad.getIdProductos(), entidad.getMayoristas());
@@ -183,23 +172,21 @@ public class ProductoDAO implements GenericDAO<Producto, Integer> {
 		Producto r = null;
 		try {
 			PreparedStatement ps = Util.prepareStatement(
-					"SELECT p.*,sc.idSubcategoria, suc.*, mc.Nombre AS Marca FROM Productos p INNER JOIN Subcategorias_Productos sc ON p.idProductos=sc.idProductos INNER JOIN Sucursal suc ON suc.idSucursal=p.idSucursal INNER JOIN Marca mc ON mc.idMarca=p.idMarca WHERE p.idProductos=?;");
+					"SELECT p.*, m.Nombre AS Marca FROM Productos p INNER JOIN Marca m ON p.idMarca=m.idMarca WHERE p.idProductos=?;");
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-				Sucursal sucursal = new Sucursal(rs.getInt("idSucursal"), rs.getString("Telefono"),
-						rs.getString("Ubicacion"), rs.getString("IP"));
 				Marca marca = new Marca(rs.getInt("idMarca"), rs.getString("Marca"));
-				Producto producto = new Producto(rs.getInt("idProductos"), rs.getDouble("Precio"),
-						rs.getString("Nombre"), rs.getBoolean("Deposito"), rs.getInt("StockMaximo"),
-						rs.getInt("StockMinimo"), rs.getInt("StockIdeal"), rs.getInt("Stock"), rs.getInt("Descuento"),
-						rs.getInt("PuntosReq"), rs.getBoolean("Eliminado"), sucursal, marca,
-						rs.getFloat("PorcentajeIVA"));
+				Producto producto = new Producto(rs.getInt("idProductos"), rs.getString("Codigo"),
+						rs.getDouble("Precio"), rs.getString("Nombre"), rs.getString("Ubicacion"),
+						rs.getInt("StockMaximo"), rs.getInt("StockMinimo"), rs.getInt("StockIdeal"), rs.getInt("Stock"),
+						rs.getBigDecimal("Descuento"), rs.getBoolean("Eliminado"), rs.getBigDecimal("porcentajeIva"));
 
-				producto.setArchivos(archivoDAO.listPorProducto(producto.getIdProductos()));
+				producto.setMarca(marca);
 				producto.setMayoristas(mayoristaDAO.listPorProducto(producto.getIdProductos()));
 				producto.setSubcategoria(subcategoriaDAO.listPorProducto(producto.getIdProductos()));
+				producto.setArchivos(archivoDAO.listPorProducto(producto.getIdProductos()));
 				r = producto;
 
 			}

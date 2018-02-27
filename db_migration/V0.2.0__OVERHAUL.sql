@@ -399,3 +399,56 @@ CHANGE COLUMN `Tasa` `Tasa` DECIMAL(4,2) NOT NULL ;
 
 ALTER TABLE `Sucursal`.`Ventas_Detalle` 
 CHANGE COLUMN `PorcentajeIVA` `PorcentajeIVA` DECIMAL(4,2) NOT NULL ;
+
+-- MySQL Workbench Synchronization
+-- Generated: 2018-02-27 00:10
+-- Model: New Model
+-- Version: 1.0
+-- Project: Name of the project
+-- Author: Mateo Pagnucco
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+ALTER TABLE `Sucursal`.`Productos` 
+CHANGE COLUMN `Stock` `Stock` MEDIUMINT(7) NOT NULL ,
+CHANGE COLUMN `Descuento` `Descuento` DECIMAL(4,2) NULL DEFAULT NULL ;
+
+ALTER TABLE `Sucursal`.`TiposDeComprobantes` 
+CHANGE COLUMN `idTiposDeComprov` `idTiposDeComprov` INT(11) NOT NULL AUTO_INCREMENT ;
+
+ALTER TABLE `Sucursal`.`CategoriasIVA` 
+CHANGE COLUMN `idCategoriasIVA` `idCategoriasIVA` INT(11) NOT NULL AUTO_INCREMENT ;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+
+ALTER TABLE `Sucursal`.`TiposDeComprobantes` 
+CHANGE COLUMN `idTiposDeComprov` `idTiposDeComprob` INT(11) NOT NULL AUTO_INCREMENT ;
+
+ALTER TABLE `Sucursal`.`Ventas` 
+DROP FOREIGN KEY `fk_Ventas_TiposDeComprobantes1`;
+ALTER TABLE `Sucursal`.`Ventas` 
+CHANGE COLUMN `idTiposDeComprov` `idTiposDeComprob` INT(11) NOT NULL ;
+ALTER TABLE `Sucursal`.`Ventas` 
+ADD CONSTRAINT `fk_Ventas_TiposDeComprobantes1`
+  FOREIGN KEY (`idTiposDeComprob`)
+  REFERENCES `Sucursal`.`TiposDeComprobantes` (`idTiposDeComprob`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+ALTER TABLE `Sucursal`.`Compras` 
+DROP FOREIGN KEY `fk_Compras_TiposDeComprobantes1`;
+ALTER TABLE `Sucursal`.`Compras` 
+CHANGE COLUMN `idTiposDeComprov` `idTiposDeComprob` INT(11) NOT NULL ;
+ALTER TABLE `Sucursal`.`Compras` 
+ADD CONSTRAINT `fk_Compras_TiposDeComprobantes1`
+  FOREIGN KEY (`idTiposDeComprob`)
+  REFERENCES `Sucursal`.`TiposDeComprobantes` (`idTiposDeComprob`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;

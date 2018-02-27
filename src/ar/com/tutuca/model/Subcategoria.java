@@ -1,6 +1,7 @@
 package ar.com.tutuca.model;
 
 public class Subcategoria {
+	
 	private int idSubcategoria;
 	private Categoria categoria;
 	private String subcategoria;
