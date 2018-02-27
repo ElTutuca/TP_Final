@@ -24,6 +24,11 @@ import ar.com.tutuca.model.Sucursal;
 public class TestDAO {
 
 	public static void main(String[] args) throws PersistenciaException {
+		
+		for (int i = 1; i <= 47; i++) {
+			System.out.println("UPDATE `Sucursal`.`Productos` SET `Ubicacion`=NULL WHERE `idProductos`="+i+";");
+		}
+		
 		MayoristaDAO mayDAO = new MayoristaDAO();
 		MarcaDAO marDAO = new MarcaDAO();
 		SubcategoriaDAO subDAO = new SubcategoriaDAO();
@@ -83,6 +88,7 @@ public class TestDAO {
 		for (MetodoPago mp : mpDAO.list()) {
 			System.out.println(mp);
 		}
+		
 	}
 	
 	public static void marco(String titulo) {

@@ -1,28 +1,34 @@
 package ar.com.tutuca.gui;
 
+import java.awt.Component;
 import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
+import java.awt.Font;
+import java.awt.GridLayout;
+
+import javax.swing.Box;
+import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.JTextField;
-import javax.swing.border.BevelBorder;
-import javax.swing.JSlider;
-import java.awt.GridLayout;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-import java.awt.Component;
-import javax.swing.Box;
 import javax.swing.JCheckBox;
-import javax.swing.JRadioButton;
-import javax.swing.ButtonGroup;
-import java.awt.Font;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JTextField;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.border.BevelBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import ar.com.tutuca.dao.MarcaDAO;
+import ar.com.tutuca.dao.extras.Exceptions.PersistenciaException;
+import ar.com.tutuca.model.Marca;
 
 public class Main extends JFrame {
-
+	
+	private MarcaDAO mDAO = new MarcaDAO();
+	
 	private int maxPrecio = 20000;
 	private int minPrecio = 0;
 
@@ -77,21 +83,22 @@ public class Main extends JFrame {
 					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
 						.addComponent(lblFiltros, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(pnFiltros, GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE))
+						.addComponent(pnFiltros, GroupLayout.PREFERRED_SIZE, 146, Short.MAX_VALUE))
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(6)
+							.addComponent(pnResultados, GroupLayout.DEFAULT_SIZE, 835, Short.MAX_VALUE)
+							.addContainerGap())
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(261)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(busqueda, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addGap(37)
-									.addComponent(lblBusqueda, GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED, 48, GroupLayout.PREFERRED_SIZE)))
-							.addGap(419))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(6)
-							.addComponent(pnResultados, GroupLayout.DEFAULT_SIZE, 814, Short.MAX_VALUE)
-							.addContainerGap())))
+									.addComponent(lblBusqueda, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)
+									.addContainerGap())
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(busqueda, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+									.addGap(419))))))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -103,12 +110,12 @@ public class Main extends JFrame {
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(busqueda, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addGap(18)
-							.addComponent(pnResultados, GroupLayout.DEFAULT_SIZE, 527, Short.MAX_VALUE)
+							.addComponent(pnResultados, GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE)
 							.addGap(28))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(lblFiltros, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(pnFiltros, GroupLayout.PREFERRED_SIZE, 555, Short.MAX_VALUE)))
+							.addComponent(pnFiltros, GroupLayout.PREFERRED_SIZE, 559, Short.MAX_VALUE)))
 					.addGap(7))
 		);
 		pnFiltros.setLayout(new GridLayout(30, 0, 0, 0));
@@ -161,24 +168,18 @@ public class Main extends JFrame {
 		Component verticalStrut_1 = Box.createVerticalStrut(20);
 		pnFiltros.add(verticalStrut_1);
 		
-		JLabel lblDescuentos = new JLabel("Descuentos");
+		JLabel lblDescuentos = new JLabel("Marcas");
 		pnFiltros.add(lblDescuentos);
 		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("Hasta 10%");
-		buttonGroup.add(rdbtnNewRadioButton);
-		pnFiltros.add(rdbtnNewRadioButton);
-		
-		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("Hasta 20%");
-		buttonGroup.add(rdbtnNewRadioButton_1);
-		pnFiltros.add(rdbtnNewRadioButton_1);
-		
-		JRadioButton rdbtnNewRadioButton_2 = new JRadioButton("Hasta 30%");
-		buttonGroup.add(rdbtnNewRadioButton_2);
-		pnFiltros.add(rdbtnNewRadioButton_2);
-		
-		JRadioButton rdbtnNewRadioButton_3 = new JRadioButton("Hasta 40% o m\u00E1s");
-		buttonGroup.add(rdbtnNewRadioButton_3);
-		pnFiltros.add(rdbtnNewRadioButton_3);
+		try {
+			for (Marca m : mDAO.list()) {
+				JCheckBox chckbxNewCheckBox = new JCheckBox(m.getNombre());
+				pnFiltros.add(chckbxNewCheckBox);
+			}
+		} catch (PersistenciaException e1) {
+			e1.printStackTrace();
+		}
+
 		getContentPane().setLayout(groupLayout);
 	}
 }
