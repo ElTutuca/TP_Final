@@ -2,17 +2,29 @@ package ar.com.tutuca.model;
 
 public class TipoDeComprobante {
 
-	private int idTipoDeComprov;
+	private int idTipoDeComprob;
 	private String nombre;
 	private String letra;
 	private String abreviatura;
+	
+	@Override
+	public String toString() {
+		return String.format("(%s) Nombre: %s, Letra: %s, Abreviatura: %s", getIdTipoDeComprob(), getNombre(),
+				getLetra(), getAbreviatura());
+	}
 
 	// Constructores
 	public TipoDeComprobante() {
 	}
+	
+	public TipoDeComprobante(String nombre, String letra, String abreviatura) {
+		setNombre(nombre);
+		setLetra(letra);
+		setAbreviatura(abreviatura);
+	}
 
-	public TipoDeComprobante(int idTipoDeComprov, String nombre, String letra, String abreviatura) {
-		setIdTipoDeComprov(idTipoDeComprov);
+	public TipoDeComprobante(int idTipoDeComprob, String nombre, String letra, String abreviatura) {
+		setIdTipoDeComprob(idTipoDeComprob);
 		setNombre(nombre);
 		setLetra(letra);
 		setAbreviatura(abreviatura);
@@ -23,8 +35,8 @@ public class TipoDeComprobante {
 		return abreviatura;
 	}
 
-	public int getIdTipoDeComprov() {
-		return idTipoDeComprov;
+	public int getIdTipoDeComprob() {
+		return idTipoDeComprob;
 	}
 
 	public String getLetra() {
@@ -40,8 +52,8 @@ public class TipoDeComprobante {
 		this.abreviatura = abreviatura;
 	}
 
-	public void setIdTipoDeComprov(int idTipoDeComprov) {
-		this.idTipoDeComprov = idTipoDeComprov;
+	public void setIdTipoDeComprob(int idTipoDeComprob) {
+		this.idTipoDeComprob = idTipoDeComprob;
 	}
 
 	public void setLetra(String letra) {
@@ -50,12 +62,6 @@ public class TipoDeComprobante {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("(%s) Nombre: %s, Letra: %s, Abreviatura: %s", getIdTipoDeComprov(), getNombre(),
-				getLetra(), getAbreviatura());
 	}
 
 }

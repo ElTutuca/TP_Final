@@ -1,8 +1,6 @@
 package ar.com.tutuca.dao;
 
 import java.sql.PreparedStatement;
-
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,39 +10,40 @@ import ar.com.tutuca.dao.extras.GenericDAO;
 import ar.com.tutuca.dao.extras.Util;
 import ar.com.tutuca.dao.extras.Exceptions.PersistenciaException;
 import ar.com.tutuca.model.Mayorista;
+import ar.com.tutuca.model.Producto;
 
 public class MayoristaDAO implements GenericDAO<Mayorista, Integer> {
 	
 	private CategoriaIvaDAO catDAO;
-	
+
 	public MayoristaDAO(CategoriaIvaDAO c) {
 		this.catDAO = c;
 	}
 
-	public void deleteEnMayProd(int idProducto, List<Mayorista> mayoristas) {
-		try {
-			for (Mayorista may : mayoristas) {
-				PreparedStatement ps1 = Util.prepareStatement(
+	public void deleteEnMayProd(Producto entidad) throws PersistenciaException {
+		for (Mayorista may : entidad.getMayoristas()) {
+			try {
+				PreparedStatement ps = Util.prepareStatement(
 						"DELETE FROM `Sucursal`.`Mayorista_Productos` WHERE `idMayorista`=? and`idProductos`=?;");
-				ps1.setInt(1, may.getIdMayorista());
-				ps1.setInt(2, idProducto);
-				ps1.execute();
+				ps.setInt(1, may.getIdMayorista());
+				ps.setInt(2, entidad.getIdProductos());
+				ps.execute();
+			} catch (ClassNotFoundException | SQLException e) {
+				throw new PersistenciaException(e.getMessage(), e);
 			}
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
 		}
 	}
 
-	public void insertEnMayProd(int idProducto, List<Mayorista> mayoristas) {
-		for (Mayorista may : mayoristas) {
+	public void insertEnMayProd(Producto entidad) throws PersistenciaException {
+		for (Mayorista may : entidad.getMayoristas()) {
 			try {
 				PreparedStatement ps = Util.prepareStatement(
 						"INSERT INTO `Sucursal`.`Mayorista_Productos` (`idMayorista`, `idProductos`) VALUES (?, ?);");
 				ps.setInt(1, may.getIdMayorista());
-				ps.setInt(2, idProducto);
+				ps.setInt(2, entidad.getIdProductos());
 				ps.execute();
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (ClassNotFoundException | SQLException e) {
+				throw new PersistenciaException(e.getMessage(), e);
 			}
 		}
 	}
@@ -59,9 +58,8 @@ public class MayoristaDAO implements GenericDAO<Mayorista, Integer> {
 			while (rs.next()) {
 				Mayorista mayorista = new Mayorista(rs.getInt("idMayorista"), rs.getString("Nombre"),
 						rs.getString("NombreDeFantasia"), rs.getString("Direccion"), rs.getString("Telefono"),
-						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"));
-				mayorista.setCatIva(catDAO.load(rs.getInt("idCategoriasIVA")));
-				
+						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"),
+						catDAO.load(rs.getInt("idCategoriasIVA")));
 				mayoristas.add(mayorista);
 			}
 		} catch (ClassNotFoundException | SQLException e) {
@@ -78,9 +76,8 @@ public class MayoristaDAO implements GenericDAO<Mayorista, Integer> {
 			while (rs.next()) {
 				Mayorista mayorista = new Mayorista(rs.getInt("idMayorista"), rs.getString("Nombre"),
 						rs.getString("NombreDeFantasia"), rs.getString("Direccion"), rs.getString("Telefono"),
-						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"));
-				mayorista.setCatIva(catDAO.load(rs.getInt("idCategoriasIVA")));
-				
+						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"),
+						catDAO.load(rs.getInt("idCategoriasIVA")));
 				r.add(mayorista);
 			}
 		} catch (ClassNotFoundException | SQLException e) {
@@ -91,27 +88,30 @@ public class MayoristaDAO implements GenericDAO<Mayorista, Integer> {
 
 	@Override
 	public Mayorista insert(Mayorista entidad) throws PersistenciaException {
+		Mayorista m = entidad;
 		try {
-			PreparedStatement ps = Util.prepareStatement("INSERT INTO `Sucursal`.`Mayorista` (`Nombre`, `NombreDeFantasia`, `Direccion`, `Telefono`, `NmroIngresosBrutos`, `CUIT`, `idCategoriasIVA`) VALUES (?, ?, ?, ?, ?, ?, ?);");
-			ps.setString(1, entidad.getNombre());
-			ps.setString(2, entidad.getNombreDeFantasia());
-			ps.setString(3, entidad.getDireccion());
-			ps.setString(4, entidad.getTelefono());
-			ps.setString(5, entidad.getNmroIngresosBrutos());
-			ps.setString(6, entidad.getCuit());
-			ps.setInt(7, entidad.getCatIva().getIdCategoriasIVA());
+			PreparedStatement ps = Util.prepareStatement(
+					"INSERT INTO `Sucursal`.`Mayorista` (`Nombre`, `NombreDeFantasia`, `Direccion`, `Telefono`, `NmroIngresosBrutos`, `CUIT`, `idCategoriasIVA`) VALUES (?, ?, ?, ?, ?, ?, ?);");
+			ps.setString(1, m.getNombre());
+			ps.setString(2, m.getNombreDeFantasia());
+			ps.setString(3, m.getDireccion());
+			ps.setString(4, m.getTelefono());
+			ps.setString(5, m.getNmroIngresosBrutos());
+			ps.setString(6, m.getCuit());
+			ps.setInt(7, m.getCatIva().getIdCategoriasIVA());
 			ps.execute();
+			m.setIdMayorista(Util.lastId());
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new PersistenciaException(e.getMessage(), e);
 		}
-		return entidad;
+		return m;
 	}
 
 	@Override
 	public Mayorista update(Mayorista entidad) throws PersistenciaException {
 		try {
-			PreparedStatement ps = Util
-					.prepareStatement("UPDATE `Sucursal`.`Mayorista` SET `Nombre`=?, `NombreDeFantasia`=?, `Direccion`=?, `Telefono`=?, `NmroIngresosBrutos`=?, `CUIT`=?, `idCategoriasIVA`=? WHERE `idMayorista`=?;");
+			PreparedStatement ps = Util.prepareStatement(
+					"UPDATE `Sucursal`.`Mayorista` SET `Nombre`=?, `NombreDeFantasia`=?, `Direccion`=?, `Telefono`=?, `NmroIngresosBrutos`=?, `CUIT`=?, `idCategoriasIVA`=? WHERE `idMayorista`=?;");
 			ps.setString(1, entidad.getNombre());
 			ps.setString(2, entidad.getNombreDeFantasia());
 			ps.setString(3, entidad.getDireccion());
@@ -148,9 +148,9 @@ public class MayoristaDAO implements GenericDAO<Mayorista, Integer> {
 			if (rs.next()) {
 				Mayorista mayorista = new Mayorista(rs.getInt("idMayorista"), rs.getString("Nombre"),
 						rs.getString("NombreDeFantasia"), rs.getString("Direccion"), rs.getString("Telefono"),
-						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"));
-				mayorista.setCatIva(catDAO.load(rs.getInt("idCategoriasIVA")));
-				
+						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"),
+						catDAO.load(rs.getInt("idCategoriasIVA")));
+
 				r = mayorista;
 			}
 		} catch (ClassNotFoundException | SQLException e) {

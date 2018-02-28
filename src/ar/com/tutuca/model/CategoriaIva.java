@@ -8,8 +8,21 @@ public class CategoriaIva {
 	private String nombre;
 	private BigDecimal tasa;
 	private boolean discrimina;
-
+	
+	@Override
+	public String toString() {
+		return String.format("(%s) Name: %s, Tasa:%s%, Discrimina: %s", getIdCategoriasIVA(), getNombre(), getTasa(),
+				isDiscrimina());
+	}
+	
+	// Constructores
 	public CategoriaIva() {
+	}
+	
+	public CategoriaIva(String nombre, BigDecimal tasa, boolean discrimina) {
+		setNombre(nombre);
+		setTasa(tasa);
+		setDiscrimina(discrimina);
 	}
 
 	public CategoriaIva(int idCategoriasIVA, String nombre, BigDecimal tasa, boolean discrimina) {
@@ -18,7 +31,8 @@ public class CategoriaIva {
 		setTasa(tasa);
 		setDiscrimina(discrimina);
 	}
-
+	
+	// Getters
 	public int getIdCategoriasIVA() {
 		return idCategoriasIVA;
 	}
@@ -34,7 +48,8 @@ public class CategoriaIva {
 	public boolean isDiscrimina() {
 		return discrimina;
 	}
-
+	
+	// Setters
 	public void setDiscrimina(boolean discrimina) {
 		this.discrimina = discrimina;
 	}
@@ -49,12 +64,6 @@ public class CategoriaIva {
 
 	public void setTasa(BigDecimal tasa) {
 		this.tasa = tasa;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("(%s) Name: %s, Tasa:%s%, Discrimina: %s", getIdCategoriasIVA(), getNombre(), getTasa(),
-				isDiscrimina());
 	}
 
 }

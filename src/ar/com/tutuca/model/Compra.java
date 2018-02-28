@@ -20,8 +20,46 @@ public class Compra {
 	private List<MetodoPago> metodosPago;
 	private List<CompraDetalle> comprasDetalle;
 
+	@Override
+	public String toString() {
+		return String.format(
+				"(%s) Mayor: %s, TipoDeComp: %s, Fecha: %s, NmroDeComp: %s, Neto1050: %s, Neto2100: %s, Neto2700: %s, Iva1050: %s, Iva2100: %s, Iva2700: %s, Total: %s",
+				getIdCompra(), getMayorista().getIdMayorista(), getTipoDeComprob().getIdTipoDeComprob(), getFecha(),
+				getNmroDeComprobante(), getNeto1050(), getNeto2100(), getNeto2700(), getIva1050(), getIva2100(),
+				getIva2700(), getTotal());
+	}
+
+	public void mostrarMetodoPago() {
+		for (MetodoPago metodos : getMetodosPago()) {
+			System.out.printf("MetodoPago (%s)", metodos.getIdMetodo());
+		}
+	}
+
+	public void mostrarComprasDetalle() {
+		for (CompraDetalle compraDetalle : comprasDetalle) {
+			System.out.printf("ComprasDetalle: (%s), Prod: (%s)", compraDetalle.getIdCompra(),
+					compraDetalle.getProd().getIdProductos());
+		}
+	}
+
 	// Constructores
 	public Compra() {
+	}
+
+	public Compra(Mayorista mayorista, TipoDeComprobante tipoDeComprob, Timestamp fecha, String nmroDeComprobante,
+			double neto1050, double neto2100, double neto2700, double iva1050, double iva2100, double iva2700,
+			double total) {
+		setMayorista(mayorista);
+		setTipoDeComprob(tipoDeComprob);
+		setFecha(fecha);
+		setNmroDeComprobante(nmroDeComprobante);
+		setNeto1050(neto1050);
+		setNeto2100(neto2100);
+		setNeto2700(neto2700);
+		setIva1050(iva1050);
+		setIva2100(iva2100);
+		setIva2700(iva2700);
+		setTotal(total);
 	}
 
 	public Compra(int idCompra, Mayorista mayorista, TipoDeComprobante tipoDeComprob, Timestamp fecha,
@@ -45,11 +83,11 @@ public class Compra {
 	public List<CompraDetalle> getComprasDetalle() {
 		return comprasDetalle;
 	}
-	
+
 	public List<MetodoPago> getMetodosPago() {
 		return metodosPago;
 	}
-	
+
 	public Timestamp getFecha() {
 		return fecha;
 	}
@@ -102,7 +140,7 @@ public class Compra {
 	public void setComprasDetalle(List<CompraDetalle> comprasDetalle) {
 		this.comprasDetalle = comprasDetalle;
 	}
-	
+
 	public void setMetodosPago(List<MetodoPago> metodosPago) {
 		this.metodosPago = metodosPago;
 	}
@@ -153,15 +191,6 @@ public class Compra {
 
 	public void setTotal(double total) {
 		this.total = total;
-	}
-
-	@Override
-	public String toString() {
-		return String.format(
-				"(%s) Mayor: %s, TipoDeComp: %s, Fecha: %s, NmroDeComp: %s, Neto1050: %s, Neto2100: %s, Neto2700: %s, Iva1050: %s, Iva2100: %s, Iva2700: %s, Total: %s",
-				getIdCompra(), getMayorista().getIdMayorista(), getTipoDeComprob().getIdTipoDeComprov(), getFecha(),
-				getNmroDeComprobante(), getNeto1050(), getNeto2100(), getNeto2700(), getIva1050(), getIva2100(),
-				getIva2700(), getTotal());
 	}
 
 }

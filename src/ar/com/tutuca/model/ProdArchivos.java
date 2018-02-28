@@ -5,16 +5,29 @@ public class ProdArchivos {
 	private int idProducto;
 	private Archivo arch;
 	private int orden;
-
+	
+	@Override
+	public String toString() {
+		return String.format("idProducto: (%s), idArchivo: (%s), Orden: %s", getIdProducto(), getArch().getIdArchivo(),
+				getOrden());
+	}
+	
+	// Constructores
 	public ProdArchivos() {
+	}
+	
+	public ProdArchivos(Archivo arch, int orden) {
+		setArch(arch);
+		setOrden(orden);
 	}
 
 	public ProdArchivos(int idProducto, Archivo arch, int orden) {
+		setIdProducto(idProducto);
 		setArch(arch);
 		setOrden(orden);
-		setIdProducto(idProducto);
 	}
 
+	// Getters
 	public int getIdProducto() {
 		return idProducto;
 	}
@@ -27,6 +40,7 @@ public class ProdArchivos {
 		return orden;
 	}
 
+	// Setters
 	public void setIdProducto(int idProducto) {
 		this.idProducto = idProducto;
 	}
@@ -37,12 +51,6 @@ public class ProdArchivos {
 
 	public void setOrden(int orden) {
 		this.orden = orden;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("idProducto: (%s), idArchivo: (%s), Orden: %s", getIdProducto(), getArch().getIdArchivo(),
-				getOrden());
 	}
 
 }

@@ -2,6 +2,7 @@ package ar.com.tutuca.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,25 +22,27 @@ public class CategoriaIvaDAO implements GenericDAO<CategoriaIva, Integer> {
 				r.add(new CategoriaIva(rs.getInt("idCategoriasIVA"), rs.getString("Nombre"), rs.getBigDecimal("Tasa"),
 						rs.getBoolean("Discrimina")));
 			}
-		} catch (Exception e) {
-			e.getMessage();
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
 		}
 		return r;
 	}
 
 	@Override
 	public CategoriaIva insert(CategoriaIva entidad) throws PersistenciaException {
+		CategoriaIva catIva = entidad;
 		try {
 			PreparedStatement ps = Util.prepareStatement(
 					"INSERT INTO `Sucursal`.`CategoriasIVA` (`Nombre`, `Tasa`, `Discrimina`) VALUES (?, ?, ?);");
-			ps.setString(1, entidad.getNombre());
-			ps.setBigDecimal(2, entidad.getTasa());
-			ps.setBoolean(3, entidad.isDiscrimina());
+			ps.setString(1, catIva.getNombre());
+			ps.setBigDecimal(2, catIva.getTasa());
+			ps.setBoolean(3, catIva.isDiscrimina());
 			ps.execute();
-		} catch (Exception e) {
-			e.getStackTrace();
+			catIva.setIdCategoriasIVA(Util.lastId());
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
 		}
-		return entidad;
+		return catIva;
 	}
 
 	@Override
@@ -52,8 +55,8 @@ public class CategoriaIvaDAO implements GenericDAO<CategoriaIva, Integer> {
 			ps.setBoolean(3, entidad.isDiscrimina());
 			ps.setInt(4, entidad.getIdCategoriasIVA());
 			ps.execute();
-		} catch (Exception e) {
-			e.getStackTrace();
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
 		}
 		return entidad;
 	}
@@ -65,8 +68,8 @@ public class CategoriaIvaDAO implements GenericDAO<CategoriaIva, Integer> {
 					.prepareStatement("DELETE FROM `Sucursal`.`CategoriasIVA` WHERE `idCategoriasIVA`=?;");
 			ps.setInt(1, entidad.getIdCategoriasIVA());
 			ps.execute();
-		} catch (Exception e) {
-			e.getStackTrace();
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
 		}
 	}
 
@@ -81,10 +84,9 @@ public class CategoriaIvaDAO implements GenericDAO<CategoriaIva, Integer> {
 				r = new CategoriaIva(rs.getInt("idCategoriasIVA"), rs.getString("Nombre"), rs.getBigDecimal("Tasa"),
 						rs.getBoolean("Discrimina"));
 			}
-		} catch (Exception e) {
-			e.getMessage();
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
 		}
 		return r;
 	}
-
 }

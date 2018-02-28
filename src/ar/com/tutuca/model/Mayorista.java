@@ -10,13 +10,32 @@ public class Mayorista {
 	private String nmroIngresosBrutos;
 	private String cuit;
 	private CategoriaIva catIva;
-
+	
+	@Override
+	public String toString() {
+		return String.format(
+				"(%s) Name: %s, NameFantasia: %s, Direccion: %s, Tel: %s, NmroIngreBrutos: %s, CUIT: %s, idCatIva: %s",
+				getIdMayorista(), getNombre(), getNombreDeFantasia(), getDireccion(), getTelefono(),
+				getNmroIngresosBrutos(), getCuit(), getCatIva().getIdCategoriasIVA());
+	}
+	
 	// Constructores
 	public Mayorista() {
 	}
 
+	public Mayorista(String nombre, String nombreDeFantasia, String direccion, String telefono,
+			String nmroIngresosBrutos, String cuit, CategoriaIva categoriaIVA) {
+		setNombre(nombre);
+		setNombreDeFantasia(nombreDeFantasia);
+		setDireccion(direccion);
+		setTelefono(telefono);
+		setNmroIngresosBrutos(nmroIngresosBrutos);
+		setCuit(cuit);
+		setCatIva(categoriaIVA);
+	}
+
 	public Mayorista(int idMayorista, String nombre, String nombreDeFantasia, String direccion, String telefono,
-			String nmroIngresosBrutos, String cuit) {
+			String nmroIngresosBrutos, String cuit, CategoriaIva categoriaIVA) {
 		setIdMayorista(idMayorista);
 		setNombre(nombre);
 		setNombreDeFantasia(nombreDeFantasia);
@@ -24,6 +43,7 @@ public class Mayorista {
 		setTelefono(telefono);
 		setNmroIngresosBrutos(nmroIngresosBrutos);
 		setCuit(cuit);
+		setCatIva(categoriaIVA);
 	}
 
 	// Getters
@@ -91,13 +111,5 @@ public class Mayorista {
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
-	
-	@Override
-	public String toString() {
-		return String.format(
-				"(%s) Name: %s, NameFantasia: %s, Direccion: %s, Tel: %s, NmroIngreBrutos: %s, CUIT: %s, idCatIva: %s",
-				getIdMayorista(), getNombre(), getNombreDeFantasia(), getDireccion(), getTelefono(),
-				getNmroIngresosBrutos(), getCuit(), getCatIva().getIdCategoriasIVA());
-	}
-	
+
 }

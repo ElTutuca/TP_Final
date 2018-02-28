@@ -15,16 +15,14 @@ import ar.com.tutuca.dao.extras.Exceptions.PersistenciaException;
 import ar.com.tutuca.model.Categoria;
 import ar.com.tutuca.model.Cliente;
 import ar.com.tutuca.model.Marca;
-import ar.com.tutuca.model.Mayorista;
 import ar.com.tutuca.model.MetodoPago;
-import ar.com.tutuca.model.ProdArchivos;
 import ar.com.tutuca.model.Producto;
 import ar.com.tutuca.model.Subcategoria;
 
 public class TestDAO {
 
 	public static void main(String[] args) throws PersistenciaException {
-		
+
 		ArchivoDAO arDAO = new ArchivoDAO();
 		ProdArchivosDAO prodArchDAO = new ProdArchivosDAO(arDAO);
 		CategoriaIvaDAO catIvaDAO = new CategoriaIvaDAO();
@@ -32,16 +30,10 @@ public class TestDAO {
 		MarcaDAO marDAO = new MarcaDAO();
 		SubcategoriaDAO subDAO = new SubcategoriaDAO();
 		CategoriaDAO catDAO = new CategoriaDAO();
-		ProductoDAO proDAO = new ProductoDAO(mayDAO, subDAO, arDAO,prodArchDAO);
+		ProductoDAO proDAO = new ProductoDAO(mayDAO, subDAO, prodArchDAO);
 		ClienteDAO clienteDAO = new ClienteDAO();
 		MetodoPagoDAO mpDAO = new MetodoPagoDAO();
 
-		for (ProdArchivos prod : prodArchDAO.listPorProducto(26)) {
-			System.out.println(prod);
-		}
-		
-		
-		
 		marco("producto");
 		for (Producto p : proDAO.list()) {
 			System.out.println(p);

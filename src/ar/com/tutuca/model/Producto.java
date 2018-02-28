@@ -24,13 +24,57 @@ public class Producto {
 	private List<Subcategoria> subcategoria = new ArrayList<Subcategoria>();
 	private List<ProdArchivos> prodArch = new ArrayList<ProdArchivos>();
 
+	@Override
+	public String toString() {
+		return String.format(
+				"(%s) Cod: %s, Precio: %s, Name: %s, Ubic: %s, StckMax: %s, StckMin: %s, StckIdeal: %s, Stck: %s, Descto: %s, Elim: %s, PorcIVA: %s, Marca: %s",
+				getIdProductos(), getCodigo(), getPrecio(), getNombre(), getUbicacion(), getStockMaximo(),
+				getStockMinimo(), getStockIdeal(), getStock(), getDescuento(), isEliminado(), getPorcentajeIva(),
+				getMarca().getIdMarca());
+	}
+
+	public void mostrarMayoristas() {
+		for (Mayorista mayorista : getMayoristas()) {
+			System.out.printf("May: (%s) ----> %s\n", idProductos, mayorista.getIdMayorista());
+		}
+	}
+
+	public void mostrarSubcategorias() {
+		for (Subcategoria sc : getSubcategoria()) {
+			System.out.printf("Sub: (%s) ----> %s\n", idProductos, sc.getIdSubcategoria());
+		}
+	}
+
+	public void mostrarArchivos() {
+		for (ProdArchivos ar : getProdArch()) {
+			System.out.println(ar);
+		}
+	}
+	
 	// Constructores
 	public Producto() {
 	}
 
+	public Producto(String codigo, double precio, String nombre, String ubicacion, int stockMaximo,
+			int stockMinimo, int stockIdeal, int stock, BigDecimal descuento, boolean eliminado,
+			BigDecimal porcentajeIva, Marca marca) {
+		setCodigo(codigo);
+		setPrecio(precio);
+		setNombre(nombre);
+		setUbicacion(ubicacion);
+		setStockMaximo(stockMaximo);
+		setStockMinimo(stockMinimo);
+		setStockIdeal(stockIdeal);
+		setStock(stock);
+		setDescuento(descuento);
+		setEliminado(eliminado);
+		setPorcentajeIva(porcentajeIva);
+		setMarca(marca);
+	}
+	
 	public Producto(int idProductos, String codigo, double precio, String nombre, String ubicacion, int stockMaximo,
 			int stockMinimo, int stockIdeal, int stock, BigDecimal descuento, boolean eliminado,
-			BigDecimal porcentajeIva) {
+			BigDecimal porcentajeIva, Marca marca) {
 		setIdProductos(idProductos);
 		setCodigo(codigo);
 		setPrecio(precio);
@@ -43,6 +87,7 @@ public class Producto {
 		setDescuento(descuento);
 		setEliminado(eliminado);
 		setPorcentajeIva(porcentajeIva);
+		setMarca(marca);
 	}
 
 	// Getters
@@ -173,33 +218,6 @@ public class Producto {
 
 	public void setUbicacion(String ubicacion) {
 		this.ubicacion = ubicacion;
-	}
-
-	@Override
-	public String toString() {
-		return String.format(
-				"(%s) Cod: %s, Precio: %s, Name: %s, Ubic: %s, StckMax: %s, StckMin: %s, StckIdeal: %s, Stck: %s, Descto: %s, Elim: %s, PorcIVA: %s, Marca: %s",
-				getIdProductos(), getCodigo(), getPrecio(), getNombre(), getUbicacion(), getStockMaximo(),
-				getStockMinimo(), getStockIdeal(), getStock(), getDescuento(), isEliminado(), getPorcentajeIva(),
-				getMarca().getIdMarca());
-	}
-
-	public void mostrarMayoristas() {
-		for (Mayorista mayorista : getMayoristas()) {
-			System.out.printf("May: (%s) ----> %s\n", idProductos, mayorista.getIdMayorista());
-		}
-	}
-
-	public void mostrarSubcategorias() {
-		for (Subcategoria sc : getSubcategoria()) {
-			System.out.printf("Sub: (%s) ----> %s\n", idProductos, sc.getIdSubcategoria());
-		}
-	}
-
-	public void mostrarArchivos() {
-		for (ProdArchivos ar : getProdArch()) {
-			System.out.println(ar);
-		}
 	}
 
 }

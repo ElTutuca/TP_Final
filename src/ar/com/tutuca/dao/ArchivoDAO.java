@@ -2,6 +2,7 @@ package ar.com.tutuca.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,35 +12,6 @@ import ar.com.tutuca.dao.extras.Exceptions.PersistenciaException;
 import ar.com.tutuca.model.Archivo;
 
 public class ArchivoDAO implements GenericDAO<Archivo, Integer> {
-	
-	
-	public void deleteEnProdArch(int id, List<Archivo> archivos) {
-		for (Archivo archivo : archivos) {
-			try {
-				PreparedStatement ps = Util.prepareStatement(
-						"DELETE FROM `Sucursal`.`Productos_Archivos` WHERE `idProductos`=? and`idArchivos`=?;");
-				ps.setInt(1, id);
-				ps.setInt(2, archivo.getIdArchivo());
-				ps.execute();
-			} catch (Exception e) {
-				e.getStackTrace();
-			}
-		}
-	}
-	
-	public void insertEnProdArch(int id, List<Archivo> archivos) {
-		for (Archivo archivo : archivos) {
-			try {
-				PreparedStatement ps = Util.prepareStatement(
-						"INSERT INTO `Sucursal`.`Productos_Archivos` (`idProductos`, `idArchivos`) VALUES (?, ?);");
-				ps.setInt(1, id);
-				ps.setInt(2, archivo.getIdArchivo());
-				ps.execute();
-			} catch (Exception e) {
-				e.getStackTrace();
-			}
-		}
-	}
 
 	public List<Archivo> listPorProducto(int id) throws PersistenciaException {
 		List<Archivo> r = new ArrayList<Archivo>();
@@ -52,8 +24,8 @@ public class ArchivoDAO implements GenericDAO<Archivo, Integer> {
 				r.add(new Archivo(rs.getInt("idArchivos"), rs.getString("PATH"), rs.getString("Nombre"),
 						rs.getString("mimeType"), rs.getInt("Tamaño")));
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
 		}
 		return r;
 	}
@@ -67,26 +39,28 @@ public class ArchivoDAO implements GenericDAO<Archivo, Integer> {
 				r.add(new Archivo(rs.getInt("idArchivos"), rs.getString("PATH"), rs.getString("Nombre"),
 						rs.getString("mimeType"), rs.getInt("Tamaño")));
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
 		}
 		return r;
 	}
 
 	@Override
 	public Archivo insert(Archivo entidad) throws PersistenciaException {
+		Archivo arch = entidad;
 		try {
 			PreparedStatement ps = Util.prepareStatement(
 					"INSERT INTO `Sucursal`.`Archivos` (`PATH`, `Nombre`, `mimeType`, `Tamaño`) VALUES (?, ?, ?, ?);");
-			ps.setString(1, entidad.getPath());
-			ps.setString(2, entidad.getNombre());
-			ps.setString(3, entidad.getMimeType());
-			ps.setInt(4, entidad.getTamaño());
+			ps.setString(1, arch.getPath());
+			ps.setString(2, arch.getNombre());
+			ps.setString(3, arch.getMimeType());
+			ps.setInt(4, arch.getTamaño());
 			ps.execute();
-		} catch (Exception e) {
-			e.getStackTrace();
+			arch.setIdArchivo(Util.lastId());
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
 		}
-		return entidad;
+		return arch;
 	}
 
 	@Override
@@ -100,8 +74,8 @@ public class ArchivoDAO implements GenericDAO<Archivo, Integer> {
 			ps.setInt(4, entidad.getTamaño());
 			ps.setInt(5, entidad.getIdArchivo());
 			ps.execute();
-		} catch (Exception e) {
-			e.getStackTrace();
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
 		}
 		return entidad;
 	}
@@ -112,8 +86,8 @@ public class ArchivoDAO implements GenericDAO<Archivo, Integer> {
 			PreparedStatement ps = Util.prepareStatement("DELETE FROM `Sucursal`.`Archivos` WHERE `idArchivos`=?;");
 			ps.setInt(1, entidad.getIdArchivo());
 			ps.execute();
-		} catch (Exception e) {
-			e.getStackTrace();
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
 		}
 	}
 
@@ -128,8 +102,8 @@ public class ArchivoDAO implements GenericDAO<Archivo, Integer> {
 				r = new Archivo(rs.getInt("idArchivos"), rs.getString("PATH"), rs.getString("Nombre"),
 						rs.getString("mimeType"), rs.getInt("Tamaño"));
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
 		}
 		return r;
 	}

@@ -3,6 +3,7 @@ package ar.com.tutuca.dao;
 import java.sql.PreparedStatement;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import ar.com.tutuca.dao.extras.GenericDAO;
@@ -20,37 +21,38 @@ public class ClienteDAO implements GenericDAO<Cliente, Integer> {
 			ResultSet rs = Util.createStatement().executeQuery(
 					"SELECT c.*, ci.* FROM Clientes c INNER JOIN CategoriasIVA ci ON c.idCategoriasIVA=ci.idCategoriasIVA;");
 			while (rs.next()) {
+				CategoriaIva catIva = new CategoriaIva(rs.getInt("idCategoriasIVA"), rs.getString("Nombre"),
+						rs.getBigDecimal("Tasa"), rs.getBoolean("Discrimina"));
 				Cliente c = new Cliente(rs.getInt("idCliente"), rs.getString("Nombre"),
 						rs.getString("NombreDeFantasia"), rs.getString("Direccion"), rs.getString("Telefono"),
-						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"));
-
-				c.setCatIva(new CategoriaIva(rs.getInt("idCategoriasIVA"), rs.getString("Nombre"),
-						rs.getBigDecimal("Tasa"), rs.getBoolean("Discrimina")));
+						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"), catIva);
 				r.add(c);
 			}
-		} catch (Exception e) {
-			e.getStackTrace();
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
 		}
 		return r;
 	}
 
 	@Override
 	public Cliente insert(Cliente entidad) throws PersistenciaException {
+		Cliente cl = entidad;
 		try {
 			PreparedStatement ps = Util.prepareStatement(
 					"INSERT INTO `Sucursal`.`Clientes` (`Nombre`, `NombreDeFantasia`, `Direccion`, `Telefono`, `NmroIngresosBrutos`, `CUIT`, `idCategoriasIVA`) VALUES (?, ?, ?, ?, ?, ?, ?);");
-			ps.setString(1, entidad.getNombre());
-			ps.setString(2, entidad.getNombreDeFantasia());
-			ps.setString(3, entidad.getDireccion());
-			ps.setString(4, entidad.getTelefono());
-			ps.setString(5, entidad.getNmroIngresosBrutos());
-			ps.setString(6, entidad.getCuit());
-			ps.setInt(7, entidad.getCatIva().getIdCategoriasIVA());
+			ps.setString(1, cl.getNombre());
+			ps.setString(2, cl.getNombreDeFantasia());
+			ps.setString(3, cl.getDireccion());
+			ps.setString(4, cl.getTelefono());
+			ps.setString(5, cl.getNmroIngresosBrutos());
+			ps.setString(6, cl.getCuit());
+			ps.setInt(7, cl.getCatIva().getIdCategoriasIVA());
 			ps.execute();
-		} catch (Exception e) {
-			e.getStackTrace();
+			cl.setIdCliente(Util.lastId());
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
 		}
-		return entidad;
+		return cl;
 	}
 
 	@Override
@@ -67,8 +69,8 @@ public class ClienteDAO implements GenericDAO<Cliente, Integer> {
 			ps.setInt(7, entidad.getCatIva().getIdCategoriasIVA());
 			ps.setInt(8, entidad.getIdCliente());
 			ps.execute();
-		} catch (Exception e) {
-			e.getStackTrace();
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
 		}
 		return entidad;
 	}
@@ -76,14 +78,15 @@ public class ClienteDAO implements GenericDAO<Cliente, Integer> {
 	@Override
 	public void delete(Cliente entidad) throws PersistenciaException {
 		/**
-		 * No tiene codigo adentro.
+		 * No va a funcionar
 		 */
 	}
 
 	@Override
 	public Cliente load(Integer id) throws PersistenciaException {
 		/**
-		 * Carga un cliente;
+		 * Carga un cliente
+		 * 
 		 * @return Cliente
 		 */
 		Cliente r = null;
@@ -93,19 +96,16 @@ public class ClienteDAO implements GenericDAO<Cliente, Integer> {
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
+				CategoriaIva catIva = new CategoriaIva(rs.getInt("idCategoriasIVA"), rs.getString("Nombre"),
+						rs.getBigDecimal("Tasa"), rs.getBoolean("Discrimina"));
 				Cliente c = new Cliente(rs.getInt("idCliente"), rs.getString("Nombre"),
 						rs.getString("NombreDeFantasia"), rs.getString("Direccion"), rs.getString("Telefono"),
-						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"));
-
-				c.setCatIva(new CategoriaIva(rs.getInt("idCategoriasIVA"), rs.getString("Nombre"),
-						rs.getBigDecimal("Tasa"), rs.getBoolean("Discrimina")));
-
+						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"), catIva);
 				r = c;
 			}
-		} catch (Exception e) {
-			e.getStackTrace();
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
 		}
 		return r;
 	}
-
 }

@@ -2,6 +2,7 @@ package ar.com.tutuca.dao;
 
 import java.sql.PreparedStatement;
 
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,13 +18,11 @@ public class ProductoDAO implements GenericDAO<Producto, Integer> {
 
 	private MayoristaDAO mayoristaDAO;
 	private SubcategoriaDAO subcategoriaDAO;
-	private ArchivoDAO archivoDAO;
 	private ProdArchivosDAO prodArchDAO;
 
-	public ProductoDAO(MayoristaDAO mDAO, SubcategoriaDAO scDAO, ArchivoDAO aDAO, ProdArchivosDAO paDAO) {
+	public ProductoDAO(MayoristaDAO mDAO, SubcategoriaDAO scDAO, ProdArchivosDAO paDAO) {
 		mayoristaDAO = mDAO;
 		subcategoriaDAO = scDAO;
-		archivoDAO = aDAO;
 		prodArchDAO = paDAO;
 	}
 
@@ -37,9 +36,8 @@ public class ProductoDAO implements GenericDAO<Producto, Integer> {
 				Producto producto = new Producto(rs.getInt("idProductos"), rs.getString("Codigo"),
 						rs.getDouble("Precio"), rs.getString("Nombre"), rs.getString("Ubicacion"),
 						rs.getInt("StockMaximo"), rs.getInt("StockMinimo"), rs.getInt("StockIdeal"), rs.getInt("Stock"),
-						rs.getBigDecimal("Descuento"), rs.getBoolean("Eliminado"), rs.getBigDecimal("porcentajeIva"));
+						rs.getBigDecimal("Descuento"), rs.getBoolean("Eliminado"), rs.getBigDecimal("porcentajeIva"), marca);
 
-				producto.setMarca(marca);
 				producto.setMayoristas(mayoristaDAO.listPorProducto(producto.getIdProductos()));
 				producto.setSubcategoria(subcategoriaDAO.listPorProducto(producto.getIdProductos()));
 				producto.setProdArch(prodArchDAO.listPorProducto(producto.getIdProductos()));
@@ -62,9 +60,8 @@ public class ProductoDAO implements GenericDAO<Producto, Integer> {
 				Producto producto = new Producto(rs.getInt("idProductos"), rs.getString("Codigo"),
 						rs.getDouble("Precio"), rs.getString("Nombre"), rs.getString("Ubicacion"),
 						rs.getInt("StockMaximo"), rs.getInt("StockMinimo"), rs.getInt("StockIdeal"), rs.getInt("Stock"),
-						rs.getBigDecimal("Descuento"), rs.getBoolean("Eliminado"), rs.getBigDecimal("porcentajeIva"));
+						rs.getBigDecimal("Descuento"), rs.getBoolean("Eliminado"), rs.getBigDecimal("porcentajeIva"), marca);
 
-				producto.setMarca(marca);
 				producto.setMayoristas(mayoristaDAO.listPorProducto(producto.getIdProductos()));
 				producto.setSubcategoria(subcategoriaDAO.listPorProducto(producto.getIdProductos()));
 				producto.setProdArch(prodArchDAO.listPorProducto(producto.getIdProductos()));
@@ -78,32 +75,34 @@ public class ProductoDAO implements GenericDAO<Producto, Integer> {
 
 	@Override
 	public Producto insert(Producto entidad) throws PersistenciaException {
+		Producto prod = entidad;
 		try {
 			PreparedStatement ps = Util.prepareStatement(
 					"INSERT INTO `Sucursal`.`Productos` (`Codigo`, `Precio`, `Nombre`, `Ubicacion`, `StockMaximo`, `StockMinimo`, `StockIdeal`, `Stock`, `Descuento`, `Eliminado`, `PorcentajeIVA`, `idMarca`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
-			ps.setString(1, entidad.getCodigo());
-			ps.setDouble(2, entidad.getPrecio());
-			ps.setString(3, entidad.getNombre());
-			ps.setString(4, entidad.getUbicacion());
-			ps.setInt(5, entidad.getStockMaximo());
-			ps.setInt(6, entidad.getStockMinimo());
-			ps.setInt(7, entidad.getStockIdeal());
-			ps.setInt(8, entidad.getStock());
-			ps.setBigDecimal(9, entidad.getDescuento());
-			ps.setBoolean(10, entidad.isEliminado());
-			ps.setBigDecimal(11, entidad.getPorcentajeIva());
-			ps.setInt(12, entidad.getMarca().getIdMarca());
+			ps.setString(1, prod.getCodigo());
+			ps.setDouble(2, prod.getPrecio());
+			ps.setString(3, prod.getNombre());
+			ps.setString(4, prod.getUbicacion());
+			ps.setInt(5, prod.getStockMaximo());
+			ps.setInt(6, prod.getStockMinimo());
+			ps.setInt(7, prod.getStockIdeal());
+			ps.setInt(8, prod.getStock());
+			ps.setBigDecimal(9, prod.getDescuento());
+			ps.setBoolean(10, prod.isEliminado());
+			ps.setBigDecimal(11, prod.getPorcentajeIva());
+			ps.setInt(12, prod.getMarca().getIdMarca());
 			ps.execute();
 
-			int lastId = Util.lastId();
-			mayoristaDAO.insertEnMayProd(lastId, entidad.getMayoristas());
-			subcategoriaDAO.insertEnSubProd(lastId, entidad.getSubcategoria());
-			archivoDAO.insertEnProdArch(lastId, entidad.getArchivos());
+			prod.setIdProductos(Util.lastId());
+
+			mayoristaDAO.insertEnMayProd(prod);
+			subcategoriaDAO.insertEnSubProd(prod);
+			prodArchDAO.insertPorProducto(prod);
 
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new PersistenciaException(e.getMessage(), e);
 		}
-		return entidad;
+		return prod;
 	}
 
 	@Override
@@ -126,15 +125,14 @@ public class ProductoDAO implements GenericDAO<Producto, Integer> {
 			ps.setInt(13, entidad.getIdProductos());
 			ps.execute();
 
-			mayoristaDAO.deleteEnMayProd(entidad.getIdProductos(), entidad.getMayoristas());
-			mayoristaDAO.insertEnMayProd(entidad.getIdProductos(), entidad.getMayoristas());
+			mayoristaDAO.deleteEnMayProd(entidad);
+			mayoristaDAO.insertEnMayProd(entidad);
 
-			subcategoriaDAO.deleteEnSubProd(entidad.getIdProductos(), entidad.getSubcategoria());
-			subcategoriaDAO.insertEnSubProd(entidad.getIdProductos(), entidad.getSubcategoria());
+			subcategoriaDAO.deleteEnSubProd(entidad);
+			subcategoriaDAO.insertEnSubProd(entidad);
 
-			archivoDAO.deleteEnProdArch(entidad.getIdProductos(), entidad.getArchivos());
-			archivoDAO.insertEnProdArch(entidad.getIdProductos(), entidad.getArchivos());
-
+			prodArchDAO.deletePorProducto(entidad);
+			prodArchDAO.insertPorProducto(entidad);
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new PersistenciaException(e.getMessage(), e);
 		}
@@ -181,12 +179,11 @@ public class ProductoDAO implements GenericDAO<Producto, Integer> {
 				Producto producto = new Producto(rs.getInt("idProductos"), rs.getString("Codigo"),
 						rs.getDouble("Precio"), rs.getString("Nombre"), rs.getString("Ubicacion"),
 						rs.getInt("StockMaximo"), rs.getInt("StockMinimo"), rs.getInt("StockIdeal"), rs.getInt("Stock"),
-						rs.getBigDecimal("Descuento"), rs.getBoolean("Eliminado"), rs.getBigDecimal("porcentajeIva"));
+						rs.getBigDecimal("Descuento"), rs.getBoolean("Eliminado"), rs.getBigDecimal("porcentajeIva"), marca);
 
-				producto.setMarca(marca);
 				producto.setMayoristas(mayoristaDAO.listPorProducto(producto.getIdProductos()));
 				producto.setSubcategoria(subcategoriaDAO.listPorProducto(producto.getIdProductos()));
-				producto.setArchivos(archivoDAO.listPorProducto(producto.getIdProductos()));
+				producto.setProdArch(prodArchDAO.listPorProducto(producto.getIdProductos()));
 				r = producto;
 
 			}
@@ -195,5 +192,4 @@ public class ProductoDAO implements GenericDAO<Producto, Integer> {
 		}
 		return r;
 	}
-
 }

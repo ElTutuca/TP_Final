@@ -29,16 +29,16 @@ public class CategoriaDAO implements GenericDAO<Categoria, Integer> {
 
 	@Override
 	public Categoria insert(Categoria entidad) throws PersistenciaException {
+		Categoria cat = entidad;
 		try {
 			PreparedStatement ps = Util.prepareStatement("INSERT INTO `Sucursal`.`Categoria` (`Categoria`) VALUES (?);");
-
-			ps.setString(1, entidad.getCategoria());
+			ps.setString(1, cat.getCategoria());
 			ps.execute();
-			
+			cat.setIdCategoria(Util.lastId());
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new PersistenciaException(e.getMessage(), e);
 		}
-		return entidad;
+		return cat;
 	}
 
 	@Override
@@ -46,7 +46,6 @@ public class CategoriaDAO implements GenericDAO<Categoria, Integer> {
 		try {
 			PreparedStatement ps = Util
 					.prepareStatement("UPDATE `Sucursal`.`Categoria` SET `Categoria`=? WHERE `idCategoria`=?;");
-
 			ps.setString(1, entidad.getCategoria());
 			ps.setInt(2, entidad.getIdCategoria());
 			ps.execute();
@@ -74,7 +73,6 @@ public class CategoriaDAO implements GenericDAO<Categoria, Integer> {
 			PreparedStatement ps = Util.prepareStatement("SELECT * FROM Categoria WHERE idCategoria=?;");
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
-
 			if (rs.next()) {
 				 r = new Categoria(rs.getInt("idCategoria"), rs.getString("Categoria"));
 			}

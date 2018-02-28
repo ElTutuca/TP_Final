@@ -5,8 +5,17 @@ public class MetodoPago {
 	private int idMetodo;
 	private String descripcion;
 
+	@Override
+	public String toString() {
+		return String.format("(%s) Metodo: %s", getIdMetodo(), getDescripcion());
+	}
+
 	// Constructores
 	public MetodoPago() {
+	}
+
+	public MetodoPago(String descripcion) {
+		setDescripcion(descripcion);
 	}
 
 	public MetodoPago(int idMetodo, String descripcion) {
@@ -30,11 +39,6 @@ public class MetodoPago {
 
 	public void setIdMetodo(int idMetodo) {
 		this.idMetodo = idMetodo;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("(%s) Metodo: %s", getIdMetodo(), getDescripcion());
 	}
 
 }

@@ -11,39 +11,40 @@ import ar.com.tutuca.dao.extras.GenericDAO;
 import ar.com.tutuca.dao.extras.Util;
 import ar.com.tutuca.dao.extras.Exceptions.PersistenciaException;
 import ar.com.tutuca.model.Categoria;
+import ar.com.tutuca.model.Producto;
 import ar.com.tutuca.model.Subcategoria;
 
 public class SubcategoriaDAO implements GenericDAO<Subcategoria, Integer> {
 
-	public void deleteEnSubProd(int id, List<Subcategoria> subcategoria) {
-		for (Subcategoria sc : subcategoria) {
+	public void deleteEnSubProd(Producto entidad) throws PersistenciaException {
+		for (Subcategoria sc : entidad.getSubcategoria()) {
 			try {
 				PreparedStatement ps = Util.prepareStatement(
 						"DELETE FROM `Sucursal`.`Subcategorias_Productos` WHERE `idProductos`=? and`idSubcategoria`=?;");
-				ps.setInt(1, id);
+				ps.setInt(1, entidad.getIdProductos());
 				ps.setInt(2, sc.getIdSubcategoria());
 				ps.execute();
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (ClassNotFoundException | SQLException e) {
+				throw new PersistenciaException(e.getMessage(), e);
 			}
 		}
 	}
 
-	public void insertEnSubProd(int id, List<Subcategoria> subcategoria) {
-		for (Subcategoria sc : subcategoria) {
+	public void insertEnSubProd(Producto entidad) throws PersistenciaException {
+		for (Subcategoria sc : entidad.getSubcategoria()) {
 			try {
 				PreparedStatement ps = Util.prepareStatement(
 						"INSERT INTO `Sucursal`.`Subcategorias_Productos` (`idProductos`, `idSubcategoria`) VALUES (?, ?);");
-				ps.setInt(1, id);
+				ps.setInt(1, entidad.getIdProductos());
 				ps.setInt(2, sc.getIdSubcategoria());
 				ps.execute();
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (ClassNotFoundException | SQLException e) {
+				throw new PersistenciaException(e.getMessage(), e);
 			}
 		}
 	}
 
-	public List<Subcategoria> listPorProducto(int id) {
+	public List<Subcategoria> listPorProducto(int id) throws PersistenciaException {
 		List<Subcategoria> r = new ArrayList<Subcategoria>();
 		try {
 			PreparedStatement ps = Util.prepareStatement(
@@ -55,8 +56,8 @@ public class SubcategoriaDAO implements GenericDAO<Subcategoria, Integer> {
 				Subcategoria s = new Subcategoria(rs.getInt("idSubcategoria"), c, rs.getString("Subcategoria"));
 				r.add(s);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
 		}
 		return r;
 	}
@@ -80,17 +81,18 @@ public class SubcategoriaDAO implements GenericDAO<Subcategoria, Integer> {
 
 	@Override
 	public Subcategoria insert(Subcategoria entidad) throws PersistenciaException {
+		Subcategoria sub = entidad;
 		try {
 			PreparedStatement ps = Util.prepareStatement(
 					"INSERT INTO `Sucursal`.`Subcategoria` (`Subcategoria`, `idCategoria`) VALUES (?, ?);");
-
-			ps.setString(1, entidad.getSubcategoria());
-			ps.setInt(2, entidad.getCategoria().getIdCategoria());
+			ps.setString(1, sub.getSubcategoria());
+			ps.setInt(2, sub.getCategoria().getIdCategoria());
 			ps.execute();
+			sub.setIdSubcategoria(Util.lastId());
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new PersistenciaException(e.getMessage(), e);
 		}
-		return entidad;
+		return sub;
 	}
 
 	@Override
@@ -129,7 +131,6 @@ public class SubcategoriaDAO implements GenericDAO<Subcategoria, Integer> {
 					"SELECT s.*, c.Categoria FROM Subcategoria s INNER JOIN Categoria c ON s.idCategoria=c.idCategoria WHERE s.idSubcategoria=?;");
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
-
 			if (rs.next()) {
 				Categoria c = new Categoria(rs.getInt("idCategoria"), rs.getString("Categoria"));
 				r = new Subcategoria(rs.getInt("idSubcategoria"), c, rs.getString("Subcategoria"));

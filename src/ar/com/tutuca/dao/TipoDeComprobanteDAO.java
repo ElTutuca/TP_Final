@@ -10,7 +10,7 @@ import ar.com.tutuca.dao.extras.Util;
 import ar.com.tutuca.dao.extras.Exceptions.PersistenciaException;
 import ar.com.tutuca.model.TipoDeComprobante;
 
-public class TipoDeComprovanteDAO implements GenericDAO<TipoDeComprobante, Integer> {
+public class TipoDeComprobanteDAO implements GenericDAO<TipoDeComprobante, Integer> {
 
 	@Override
 	public List<TipoDeComprobante> list() throws PersistenciaException {
@@ -50,7 +50,7 @@ public class TipoDeComprovanteDAO implements GenericDAO<TipoDeComprobante, Integ
 			ps.setString(1, entidad.getNombre());
 			ps.setString(2, entidad.getLetra());
 			ps.setString(3, entidad.getAbreviatura());
-			ps.setInt(4, entidad.getIdTipoDeComprov());
+			ps.setInt(4, entidad.getIdTipoDeComprob());
 			ps.execute();
 		} catch (Exception e) {
 			e.getStackTrace();
@@ -63,7 +63,7 @@ public class TipoDeComprovanteDAO implements GenericDAO<TipoDeComprobante, Integ
 		try {
 			PreparedStatement ps = Util
 					.prepareStatement("DELETE FROM `Sucursal`.`TiposDeComprobantes` WHERE `idTiposDeComprob`=?;");
-			ps.setInt(1, entidad.getIdTipoDeComprov());
+			ps.setInt(1, entidad.getIdTipoDeComprob());
 			ps.execute();
 		} catch (Exception e) {
 			e.getStackTrace();

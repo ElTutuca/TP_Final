@@ -1,28 +1,21 @@
 package ar.com.tutuca.model;
 
 public class Marca {
-	
+
 	private int idMarca;
 	private String nombre;
 
-	public int getIdMarca() {
-		return idMarca;
-	}
-
-	public void setIdMarca(int idMarca) {
-		this.idMarca = idMarca;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	@Override
+	public String toString() {
+		return String.format("(%s) Marca: %s", getIdMarca(), getNombre());
 	}
 
 	// Constructores
 	public Marca() {
+	}
+
+	public Marca(String nombre) {
+		setNombre(nombre);
 	}
 
 	public Marca(int id, String nombre) {
@@ -30,9 +23,21 @@ public class Marca {
 		setNombre(nombre);
 	}
 
-	@Override
-	public String toString() {
-		return String.format("(%s) %s", getIdMarca(), getNombre());
+	// Getters
+	public int getIdMarca() {
+		return idMarca;
 	}
 
+	public String getNombre() {
+		return nombre;
+	}
+
+	// Setters
+	public void setIdMarca(int idMarca) {
+		this.idMarca = idMarca;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 }

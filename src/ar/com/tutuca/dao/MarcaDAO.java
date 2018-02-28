@@ -17,7 +17,7 @@ public class MarcaDAO implements GenericDAO<Marca, Integer> {
 	public List<Marca> list() throws PersistenciaException {
 		List<Marca> r = new ArrayList<Marca>();
 		try {
-			ResultSet rs = Util.createStatement().executeQuery("SELECT * FROM Marca ORDER BY Nombre");
+			ResultSet rs = Util.createStatement().executeQuery("SELECT * FROM Marca;");
 			while (rs.next()) {
 				r.add(new Marca(rs.getInt("idMarca"), rs.getString("Nombre")));
 			}
@@ -29,15 +29,17 @@ public class MarcaDAO implements GenericDAO<Marca, Integer> {
 
 	@Override
 	public Marca insert(Marca entidad) throws PersistenciaException {
+		Marca m = entidad;
 		try {
 			PreparedStatement ps = Util.prepareStatement(
 					"INSERT INTO `Sucursal`.`Marca` (`Nombre`) VALUES (?);");
-			ps.setString(1, entidad.getNombre());
+			ps.setString(1, m.getNombre());
 			ps.execute();
+			m.setIdMarca(Util.lastId());
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new PersistenciaException(e.getMessage(), e);
 		}
-		return entidad;
+		return m;
 	}
 
 	@Override
@@ -72,7 +74,6 @@ public class MarcaDAO implements GenericDAO<Marca, Integer> {
 			PreparedStatement ps = Util.prepareStatement("SELECT * FROM Marca WHERE idMarca=?;");
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
-
 			if (rs.next()) {
 				 r = new Marca(rs.getInt("idMarca"), rs.getString("Nombre"));
 			}
