@@ -1,6 +1,8 @@
 package ar.com.tutuca.model;
 
-public class Mayorista {
+import ar.com.tutuca.extras.GenericModel;
+
+public class Mayorista implements GenericModel {
 
 	private int idMayorista;
 	private String nombre;
@@ -10,15 +12,15 @@ public class Mayorista {
 	private String nmroIngresosBrutos;
 	private String cuit;
 	private CategoriaIva catIva;
-	
+
 	@Override
 	public String toString() {
 		return String.format(
 				"(%s) Name: %s, NameFantasia: %s, Direccion: %s, Tel: %s, NmroIngreBrutos: %s, CUIT: %s, idCatIva: %s",
 				getIdMayorista(), getNombre(), getNombreDeFantasia(), getDireccion(), getTelefono(),
-				getNmroIngresosBrutos(), getCuit(), getCatIva().getIdCategoriasIVA());
+				getNmroIngresosBrutos(), getCuit(), getCatIva().getNombre());
 	}
-	
+
 	// Constructores
 	public Mayorista() {
 	}
@@ -78,7 +80,7 @@ public class Mayorista {
 	public String getTelefono() {
 		return telefono;
 	}
-	
+
 	// Setters
 	public void setCatIva(CategoriaIva catIva) {
 		this.catIva = catIva;
@@ -110,6 +112,13 @@ public class Mayorista {
 
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
+	}
+
+	@Override
+	public Object[] getFieldsValues() {
+		Object[] r = { getIdMayorista(), getNombre(), getNombreDeFantasia(), getDireccion(), getTelefono(),
+				getNmroIngresosBrutos(), getCuit(), getCatIva() };
+		return r;
 	}
 
 }

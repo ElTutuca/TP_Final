@@ -1,6 +1,8 @@
 package ar.com.tutuca.model;
 
-public class CompraDetalle {
+import ar.com.tutuca.extras.GenericModel;
+
+public class CompraDetalle implements GenericModel {
 
 	private int idCompra;
 	private Producto prod;

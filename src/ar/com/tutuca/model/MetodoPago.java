@@ -1,6 +1,8 @@
 package ar.com.tutuca.model;
 
-public class MetodoPago {
+import ar.com.tutuca.extras.GenericModel;
+
+public class MetodoPago implements GenericModel {
 
 	private int idMetodo;
 	private String descripcion;

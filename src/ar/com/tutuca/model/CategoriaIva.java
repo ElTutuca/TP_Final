@@ -2,23 +2,25 @@ package ar.com.tutuca.model;
 
 import java.math.BigDecimal;
 
-public class CategoriaIva {
+import ar.com.tutuca.extras.GenericModel;
+
+public class CategoriaIva implements GenericModel {
 
 	private int idCategoriasIVA;
 	private String nombre;
 	private BigDecimal tasa;
 	private boolean discrimina;
-	
+
 	@Override
 	public String toString() {
 		return String.format("(%s) Name: %s, Tasa:%s%, Discrimina: %s", getIdCategoriasIVA(), getNombre(), getTasa(),
 				isDiscrimina());
 	}
-	
+
 	// Constructores
 	public CategoriaIva() {
 	}
-	
+
 	public CategoriaIva(String nombre, BigDecimal tasa, boolean discrimina) {
 		setNombre(nombre);
 		setTasa(tasa);
@@ -31,7 +33,7 @@ public class CategoriaIva {
 		setTasa(tasa);
 		setDiscrimina(discrimina);
 	}
-	
+
 	// Getters
 	public int getIdCategoriasIVA() {
 		return idCategoriasIVA;
@@ -48,7 +50,7 @@ public class CategoriaIva {
 	public boolean isDiscrimina() {
 		return discrimina;
 	}
-	
+
 	// Setters
 	public void setDiscrimina(boolean discrimina) {
 		this.discrimina = discrimina;
@@ -64,6 +66,13 @@ public class CategoriaIva {
 
 	public void setTasa(BigDecimal tasa) {
 		this.tasa = tasa;
+	}
+
+	@Override
+	public Object[] getFieldsValues() {
+		Object[] r = { getIdCategoriasIVA(), getNombre(), getTasa(), isDiscrimina() };
+		return r;
+
 	}
 
 }

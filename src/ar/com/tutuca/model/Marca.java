@@ -1,6 +1,8 @@
 package ar.com.tutuca.model;
 
-public class Marca {
+import ar.com.tutuca.extras.GenericModel;
+
+public class Marca implements GenericModel {
 
 	private int idMarca;
 	private String nombre;

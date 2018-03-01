@@ -1,6 +1,8 @@
 package ar.com.tutuca.model;
 
-public class Archivo {
+import ar.com.tutuca.extras.GenericModel;
+
+public class Archivo implements GenericModel {
 
 	private int idArchivo;
 	private String path;
@@ -73,6 +75,12 @@ public class Archivo {
 
 	public void setTamaño(int tamaño) {
 		this.tamaño = tamaño;
+	}
+
+	@Override
+	public Object[] getFieldsValues() {
+		Object[] r = { getIdArchivo(), getPath(), getNombre(), getMimeType(), getTamaño() };
+		return r;
 	}
 
 }

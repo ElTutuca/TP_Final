@@ -1,6 +1,8 @@
 package ar.com.tutuca.model;
 
-public class TipoDeComprobante {
+import ar.com.tutuca.extras.GenericModel;
+
+public class TipoDeComprobante implements GenericModel {
 
 	private int idTipoDeComprob;
 	private String nombre;

@@ -1,4 +1,4 @@
-package ar.com.tutuca.dao.extras;
+package ar.com.tutuca.extras;
 
 import ar.com.tutuca.dao.ArchivoDAO;
 
@@ -11,7 +11,6 @@ import ar.com.tutuca.dao.MetodoPagoDAO;
 import ar.com.tutuca.dao.ProdArchivosDAO;
 import ar.com.tutuca.dao.ProductoDAO;
 import ar.com.tutuca.dao.SubcategoriaDAO;
-import ar.com.tutuca.dao.extras.Exceptions.PersistenciaException;
 import ar.com.tutuca.model.Categoria;
 import ar.com.tutuca.model.Cliente;
 import ar.com.tutuca.model.Marca;
@@ -31,7 +30,7 @@ public class TestDAO {
 		SubcategoriaDAO subDAO = new SubcategoriaDAO();
 		CategoriaDAO catDAO = new CategoriaDAO();
 		ProductoDAO proDAO = new ProductoDAO(mayDAO, subDAO, prodArchDAO);
-		ClienteDAO clienteDAO = new ClienteDAO();
+		ClienteDAO clienteDAO = new ClienteDAO(catIvaDAO);
 		MetodoPagoDAO mpDAO = new MetodoPagoDAO();
 
 		marco("producto");

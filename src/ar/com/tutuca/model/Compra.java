@@ -3,7 +3,9 @@ package ar.com.tutuca.model;
 import java.sql.Timestamp;
 import java.util.List;
 
-public class Compra {
+import ar.com.tutuca.extras.GenericModel;
+
+public class Compra implements GenericModel {
 
 	private int idCompra;
 	private Mayorista mayorista;
@@ -191,6 +193,14 @@ public class Compra {
 
 	public void setTotal(double total) {
 		this.total = total;
+	}
+
+	@Override
+	public Object[] getFieldsValues() {
+		Object[] r = { getIdCompra(), getMayorista(), getTipoDeComprob(), getFecha(), getNmroDeComprobante(),
+				getNeto1050(), getNeto2100(), getNeto2700(), getIva1050(), getIva2100(), getIva2700(), getTotal(),
+				getMetodosPago(), getComprasDetalle() };
+		return r;
 	}
 
 }

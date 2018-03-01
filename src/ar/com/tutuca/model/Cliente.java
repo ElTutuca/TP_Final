@@ -1,6 +1,8 @@
 package ar.com.tutuca.model;
 
-public class Cliente {
+import ar.com.tutuca.extras.GenericModel;
+
+public class Cliente implements GenericModel {
 
 	private int idCliente;
 	private String nombre;
@@ -110,6 +112,13 @@ public class Cliente {
 
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
+	}
+
+	@Override
+	public Object[] getFieldsValues() {
+		Object[] r = { getIdCliente(), getNombre(), getNombreDeFantasia(), getDireccion(), getTelefono(),
+				getNmroIngresosBrutos(), getCuit(), getCatIva().getNombre() };
+		return r;
 	}
 
 }

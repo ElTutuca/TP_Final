@@ -1,6 +1,8 @@
 package ar.com.tutuca.model;
 
-public class ProdArchivos {
+import ar.com.tutuca.extras.GenericModel;
+
+public class ProdArchivos implements GenericModel {
 
 	private int idProducto;
 	private Archivo arch;

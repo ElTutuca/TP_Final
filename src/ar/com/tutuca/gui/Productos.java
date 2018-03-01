@@ -22,7 +22,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import ar.com.tutuca.dao.MarcaDAO;
-import ar.com.tutuca.dao.extras.Exceptions.PersistenciaException;
+import ar.com.tutuca.extras.PersistenciaException;
 import ar.com.tutuca.model.Marca;
 
 public class Productos extends JFrame {

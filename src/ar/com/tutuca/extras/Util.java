@@ -1,4 +1,4 @@
-package ar.com.tutuca.dao.extras;
+package ar.com.tutuca.extras;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

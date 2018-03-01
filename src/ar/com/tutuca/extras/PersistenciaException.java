@@ -1,4 +1,4 @@
-package ar.com.tutuca.dao.extras.Exceptions;
+package ar.com.tutuca.extras;
 
 public class PersistenciaException extends Exception {
 

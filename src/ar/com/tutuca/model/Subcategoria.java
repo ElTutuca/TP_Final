@@ -1,6 +1,8 @@
 package ar.com.tutuca.model;
 
-public class Subcategoria {
+import ar.com.tutuca.extras.GenericModel;
+
+public class Subcategoria implements GenericModel {
 
 	private int idSubcategoria;
 	private Categoria categoria;

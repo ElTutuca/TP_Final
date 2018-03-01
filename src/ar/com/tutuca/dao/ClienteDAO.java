@@ -6,26 +6,30 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import ar.com.tutuca.dao.extras.GenericDAO;
-import ar.com.tutuca.dao.extras.Util;
-import ar.com.tutuca.dao.extras.Exceptions.PersistenciaException;
+
+import ar.com.tutuca.extras.GenericDAO;
+import ar.com.tutuca.extras.PersistenciaException;
+import ar.com.tutuca.extras.Util;
 import ar.com.tutuca.model.CategoriaIva;
 import ar.com.tutuca.model.Cliente;
 
 public class ClienteDAO implements GenericDAO<Cliente, Integer> {
 
+	private CategoriaIvaDAO catIvaDAO;
+
+	public ClienteDAO(CategoriaIvaDAO catIvaDAO) {
+		this.catIvaDAO = catIvaDAO;
+	}
+
 	@Override
 	public List<Cliente> list() throws PersistenciaException {
 		List<Cliente> r = new ArrayList<Cliente>();
 		try {
-			ResultSet rs = Util.createStatement().executeQuery(
-					"SELECT c.*, ci.* FROM Clientes c INNER JOIN CategoriasIVA ci ON c.idCategoriasIVA=ci.idCategoriasIVA;");
-			while (rs.next()) {
-				CategoriaIva catIva = new CategoriaIva(rs.getInt("idCategoriasIVA"), rs.getString("Nombre"),
-						rs.getBigDecimal("Tasa"), rs.getBoolean("Discrimina"));
+			ResultSet rs = Util.createStatement().executeQuery("SELECT * FROM Clientes;");
+			while (rs.next()) {;
 				Cliente c = new Cliente(rs.getInt("idCliente"), rs.getString("Nombre"),
 						rs.getString("NombreDeFantasia"), rs.getString("Direccion"), rs.getString("Telefono"),
-						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"), catIva);
+						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"), catIvaDAO.load(rs.getInt("idCategoriasIVA")));
 				r.add(c);
 			}
 		} catch (ClassNotFoundException | SQLException e) {
@@ -92,15 +96,13 @@ public class ClienteDAO implements GenericDAO<Cliente, Integer> {
 		Cliente r = null;
 		try {
 			PreparedStatement ps = Util.prepareStatement(
-					"SELECT c.*, ci.* FROM Clientes c INNER JOIN CategoriasIVA ci ON c.idCategoriasIVA=ci.idCategoriasIVA WHERE c.idCliente=?;");
+					"SELECT * FROM Clientes WHERE idCliente=?;");
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				CategoriaIva catIva = new CategoriaIva(rs.getInt("idCategoriasIVA"), rs.getString("Nombre"),
-						rs.getBigDecimal("Tasa"), rs.getBoolean("Discrimina"));
 				Cliente c = new Cliente(rs.getInt("idCliente"), rs.getString("Nombre"),
 						rs.getString("NombreDeFantasia"), rs.getString("Direccion"), rs.getString("Telefono"),
-						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"), catIva);
+						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"), catIvaDAO.load(rs.getInt("idCategoriasIVA")));
 				r = c;
 			}
 		} catch (ClassNotFoundException | SQLException e) {

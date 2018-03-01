@@ -1,9 +1,16 @@
 package ar.com.tutuca.model;
 
-public class Categoria {
+import ar.com.tutuca.extras.GenericModel;
+
+public class Categoria implements GenericModel {
 
 	private int idCategoria;
 	private String categoria;
+	
+	public Object[] getFieldsValues() {
+		Object []objs = {getIdCategoria(), getCategoria()};
+		return objs;
+	}
 
 	@Override
 	public String toString() {

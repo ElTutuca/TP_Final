@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Producto {
+import ar.com.tutuca.extras.GenericModel;
+
+public class Producto implements GenericModel {
 
 	// Atributos
 	private int idProductos;
