@@ -92,7 +92,6 @@ public class ModeloTabla implements TableModel {
 			GenericModel gm = (GenericModel) list.get(rowIndex);
 			r = gm.getFieldsValues();
 		} catch (PersistenciaException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return r[columnIndex];

@@ -13,8 +13,7 @@ public class CategoriaIva implements GenericModel {
 
 	@Override
 	public String toString() {
-		return String.format("(%s) Name: %s, Tasa:%s%, Discrimina: %s", getIdCategoriasIVA(), getNombre(), getTasa(),
-				isDiscrimina());
+		return getNombre();
 	}
 
 	// Constructores
