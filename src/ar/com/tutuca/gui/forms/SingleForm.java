@@ -221,22 +221,18 @@ public class SingleForm extends JFrame {
 			if (alta) {
 				if (model == CATEGORIA_MODEL) {
 					Categoria entidad = new Categoria(txtMain.getText());
-					CategoriaDAO catDAO = new CategoriaDAO();
-					catDAO.insert(entidad);
+					dao.insert(entidad);
 				} else if (model == MARCA_MODEL) {
 					Marca entidad = new Marca(txtMain.getText());
-					MarcaDAO marcaDAO = new MarcaDAO();
-					marcaDAO.insert(entidad);
+					dao.insert(entidad);
 				}
 			} else {
 				if (model == CATEGORIA_MODEL) {
 					Categoria entidad = new Categoria(id, txtMain.getText());
-					CategoriaDAO catDAO = new CategoriaDAO();
-					catDAO.update(entidad);
+					dao.update(entidad);
 				} else if (model == MARCA_MODEL) {
 					Marca entidad = new Marca(id, txtMain.getText());
-					MarcaDAO marcaDAO = new MarcaDAO();
-					marcaDAO.update(entidad);
+					dao.update(entidad);
 				}
 			}
 		} catch (PersistenciaException e) {

@@ -278,8 +278,7 @@ public class MayoristaForm extends JFrame {
 			return;
 		}
 
-		int catIva = selectCatIva == null ? 2 : 1;
-		if (catIva != 1) {
+		if (selectCatIva == null) {
 			JOptionPane.showMessageDialog(this, "Tiene que seleccionar una Categoria Iva.", "Precaucion",
 					JOptionPane.WARNING_MESSAGE);
 			return;

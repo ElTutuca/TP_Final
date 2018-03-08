@@ -20,6 +20,7 @@ import ar.com.tutuca.extras.GenericModel;
 import ar.com.tutuca.extras.PersistenciaException;
 import ar.com.tutuca.gui.forms.MayoristaForm;
 import ar.com.tutuca.gui.forms.SingleForm;
+import ar.com.tutuca.gui.forms.SubcategoriaForm;
 import ar.com.tutuca.gui.tables.ModeloTabla;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -165,7 +166,8 @@ public class GenericABM extends JPanel {
 		} else if (idForm == PRODUCTO_ID) {
 			// TODO form = new ProductoForm();
 		} else if (idForm == SUBCATEGORIA_ID) {
-			// TODO form de subcategoria
+			form = new SubcategoriaForm(superFrame, dao, table, isAlta);
+			return true;
 		} else if (idForm == CATEGORIA_ID) {
 			form = new SingleForm("Categoria", "Categoria", superFrame, isAlta, dao, table, 1, 45);
 			return true;
