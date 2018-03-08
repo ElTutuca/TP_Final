@@ -1,6 +1,5 @@
 package ar.com.tutuca.gui;
 
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -20,18 +19,23 @@ import javax.swing.border.EmptyBorder;
 import ar.com.tutuca.dao.CategoriaIvaDAO;
 import ar.com.tutuca.dao.ClienteDAO;
 import ar.com.tutuca.dao.MayoristaDAO;
-import ar.com.tutuca.gui.forms.MayoristaForm;
 import ar.com.tutuca.gui.panels.GenericABM;
 import ar.com.tutuca.gui.panels.HomePanel;
+import ar.com.tutuca.gui.panels.ProductosPanel;
 
 public class Principal extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2729982729672823163L;
 	private MayoristaDAO mayDAO = new MayoristaDAO(new CategoriaIvaDAO());
 	private ClienteDAO clDAO = new ClienteDAO(new CategoriaIvaDAO());
-	private JPanel homePanel = new HomePanel();
+	private JPanel homePanel;
 	private JPanel mayPanel;
 	private JPanel clPanel;
 	private JPanel contentPane;
+	private JPanel prodPanel;
 
 	/**
 	 * Launch the application.
@@ -81,10 +85,6 @@ public class Principal extends JFrame {
 						.addContainerGap()));
 		panelIzquierda.setLayout(null);
 
-		JButton btnProductos = new JButton("");
-		btnProductos.setBounds(12, 132, 90, 90);
-		panelIzquierda.add(btnProductos);
-
 		JLabel lblProductos = new JLabel("Productos");
 		lblProductos.setBounds(12, 224, 90, 15);
 		panelIzquierda.add(lblProductos);
@@ -107,36 +107,48 @@ public class Principal extends JFrame {
 		contentPane.setLayout(gl_contentPane);
 
 		// Carga paneles
-		panelDerecha.add(homePanel);
-		homePanel.setVisible(true);
-
+		homePanel = new HomePanel();
 		mayPanel = new GenericABM("Mayoristas", mayDAO, this, 1);
-		mayPanel.setVisible(false);
-		panelDerecha.add(mayPanel);
-
 		clPanel = new GenericABM("Clientes", clDAO, this, 2);
-		clPanel.setVisible(false);
-		panelDerecha.add(clPanel);
+		prodPanel = new ProductosPanel(this);
+		
 		panelDerecha.setLayout(new CardLayout(0, 0));
-		panelDerecha.add(homePanel, "name_19263292375661");
-		panelDerecha.add(mayPanel, "name_19263325384853");
-		panelDerecha.add(clPanel, "name_19263339766640");
+		panelDerecha.add(homePanel, "home");
+		panelDerecha.add(mayPanel, "mayorista");
+		panelDerecha.add(clPanel, "cliente");
+		panelDerecha.add(prodPanel, "productos");
+
+		CardLayout cl = (CardLayout) (panelDerecha.getLayout());
+		cl.show(panelDerecha, "homePanel");
+		
+		JButton btnProductos = new JButton("");
+		btnProductos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CardLayout cl = (CardLayout) (panelDerecha.getLayout());
+				cl.show(panelDerecha, "productos");
+			}
+		});
+		btnProductos.setBounds(12, 132, 90, 90);
+		panelIzquierda.add(btnProductos);
 
 		JButton btnMayoristas = new JButton("");
 		btnMayoristas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				loadPanel(mayPanel);
+				CardLayout cl = (CardLayout) (panelDerecha.getLayout());
+				cl.show(panelDerecha, "mayorista");
 			}
 		});
+
 		btnMayoristas.setBounds(12, 489, 90, 90);
 		panelIzquierda.add(btnMayoristas);
-
+		
 		JButton btnClientes = new JButton("");
 		btnClientes.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				loadPanel(clPanel);
+				CardLayout cl = (CardLayout) (panelDerecha.getLayout());
+				cl.show(panelDerecha, "cliente");
 			}
 		});
 		btnClientes.setBounds(12, 370, 90, 90);
@@ -145,7 +157,8 @@ public class Principal extends JFrame {
 		JButton btnHome = new JButton("");
 		btnHome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				loadPanel(homePanel);
+				CardLayout cl = (CardLayout) (panelDerecha.getLayout());
+				cl.show(panelDerecha, "home");
 			}
 		});
 		btnHome.setBounds(12, 13, 90, 90);
@@ -154,14 +167,6 @@ public class Principal extends JFrame {
 		JLabel lblMain = new JLabel("Home");
 		lblMain.setBounds(12, 105, 90, 15);
 		panelIzquierda.add(lblMain);
-	}
-
-	private void loadPanel(JPanel panel) {
-		mayPanel.setVisible(false);
-		homePanel.setVisible(false);
-		clPanel.setVisible(false);
-
-		panel.setVisible(true);
 	}
 
 }

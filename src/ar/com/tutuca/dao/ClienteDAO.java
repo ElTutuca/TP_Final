@@ -10,7 +10,6 @@ import java.util.List;
 import ar.com.tutuca.extras.GenericDAO;
 import ar.com.tutuca.extras.PersistenciaException;
 import ar.com.tutuca.extras.Util;
-import ar.com.tutuca.model.CategoriaIva;
 import ar.com.tutuca.model.Cliente;
 
 public class ClienteDAO implements GenericDAO<Cliente, Integer> {
@@ -26,10 +25,12 @@ public class ClienteDAO implements GenericDAO<Cliente, Integer> {
 		List<Cliente> r = new ArrayList<Cliente>();
 		try {
 			ResultSet rs = Util.createStatement().executeQuery("SELECT * FROM Clientes;");
-			while (rs.next()) {;
+			while (rs.next()) {
+				;
 				Cliente c = new Cliente(rs.getInt("idCliente"), rs.getString("Nombre"),
 						rs.getString("NombreDeFantasia"), rs.getString("Direccion"), rs.getString("Telefono"),
-						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"), catIvaDAO.load(rs.getInt("idCategoriasIVA")));
+						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"),
+						catIvaDAO.load(rs.getInt("idCategoriasIVA")));
 				r.add(c);
 			}
 		} catch (ClassNotFoundException | SQLException e) {
@@ -81,6 +82,13 @@ public class ClienteDAO implements GenericDAO<Cliente, Integer> {
 
 	@Override
 	public void delete(Cliente entidad) throws PersistenciaException {
+		try {
+			PreparedStatement ps = Util.prepareStatement("DELETE FROM `Sucursal`.`Clientes` WHERE `idCliente`=?;");
+			ps.setInt(1, entidad.getIdCliente());
+			ps.execute();
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
+		}
 		/**
 		 * No va a funcionar
 		 */
@@ -95,14 +103,14 @@ public class ClienteDAO implements GenericDAO<Cliente, Integer> {
 		 */
 		Cliente r = null;
 		try {
-			PreparedStatement ps = Util.prepareStatement(
-					"SELECT * FROM Clientes WHERE idCliente=?;");
+			PreparedStatement ps = Util.prepareStatement("SELECT * FROM Clientes WHERE idCliente=?;");
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				Cliente c = new Cliente(rs.getInt("idCliente"), rs.getString("Nombre"),
 						rs.getString("NombreDeFantasia"), rs.getString("Direccion"), rs.getString("Telefono"),
-						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"), catIvaDAO.load(rs.getInt("idCategoriasIVA")));
+						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"),
+						catIvaDAO.load(rs.getInt("idCategoriasIVA")));
 				r = c;
 			}
 		} catch (ClassNotFoundException | SQLException e) {

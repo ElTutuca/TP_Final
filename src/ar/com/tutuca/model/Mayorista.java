@@ -116,8 +116,15 @@ public class Mayorista implements GenericModel {
 
 	@Override
 	public Object[] getFieldsValues() {
-		Object[] r = { getIdMayorista(), getNombre(), getNombreDeFantasia(), getDireccion(), getTelefono(),
-				getNmroIngresosBrutos(), getCuit(), getCatIva() };
+		Object[] r = { getNombre(), getNombreDeFantasia(), getDireccion(), getTelefono(), getNmroIngresosBrutos(),
+				getCuit(), getCatIva().getNombre() };
+		return r;
+	}
+
+	@Override
+	public String[] getFieldNames() {
+		String[] r = { "Nombre", "Nombre de Fantasia", "Direccion", "Telefono", "Nmro de Ingresos", "CUIT",
+				"Categoria Iva" };
 		return r;
 	}
 

@@ -20,6 +20,8 @@ import ar.com.tutuca.extras.GenericModel;
 import ar.com.tutuca.extras.PersistenciaException;
 import ar.com.tutuca.gui.forms.MayoristaForm;
 import ar.com.tutuca.gui.tables.ModeloTabla;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class GenericABM extends JPanel {
 	private JTable table;
@@ -29,26 +31,29 @@ public class GenericABM extends JPanel {
 	 * Create the panel.
 	 */
 
-	// Pide una tabla y formularios para las ventanas de "Nuevo", "Modificar",
-	// "Eliminar". (Posiblemente un DAO)
 	public GenericABM(String nombre, GenericDAO dao, JFrame superFrame, int idForm) {
 		JScrollPane scrollPane = new JScrollPane();
-
+		
+		// Botones y lblTabla
 		JButton btnNuevo = new JButton("Nuevo");
 		btnNuevo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setForm(idForm, dao, superFrame);
-				form.setVisible(true);
-				superFrame.setEnabled(false);
+				boolean isOk = setForm(idForm, dao, superFrame, true);
+				if (isOk) {
+					form.setVisible(true);
+					superFrame.setEnabled(false);
+				}
 			}
 		});
 
 		JButton btnModificar = new JButton("Modificar");
 		btnModificar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setForm(idForm, dao, superFrame);
-				form.setVisible(true);
-				superFrame.setEnabled(false);
+				boolean isOk = setForm(idForm, dao, superFrame, false);
+				if (isOk) {
+					form.setVisible(true);
+					superFrame.setEnabled(false);
+				}
 			}
 		});
 
@@ -56,37 +61,44 @@ public class GenericABM extends JPanel {
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				List<GenericModel> daoList;
-				try {
-					if (table.getSelectedRow() != -1) {
+
+				if (table.getSelectedRow() != -1) {
+					try {
 						daoList = dao.list();
 						GenericModel gm = daoList.get(table.getSelectedRow());
 						int response = JOptionPane.showConfirmDialog(null, "Esta seguro que desea eliminar?",
 								"Confirme", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 						if (response == JOptionPane.YES_OPTION) {
 							dao.delete(gm);
-							table.setModel(new ModeloTabla(dao));
+							table.setModel(new ModeloTabla(dao.list()));
 						}
-					} else {
-						JOptionPane.showMessageDialog(superFrame,
-								"Tiene que elegir una fila en la tabla para poder eliminar.", "Precaucion",
-								JOptionPane.ERROR_MESSAGE);
+					} catch (PersistenciaException e) {
+						JOptionPane.showMessageDialog(superFrame, "No se puede borrar porque esta siendo usado.",
+								"ERROR", JOptionPane.ERROR_MESSAGE);
+						e.printStackTrace();
 					}
+				} else {
+					JOptionPane.showMessageDialog(superFrame,
+							"Tiene que elegir una fila en la tabla para poder eliminar.", "Precaucion",
+							JOptionPane.ERROR_MESSAGE);
+				}
 
+			}
+		});
+		
+		JButton btnRefresh = new JButton("Refrescar");
+		btnRefresh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					table.setModel(new ModeloTabla(dao.list()));
 				} catch (PersistenciaException e) {
 					e.printStackTrace();
 				}
 			}
 		});
-
 		JLabel lblTabla = new JLabel(nombre);
-
-		JButton btnRefresh = new JButton("Refrescar");
-		btnRefresh.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				table.setModel(new ModeloTabla(dao));
-			}
-		});
-
+		
+		// Ubicacion de todo el panel
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
 				.createSequentialGroup().addContainerGap()
@@ -107,19 +119,45 @@ public class GenericABM extends JPanel {
 								GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)))
 				.addGap(35).addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 548, Short.MAX_VALUE)
 				.addContainerGap()));
+		
+		// Setteo de la tabla
 
-		table = new JTable(new ModeloTabla(dao));
+		try {
+			table = new JTable(new ModeloTabla(dao.list()));
+			table.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					if (arg0.getClickCount() == 2) {
+						// TODO JDialog a Producto
+					}
+				}
+			});
+		} catch (PersistenciaException e1) {
+			e1.printStackTrace();
+		}
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(table);
 		setLayout(groupLayout);
 
 	}
 
-	private void setForm(int idForm, GenericDAO dao, JFrame superFrame) {
-		if (idForm == 1) {
-			form = new MayoristaForm(superFrame, true, dao, table);
-		} else if (idForm == 2) {
-			
+	private boolean setForm(int idForm, GenericDAO dao, JFrame superFrame, boolean isAlta) {
+		if (!isAlta) {
+			if (table.getSelectedRow() == -1) {
+				JOptionPane.showMessageDialog(this, "Para modificar tiene que elegir una fila de la tabla.",
+						"Precaucion", JOptionPane.WARNING_MESSAGE);
+				return false;
+			}
 		}
+		if (idForm == 1) {
+			form = new MayoristaForm(superFrame, isAlta, dao, table, true);
+			return true;
+		} else if (idForm == 2) {
+			form = new MayoristaForm(superFrame, isAlta, dao, table, false);
+			return true;
+		} else if (idForm == 3) {
+			// TODO form = new ProductoForm();
+		}
+		return false;
 	}
 }

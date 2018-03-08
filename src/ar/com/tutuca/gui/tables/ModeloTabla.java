@@ -13,104 +13,55 @@ import ar.com.tutuca.extras.PersistenciaException;
 
 public class ModeloTabla implements TableModel {
 
-	private GenericDAO dao;
+	private List<GenericDAO> daoList;
 
 	// Constructor
-	public ModeloTabla(GenericDAO dao) {
-		this.dao = dao;
+	public ModeloTabla( List<GenericDAO> daoList) {
+		this.daoList = daoList;
 	}
 
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
 		List<Class> classes = new ArrayList<Class>();
-		try {
-			List list = dao.list();
-			if (!list.isEmpty()) {
-				Object obj = list.get(0);
-				Field[] fields = (obj.getClass()).getDeclaredFields();
-				for (Field field : fields) {
-					classes.add(field.getType());
-				}
-			}
-		} catch (PersistenciaException e) {
-			e.printStackTrace();
+		Object obj = daoList.get(0);
+		Field[] fields = (obj.getClass()).getDeclaredFields();
+		for (Field field : fields) {
+			classes.add(field.getType());
 		}
 		return classes.get(columnIndex);
 	}
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		List<String> fieldsNames = new ArrayList<String>();
-		try {
-			List list = dao.list();
-			if (!list.isEmpty()) {
-				Object obj = list.get(0);
-				Field[] fields = (obj.getClass()).getDeclaredFields();
-				for (Field field : fields) {
-					fieldsNames.add(field.getName());
-				}
-			}
-		} catch (PersistenciaException e) {
-			e.printStackTrace();
-		}
-		return fieldsNames.get(columnIndex);
+		GenericModel gm = (GenericModel) daoList.get(0);
+		String[] names = gm.getFieldNames();
+		return names[columnIndex];
 	}
 
 	@Override
 	public int getColumnCount() {
-		int count = 0;
-		try {
-			List list = dao.list();
-			if (!list.isEmpty()) {
-				Object obj = list.get(0);
-				Field[] fields = (obj.getClass()).getDeclaredFields();
-				count = fields.length;
-			}
-		} catch (PersistenciaException e) {
-			e.printStackTrace();
-		}
-		return count;
+		GenericModel gm = (GenericModel) daoList.get(0);
+		return gm.getFieldsValues().length;
 	}
 
 	@Override
 	public int getRowCount() {
-		int count = 0;
-		try {
-			count = dao.list().size();
-		} catch (PersistenciaException e) {
-			e.printStackTrace();
-		}
-		return count;
+		return daoList.size();
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		List list;
 		Object[] r = null;
-		try {
-			list = dao.list();
-			GenericModel gm = (GenericModel) list.get(rowIndex);
+			GenericModel gm = (GenericModel) daoList.get(rowIndex);
 			r = gm.getFieldsValues();
-		} catch (PersistenciaException e) {
-			e.printStackTrace();
-		}
 		return r[columnIndex];
 	}
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		// TODO Hacer esta cagada :(
-		try {
-			List list = dao.list();
-			if (!list.isEmpty()) {
-				Object obj = list.get(rowIndex);
-				Field[] fields = (obj.getClass()).getDeclaredFields();
-			}
-		} catch (PersistenciaException e) {
-			e.printStackTrace();
-		}
+		// No se va a usar NUNCA
 	}
-	
+
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 		return false;
@@ -119,7 +70,7 @@ public class ModeloTabla implements TableModel {
 	@Override
 	public void removeTableModelListener(TableModelListener l) {
 	}
-	
+
 	@Override
 	public void addTableModelListener(TableModelListener l) {
 	}

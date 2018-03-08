@@ -52,14 +52,13 @@ public class Producto implements GenericModel {
 			System.out.println(ar);
 		}
 	}
-	
+
 	// Constructores
 	public Producto() {
 	}
 
-	public Producto(String codigo, double precio, String nombre, String ubicacion, int stockMaximo,
-			int stockMinimo, int stockIdeal, int stock, BigDecimal descuento, boolean eliminado,
-			BigDecimal porcentajeIva, Marca marca) {
+	public Producto(String codigo, double precio, String nombre, String ubicacion, int stockMaximo, int stockMinimo,
+			int stockIdeal, int stock, BigDecimal descuento, boolean eliminado, BigDecimal porcentajeIva, Marca marca) {
 		setCodigo(codigo);
 		setPrecio(precio);
 		setNombre(nombre);
@@ -73,7 +72,7 @@ public class Producto implements GenericModel {
 		setPorcentajeIva(porcentajeIva);
 		setMarca(marca);
 	}
-	
+
 	public Producto(int idProductos, String codigo, double precio, String nombre, String ubicacion, int stockMaximo,
 			int stockMinimo, int stockIdeal, int stock, BigDecimal descuento, boolean eliminado,
 			BigDecimal porcentajeIva, Marca marca) {
@@ -220,6 +219,21 @@ public class Producto implements GenericModel {
 
 	public void setUbicacion(String ubicacion) {
 		this.ubicacion = ubicacion;
+	}
+
+	@Override
+	public Object[] getFieldsValues() {
+		String elim = isEliminado() ? "Eliminado" : null;
+		Object[] r = { getCodigo(), getPrecio(), getNombre(), getUbicacion(), getStockMaximo(), getStockMinimo(),
+				getStockIdeal(), getStock(), getDescuento(), elim, getPorcentajeIva(), getMarca().getNombre() };
+		return r;
+	}
+
+	@Override
+	public String[] getFieldNames() {
+		String[] r = { "Codigo", "Precio", "Nombre", "Ubicacion", "Stock Max", "Stock Min", "Stock Ideal", "Stock",
+				"Descuento", "Eliminado", "Porcentaje Iva", "Marca" };
+		return r;
 	}
 
 }

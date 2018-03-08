@@ -19,17 +19,22 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import ar.com.tutuca.dao.CategoriaIvaDAO;
+import ar.com.tutuca.dao.ClienteDAO;
 import ar.com.tutuca.dao.MayoristaDAO;
 import ar.com.tutuca.extras.GenericDAO;
+import ar.com.tutuca.extras.GenericModel;
 import ar.com.tutuca.extras.PersistenciaException;
 import ar.com.tutuca.gui.tables.ModeloTabla;
 import ar.com.tutuca.model.CategoriaIva;
+import ar.com.tutuca.model.Cliente;
 import ar.com.tutuca.model.Mayorista;
 
 public class MayoristaForm extends JFrame {
 
 	private CategoriaIvaDAO catIvaDAO = new CategoriaIvaDAO();
 	private MayoristaDAO mayDAO = new MayoristaDAO(catIvaDAO);
+	private ClienteDAO clDAO = new ClienteDAO(catIvaDAO);
+	private GenericModel genericModel;
 	private JPanel contentPane;
 	private JTextField txtNombre;
 	private JTextField txtNombreDeFantasia;
@@ -44,6 +49,8 @@ public class MayoristaForm extends JFrame {
 	private static GenericDAO dao;
 	private static JTable table;
 	private Mayorista selectMayorista;
+	private Cliente selectCliente;
+	private static boolean isMayorista;
 
 	/**
 	 * Launch the application.
@@ -52,7 +59,7 @@ public class MayoristaForm extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MayoristaForm frame = new MayoristaForm(superFrame, alta, dao, table);
+					MayoristaForm frame = new MayoristaForm(superFrame, alta, dao, table, isMayorista);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -64,7 +71,8 @@ public class MayoristaForm extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MayoristaForm(JFrame superFrame, boolean alta, GenericDAO dao, JTable table) {
+	public MayoristaForm(JFrame superFrame, boolean alta, GenericDAO dao, JTable table, boolean isMayorista) {
+		MayoristaForm.isMayorista = isMayorista;
 		MayoristaForm.dao = dao;
 		MayoristaForm.table = table;
 		MayoristaForm.alta = alta;
@@ -73,7 +81,7 @@ public class MayoristaForm extends JFrame {
 		JFrame frame = this;
 		setAlwaysOnTop(true);
 		setResizable(false);
-		setTitle("Mayorista");
+		setTitle((isMayorista ? "Mayorista" : "Cliente"));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 630, 176);
 		contentPane = new JPanel();
@@ -82,8 +90,12 @@ public class MayoristaForm extends JFrame {
 
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				table.setModel(new ModeloTabla(dao));
-				superFrame.setEnabled(true);
+				try {
+					table.setModel(new ModeloTabla(dao.list()));
+					superFrame.setEnabled(true);
+				} catch (PersistenciaException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 
@@ -157,17 +169,26 @@ public class MayoristaForm extends JFrame {
 		btnCrear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (alta) {
-					altaModifica(true, 0);
-					table.setModel(new ModeloTabla(dao));
-					superFrame.setEnabled(true);
-					frame.dispose();
-					return;
+					try {
+						altaModifica(true, 0);
+						table.setModel(new ModeloTabla(dao.list()));
+						superFrame.setEnabled(true);
+						frame.dispose();
+						return;
+					} catch (PersistenciaException e1) {
+						e1.printStackTrace();
+					}
 				} else {
-					altaModifica(false, selectMayorista.getIdMayorista());
-					table.setModel(new ModeloTabla(dao));
-					superFrame.setEnabled(true);
-					frame.dispose();
-					return;
+					try {
+						int id = isMayorista ? selectMayorista.getIdMayorista() : selectCliente.getIdCliente();
+						altaModifica(false, id);
+						table.setModel(new ModeloTabla(dao.list()));
+						superFrame.setEnabled(true);
+						frame.dispose();
+						return;
+					} catch (PersistenciaException e1) {
+						e1.printStackTrace();
+					}
 				}
 			}
 		});
@@ -176,9 +197,13 @@ public class MayoristaForm extends JFrame {
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				table.setModel(new ModeloTabla(dao));
-				superFrame.setEnabled(true);
-				frame.dispose();
+				try {
+					table.setModel(new ModeloTabla(dao.list()));
+					superFrame.setEnabled(true);
+					frame.dispose();
+				} catch (PersistenciaException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnCancelar.setBounds(470, 102, 96, 25);
@@ -204,21 +229,33 @@ public class MayoristaForm extends JFrame {
 		if (!alta) {
 			if (table.getSelectedRow() != -1) {
 				try {
-					List<Mayorista> mayList = mayDAO.list();
-					selectMayorista = mayList.get(table.getSelectedRow());
-					txtNombre.setText(selectMayorista.getNombre());
-					txtNombreDeFantasia.setText(selectMayorista.getNombreDeFantasia());
-					txtDireccion.setText(selectMayorista.getDireccion());
-					txtTelefono.setText(selectMayorista.getTelefono());
-					txtCuit.setText(selectMayorista.getCuit());
-					txtNmroDeIngresos.setText(selectMayorista.getNmroIngresosBrutos());
-					comboBox.setSelectedItem(selectMayorista.getCatIva().getNombre());
+					if (isMayorista) {
+						List<Mayorista> mayList = mayDAO.list();
+						selectMayorista = mayList.get(table.getSelectedRow());
+						txtNombre.setText(selectMayorista.getNombre());
+						txtNombreDeFantasia.setText(selectMayorista.getNombreDeFantasia());
+						txtDireccion.setText(selectMayorista.getDireccion());
+						txtTelefono.setText(selectMayorista.getTelefono());
+						txtCuit.setText(selectMayorista.getCuit());
+						txtNmroDeIngresos.setText(selectMayorista.getNmroIngresosBrutos());
+						comboBox.setSelectedItem(selectMayorista.getCatIva().getNombre());
+					} else {
+						List<Cliente> clList = clDAO.list();
+						selectCliente = clList.get(table.getSelectedRow());
+						txtNombre.setText(selectCliente.getNombre());
+						txtNombreDeFantasia.setText(selectCliente.getNombreDeFantasia());
+						txtDireccion.setText(selectCliente.getDireccion());
+						txtTelefono.setText(selectCliente.getTelefono());
+						txtCuit.setText(selectCliente.getCuit());
+						txtNmroDeIngresos.setText(selectCliente.getNmroIngresosBrutos());
+						comboBox.setSelectedItem(selectCliente.getCatIva().getNombre());
+					}
 				} catch (PersistenciaException e1) {
 					e1.printStackTrace();
 				}
 			} else {
-				JOptionPane.showMessageDialog(this, "Para modificar tiene que elegir un Mayorista ", "Precaucion",
-						JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Para modificar tiene que elegir una fila de la tabla.",
+						"Precaucion", JOptionPane.WARNING_MESSAGE);
 				superFrame.setEnabled(true);
 				chau = true;
 			}
@@ -361,49 +398,45 @@ public class MayoristaForm extends JFrame {
 		if (estaSeguro == true) {
 			int response = JOptionPane.showConfirmDialog(null, "Faltan algunos campos. Esta seguro?", "Confirme",
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-			if (response == JOptionPane.YES_OPTION) {
-				try {
-					if (alta) {
-						Mayorista entidad = new Mayorista(txtNombre.getText(), isNull(txtNombreDeFantasia),
-								isNull(txtDireccion), isNull(txtTelefono), isNull(txtNmroDeIngresos), isNull(txtCuit),
-								selectCatIva);
-						mayDAO.insert(entidad);
-						return;
-					} else {
-						Mayorista entidad = new Mayorista(id, txtNombre.getText(), isNull(txtNombreDeFantasia),
-								isNull(txtDireccion), isNull(txtTelefono), isNull(txtNmroDeIngresos), isNull(txtCuit),
-								selectCatIva);
-						mayDAO.update(entidad);
-						return;
-					}
-				} catch (PersistenciaException e) {
-					JOptionPane.showMessageDialog(this, "Error de persistensia.", "Error", JOptionPane.ERROR_MESSAGE);
-					e.printStackTrace();
-					return;
-				}
-			} else {
+			if (response != JOptionPane.YES_OPTION) {
 				return;
 			}
-		} else {
-			try {
-				if (alta) {
+		}
+		
+		try {
+			if (alta) {
+				if (isMayorista) {
 					Mayorista entidad = new Mayorista(txtNombre.getText(), isNull(txtNombreDeFantasia),
-							isNull(txtDireccion), isNull(txtTelefono), isNull(txtNmroDeIngresos), isNull(txtCuit),
-							selectCatIva);
+							isNull(txtDireccion), isNull(txtTelefono), isNull(txtNmroDeIngresos),
+							isNull(txtCuit), selectCatIva);
 					mayDAO.insert(entidad);
 					return;
 				} else {
-					Mayorista entidad = new Mayorista(id, txtNombre.getText(), isNull(txtNombreDeFantasia),
-							isNull(txtDireccion), isNull(txtTelefono), isNull(txtNmroDeIngresos), isNull(txtCuit),
-							selectCatIva);
-					mayDAO.update(entidad);
+					Cliente entidad = new Cliente(txtNombre.getText(), isNull(txtNombreDeFantasia),
+							isNull(txtDireccion), isNull(txtTelefono), isNull(txtNmroDeIngresos),
+							isNull(txtCuit), selectCatIva);
+					clDAO.insert(entidad);
 					return;
 				}
-			} catch (PersistenciaException e) {
-				JOptionPane.showMessageDialog(this, "Error de persistensia.", "Error", JOptionPane.ERROR_MESSAGE);
-				e.printStackTrace();
-				return;
+			} else {
+				if (isMayorista) {
+					Mayorista entidad = new Mayorista(id, txtNombre.getText(), isNull(txtNombreDeFantasia),
+							isNull(txtDireccion), isNull(txtTelefono), isNull(txtNmroDeIngresos),
+							isNull(txtCuit), selectCatIva);
+					mayDAO.update(entidad);
+					return;
+				} else {
+					Cliente entidad = new Cliente(id, txtNombre.getText(), isNull(txtNombreDeFantasia),
+							isNull(txtDireccion), isNull(txtTelefono), isNull(txtNmroDeIngresos),
+							isNull(txtCuit), selectCatIva);
+					clDAO.update(entidad);
+					return;
+				}
 			}
+		} catch (PersistenciaException e) {
+			JOptionPane.showMessageDialog(this, "Error de persistensia.", "Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+			return;
 		}
 	}
 }
