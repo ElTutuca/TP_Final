@@ -8,6 +8,18 @@ public class Marca implements GenericModel {
 	private String nombre;
 
 	@Override
+	public Object[] getFieldsValues() {
+		Object[] r = { getNombre() };
+		return r;
+	}
+
+	@Override
+	public String[] getFieldNames() {
+		String[] r = { "Nombre" };
+		return r;
+	}
+
+	@Override
 	public String toString() {
 		return String.format("(%s) Marca: %s", getIdMarca(), getNombre());
 	}
@@ -42,4 +54,5 @@ public class Marca implements GenericModel {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+
 }

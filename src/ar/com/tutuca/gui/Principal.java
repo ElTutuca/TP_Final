@@ -108,10 +108,10 @@ public class Principal extends JFrame {
 
 		// Carga paneles
 		homePanel = new HomePanel();
-		mayPanel = new GenericABM("Mayoristas", mayDAO, this, 1);
-		clPanel = new GenericABM("Clientes", clDAO, this, 2);
+		mayPanel = new GenericABM("Mayoristas", mayDAO, this, GenericABM.MAYORISTA_ID);
+		clPanel = new GenericABM("Clientes", clDAO, this, GenericABM.CLIENTE_ID);
 		prodPanel = new ProductosPanel(this);
-		
+
 		panelDerecha.setLayout(new CardLayout(0, 0));
 		panelDerecha.add(homePanel, "home");
 		panelDerecha.add(mayPanel, "mayorista");
@@ -120,7 +120,7 @@ public class Principal extends JFrame {
 
 		CardLayout cl = (CardLayout) (panelDerecha.getLayout());
 		cl.show(panelDerecha, "homePanel");
-		
+
 		JButton btnProductos = new JButton("");
 		btnProductos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -142,7 +142,7 @@ public class Principal extends JFrame {
 
 		btnMayoristas.setBounds(12, 489, 90, 90);
 		panelIzquierda.add(btnMayoristas);
-		
+
 		JButton btnClientes = new JButton("");
 		btnClientes.addMouseListener(new MouseAdapter() {
 			@Override

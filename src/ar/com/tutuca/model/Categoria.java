@@ -7,8 +7,14 @@ public class Categoria implements GenericModel {
 	private int idCategoria;
 	private String categoria;
 	
+	@Override
+	public String[] getFieldNames() {
+		String[] r = {"Categoria"};
+		return r;
+	}
+	
 	public Object[] getFieldsValues() {
-		Object []objs = {getIdCategoria(), getCategoria()};
+		Object []objs = {getCategoria()};
 		return objs;
 	}
 
@@ -47,4 +53,5 @@ public class Categoria implements GenericModel {
 	public void setIdCategoria(int idCategoria) {
 		this.idCategoria = idCategoria;
 	}
+
 }

@@ -28,7 +28,7 @@ public class Subcategoria implements GenericModel {
 		setCategoria(categoria);
 		setSubcategoria(subcategoria);
 	}
-	
+
 	// Getters
 	public Categoria getCategoria() {
 		return categoria;
@@ -41,7 +41,7 @@ public class Subcategoria implements GenericModel {
 	public String getSubcategoria() {
 		return subcategoria;
 	}
-	
+
 	// Setters
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
@@ -53,6 +53,18 @@ public class Subcategoria implements GenericModel {
 
 	public void setSubcategoria(String subcategoria) {
 		this.subcategoria = subcategoria;
+	}
+
+	@Override
+	public Object[] getFieldsValues() {
+		Object[] r = { getSubcategoria(), getCategoria().getCategoria() };
+		return r;
+	}
+
+	@Override
+	public String[] getFieldNames() {
+		String[] r = { "Subcategoria", "Categoria" };
+		return r;
 	}
 
 }

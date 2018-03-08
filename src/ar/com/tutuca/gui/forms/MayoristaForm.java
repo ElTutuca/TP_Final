@@ -24,13 +24,18 @@ import ar.com.tutuca.dao.MayoristaDAO;
 import ar.com.tutuca.extras.GenericDAO;
 import ar.com.tutuca.extras.GenericModel;
 import ar.com.tutuca.extras.PersistenciaException;
+import ar.com.tutuca.extras.Util;
 import ar.com.tutuca.gui.tables.ModeloTabla;
 import ar.com.tutuca.model.CategoriaIva;
 import ar.com.tutuca.model.Cliente;
 import ar.com.tutuca.model.Mayorista;
 
 public class MayoristaForm extends JFrame {
-
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1834122103150408730L;
 	private CategoriaIvaDAO catIvaDAO = new CategoriaIvaDAO();
 	private MayoristaDAO mayDAO = new MayoristaDAO(catIvaDAO);
 	private ClienteDAO clDAO = new ClienteDAO(catIvaDAO);
@@ -76,8 +81,8 @@ public class MayoristaForm extends JFrame {
 		MayoristaForm.dao = dao;
 		MayoristaForm.table = table;
 		MayoristaForm.alta = alta;
-		String accion = alta ? "Crear" : "Modificar";
 		MayoristaForm.superFrame = superFrame;
+		String accion = alta ? "Crear" : "Modificar";
 		JFrame frame = this;
 		setAlwaysOnTop(true);
 		setResizable(false);
@@ -192,7 +197,7 @@ public class MayoristaForm extends JFrame {
 				}
 			}
 		});
-		btnCrear.setBounds(385, 102, 73, 25);
+		btnCrear.setBounds(385, 102, 100, 25);
 
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
@@ -206,7 +211,7 @@ public class MayoristaForm extends JFrame {
 				}
 			}
 		});
-		btnCancelar.setBounds(470, 102, 96, 25);
+		btnCancelar.setBounds(497, 102, 96, 25);
 		contentPane.setLayout(null);
 		contentPane.add(lblNombreDeFantasia);
 		contentPane.add(btnCrear);
@@ -225,7 +230,6 @@ public class MayoristaForm extends JFrame {
 		contentPane.add(txtDireccion);
 		contentPane.add(txtCuit);
 
-		boolean chau = false;
 		if (!alta) {
 			if (table.getSelectedRow() != -1) {
 				try {
@@ -257,92 +261,15 @@ public class MayoristaForm extends JFrame {
 				JOptionPane.showMessageDialog(this, "Para modificar tiene que elegir una fila de la tabla.",
 						"Precaucion", JOptionPane.WARNING_MESSAGE);
 				superFrame.setEnabled(true);
-				chau = true;
+				frame.dispose();
 			}
 		}
-
-		if (chau) {
-			frame.dispose();
-		}
-	}
-
-	private String isNull(JTextField txt) {
-		return isUsed(txt) ? txt.getText() : null;
-	}
-
-	private boolean isUsed(JTextField txt) {
-		return (!txt.getText().equals(""));
-	}
-
-	private int isValid(String str, int min, int max, int tipo) {
-		/**
-		 * tipo 1: Solo letras || tipo 2: Solo Numeros || tipo 3: Numeros y letras
-		 */
-		boolean minMax = str.length() >= min && str.length() <= max;
-		int type = 1;
-
-		if (tipo == 1) {
-			// Busca solo por letras. Devuelve 2 si encuentra numeros
-			type = str.matches("[a-zA-Z\\\\s-?(?)?:?=?.?,?-?/?]+") ? 1 : 2;
-		} else if (tipo == 2) {
-			// Busca solo por numeros. Devuelve 3 si encuentra alguna letra
-			type = str.matches("[\\d-?(?)?:?=?.?,?-?/?]+") ? 1 : 3;
-		}
-
-		if ((!minMax) && type == 2) {
-			// Contiene un numero (no deberia) y no cumple con el min o max de chars
-			return 6;
-		} else if ((!minMax) && type == 3) {
-			// Contiene una letra (no deberia) y no cumple con el min o max de chars
-			return 5;
-		} else if (!minMax) {
-			// No cumple con el min o max de chars
-			return 4;
-		} else if (type == 2) {
-			// Contiene numeros y solo deberia contener Letras
-			return 3;
-		} else if (type == 3) {
-			// Contiene letras y solo deberia contener numeros
-			return 2;
-		}
-		// Todo esta bien
-		return 1;
-	}
-
-	private int checkAll(JTextField txt, String name, int isValid) {
-		// 2 Significa que esta siendo usado pero no es valido
-		int fin = 2;
-		if (isUsed(txt)) {
-			if (isValid == 2) {
-				String r = name + " no puede contener letras.";
-				JOptionPane.showMessageDialog(this, r, "Precaucion", JOptionPane.WARNING_MESSAGE);
-			} else if (isValid == 3) {
-				String r = name + " no puede contener numeros.";
-				JOptionPane.showMessageDialog(this, r, "Precaucion", JOptionPane.WARNING_MESSAGE);
-			} else if (isValid == 4) {
-				String r = name + " se escapa del limite minimo o maximo de caracteres.";
-				JOptionPane.showMessageDialog(this, r, "Precaucion", JOptionPane.WARNING_MESSAGE);
-			} else if (isValid == 5) {
-				String r = name + " no puede contener letras y se escapa del limite minimo o maximo de caracteres.";
-				JOptionPane.showMessageDialog(this, r, "Precaucion", JOptionPane.WARNING_MESSAGE);
-			} else if (isValid == 6) {
-				String r = name + " no puede contener numeros y se escapa del limite minimo o maximo de caracteres.";
-				JOptionPane.showMessageDialog(this, r, "Precaucion", JOptionPane.WARNING_MESSAGE);
-			} else {
-				// 1 Significa que esta todo bien.
-				fin = 1;
-			}
-		} else {
-			// 3 Significa que no esta siendo usado.
-			fin = 3;
-		}
-		return fin;
 	}
 
 	private void altaModifica(boolean alta, int id) {
 		boolean estaSeguro = false;
-		int valid = isValid(txtNombre.getText(), 3, 30, 3);
-		int nombre = checkAll(txtNombre, "\"Nombre\"", valid);
+		int valid = Util.isValid(txtNombre.getText(), 3, 30, 3);
+		int nombre = Util.checkAll(txtNombre, "\"Nombre\"", valid, this);
 		if (nombre == 3) {
 			JOptionPane.showMessageDialog(this, "El campo \"Nombre\" esta vacio.", "Precaucion",
 					JOptionPane.WARNING_MESSAGE);
@@ -358,37 +285,37 @@ public class MayoristaForm extends JFrame {
 			return;
 		}
 
-		int nmbreDeFantasia = checkAll(txtNombreDeFantasia, "\"Nombre de Fantasia\"",
-				isValid(txtNombreDeFantasia.getText(), 3, 45, 3));
+		int nmbreDeFantasia = Util.checkAll(txtNombreDeFantasia, "\"Nombre de Fantasia\"",
+				Util.isValid(txtNombreDeFantasia.getText(), 3, 45, 3), this);
 		if (nmbreDeFantasia == 2) {
 			return;
 		} else if (nmbreDeFantasia == 3) {
 			estaSeguro = true;
 		}
 
-		int direccion = checkAll(txtDireccion, "\"Direccion\"", isValid(txtDireccion.getText(), 6, 60, 3));
+		int direccion = Util.checkAll(txtDireccion, "\"Direccion\"", Util.isValid(txtDireccion.getText(), 6, 60, 3), this);
 		if (direccion == 2) {
 			return;
 		} else if (direccion == 3) {
 			estaSeguro = true;
 		}
 
-		int telefono = checkAll(txtTelefono, "\"Telefono\"", isValid(txtTelefono.getText(), 9, 40, 3));
+		int telefono = Util.checkAll(txtTelefono, "\"Telefono\"", Util.isValid(txtTelefono.getText(), 9, 40, 3), this);
 		if (telefono == 2) {
 			return;
 		} else if (telefono == 3) {
 			estaSeguro = true;
 		}
 
-		int nmroDeIngresos = checkAll(txtNmroDeIngresos, "\"Nmro de Ingresos Brutos\"",
-				isValid(txtNmroDeIngresos.getText(), 9, 11, 3));
+		int nmroDeIngresos = Util.checkAll(txtNmroDeIngresos, "\"Nmro de Ingresos Brutos\"",
+				Util.isValid(txtNmroDeIngresos.getText(), 9, 11, 3), this);
 		if (nmroDeIngresos == 2) {
 			return;
 		} else if (nmroDeIngresos == 3) {
 			estaSeguro = true;
 		}
 
-		int cuit = checkAll(txtCuit, "\"Cuit\"", isValid(txtCuit.getText(), 9, 11, 2));
+		int cuit = Util.checkAll(txtCuit, "\"Cuit\"", Util.isValid(txtCuit.getText(), 9, 11, 2), this);
 		if (cuit == 2) {
 			return;
 		} else if (cuit == 3) {
@@ -402,33 +329,33 @@ public class MayoristaForm extends JFrame {
 				return;
 			}
 		}
-		
+
 		try {
 			if (alta) {
 				if (isMayorista) {
-					Mayorista entidad = new Mayorista(txtNombre.getText(), isNull(txtNombreDeFantasia),
-							isNull(txtDireccion), isNull(txtTelefono), isNull(txtNmroDeIngresos),
-							isNull(txtCuit), selectCatIva);
+					Mayorista entidad = new Mayorista(txtNombre.getText(), Util.isNull(txtNombreDeFantasia),
+							Util.isNull(txtDireccion), Util.isNull(txtTelefono), Util.isNull(txtNmroDeIngresos), Util.isNull(txtCuit),
+							selectCatIva);
 					mayDAO.insert(entidad);
 					return;
 				} else {
-					Cliente entidad = new Cliente(txtNombre.getText(), isNull(txtNombreDeFantasia),
-							isNull(txtDireccion), isNull(txtTelefono), isNull(txtNmroDeIngresos),
-							isNull(txtCuit), selectCatIva);
+					Cliente entidad = new Cliente(txtNombre.getText(), Util.isNull(txtNombreDeFantasia),
+							Util.isNull(txtDireccion), Util.isNull(txtTelefono), Util.isNull(txtNmroDeIngresos), Util.isNull(txtCuit),
+							selectCatIva);
 					clDAO.insert(entidad);
 					return;
 				}
 			} else {
 				if (isMayorista) {
-					Mayorista entidad = new Mayorista(id, txtNombre.getText(), isNull(txtNombreDeFantasia),
-							isNull(txtDireccion), isNull(txtTelefono), isNull(txtNmroDeIngresos),
-							isNull(txtCuit), selectCatIva);
+					Mayorista entidad = new Mayorista(id, txtNombre.getText(), Util.isNull(txtNombreDeFantasia),
+							Util.isNull(txtDireccion), Util.isNull(txtTelefono), Util.isNull(txtNmroDeIngresos), Util.isNull(txtCuit),
+							selectCatIva);
 					mayDAO.update(entidad);
 					return;
 				} else {
-					Cliente entidad = new Cliente(id, txtNombre.getText(), isNull(txtNombreDeFantasia),
-							isNull(txtDireccion), isNull(txtTelefono), isNull(txtNmroDeIngresos),
-							isNull(txtCuit), selectCatIva);
+					Cliente entidad = new Cliente(id, txtNombre.getText(), Util.isNull(txtNombreDeFantasia),
+							Util.isNull(txtDireccion), Util.isNull(txtTelefono), Util.isNull(txtNmroDeIngresos), Util.isNull(txtCuit),
+							selectCatIva);
 					clDAO.update(entidad);
 					return;
 				}

@@ -7,7 +7,9 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import ar.com.tutuca.dao.ArchivoDAO;
+import ar.com.tutuca.dao.CategoriaDAO;
 import ar.com.tutuca.dao.CategoriaIvaDAO;
+import ar.com.tutuca.dao.MarcaDAO;
 import ar.com.tutuca.dao.MayoristaDAO;
 import ar.com.tutuca.dao.ProdArchivosDAO;
 import ar.com.tutuca.dao.ProductoDAO;
@@ -29,17 +31,19 @@ public class ProductosPanel extends JPanel {
 
 		ProductoDAO prodDAO = new ProductoDAO(new MayoristaDAO(new CategoriaIvaDAO()), new SubcategoriaDAO(),
 				new ProdArchivosDAO(new ArchivoDAO()));
-
-		JPanel prodPane = new GenericABM("Productos", prodDAO, superFrame, 3);
+		JPanel prodPane = new GenericABM("Productos", prodDAO, superFrame, GenericABM.PRODUCTO_ID);
 		tabbedPane.addTab("Productos", null, prodPane, null);
-
-		JPanel subCatPane = new JPanel();
+		
+		SubcategoriaDAO subcatDAO = new SubcategoriaDAO();
+		JPanel subCatPane = new GenericABM("Subcategorias", subcatDAO, superFrame, GenericABM.SUBCATEGORIA_ID);
 		tabbedPane.addTab("Subcategorias", null, subCatPane, null);
 
-		JPanel catPane = new JPanel();
+		CategoriaDAO catDAO = new CategoriaDAO();
+		JPanel catPane = new GenericABM("Categorias", catDAO, superFrame, GenericABM.CATEGORIA_ID);
 		tabbedPane.addTab("Categorias", null, catPane, null);
 
-		JPanel marcasPane = new JPanel();
+		MarcaDAO marcaDAO = new MarcaDAO();
+		JPanel marcasPane = new GenericABM("Marcas", marcaDAO, superFrame, GenericABM.MARCA_ID);
 		tabbedPane.addTab("Marcas", null, marcasPane, null);
 		setLayout(groupLayout);
 

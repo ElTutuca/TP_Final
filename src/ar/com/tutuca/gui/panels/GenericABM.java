@@ -19,6 +19,7 @@ import ar.com.tutuca.extras.GenericDAO;
 import ar.com.tutuca.extras.GenericModel;
 import ar.com.tutuca.extras.PersistenciaException;
 import ar.com.tutuca.gui.forms.MayoristaForm;
+import ar.com.tutuca.gui.forms.SingleForm;
 import ar.com.tutuca.gui.tables.ModeloTabla;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -26,6 +27,12 @@ import java.awt.event.MouseEvent;
 public class GenericABM extends JPanel {
 	private JTable table;
 	JFrame form;
+	public static final int MAYORISTA_ID = 1;
+	public static final int CLIENTE_ID = 2;
+	public static final int PRODUCTO_ID = 3;
+	public static final int SUBCATEGORIA_ID = 4;
+	public static final int CATEGORIA_ID = 5;
+	public static final int MARCA_ID = 6;
 
 	/**
 	 * Create the panel.
@@ -33,7 +40,7 @@ public class GenericABM extends JPanel {
 
 	public GenericABM(String nombre, GenericDAO dao, JFrame superFrame, int idForm) {
 		JScrollPane scrollPane = new JScrollPane();
-		
+
 		// Botones y lblTabla
 		JButton btnNuevo = new JButton("Nuevo");
 		btnNuevo.addActionListener(new ActionListener() {
@@ -85,7 +92,7 @@ public class GenericABM extends JPanel {
 
 			}
 		});
-		
+
 		JButton btnRefresh = new JButton("Refrescar");
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -97,7 +104,7 @@ public class GenericABM extends JPanel {
 			}
 		});
 		JLabel lblTabla = new JLabel(nombre);
-		
+
 		// Ubicacion de todo el panel
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addGroup(groupLayout
@@ -119,7 +126,7 @@ public class GenericABM extends JPanel {
 								GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)))
 				.addGap(35).addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 548, Short.MAX_VALUE)
 				.addContainerGap()));
-		
+
 		// Setteo de la tabla
 
 		try {
@@ -149,14 +156,22 @@ public class GenericABM extends JPanel {
 				return false;
 			}
 		}
-		if (idForm == 1) {
+		if (idForm == MAYORISTA_ID) {
 			form = new MayoristaForm(superFrame, isAlta, dao, table, true);
 			return true;
-		} else if (idForm == 2) {
+		} else if (idForm == CLIENTE_ID) {
 			form = new MayoristaForm(superFrame, isAlta, dao, table, false);
 			return true;
-		} else if (idForm == 3) {
+		} else if (idForm == PRODUCTO_ID) {
 			// TODO form = new ProductoForm();
+		} else if (idForm == SUBCATEGORIA_ID) {
+			// TODO form de subcategoria
+		} else if (idForm == CATEGORIA_ID) {
+			form = new SingleForm("Categoria", "Categoria", superFrame, isAlta, dao, table, 1, 45);
+			return true;
+		} else if (idForm == MARCA_ID) {
+			form = new SingleForm("Marca", "Marca", superFrame, isAlta, dao, table, 2, 45);
+			return true;
 		}
 		return false;
 	}
