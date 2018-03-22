@@ -160,6 +160,7 @@ public class MayoristaForm extends JFrame {
 					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
+		
 		String[] ivas = new String[nombres.size()];
 		ivas = nombres.toArray(ivas);
 		// Poner "ivas" en ..JComboBox<String>(*aca*);

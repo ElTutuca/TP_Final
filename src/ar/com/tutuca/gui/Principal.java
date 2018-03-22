@@ -161,6 +161,7 @@ public class Principal extends JFrame {
 				cl.show(panelDerecha, "home");
 			}
 		});
+		
 		btnHome.setBounds(12, 13, 90, 90);
 		panelIzquierda.add(btnHome);
 

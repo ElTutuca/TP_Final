@@ -32,7 +32,7 @@ public class Util {
 	}
 	
 	public static int lastId() throws SQLException, ClassNotFoundException {
-		ResultSet rs = Util.createStatement().executeQuery("SELECT LAST_INSERT_ID();");
+		ResultSet rs = createStatement().executeQuery("SELECT LAST_INSERT_ID();");
 		rs.next();
 		return rs.getInt(1);
 	}
