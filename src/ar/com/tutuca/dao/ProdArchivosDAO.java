@@ -44,7 +44,7 @@ public class ProdArchivosDAO implements GenericDAO<ProdArchivos, Integer> {
 		List<ProdArchivos> r = new ArrayList<ProdArchivos>();
 		try {
 			PreparedStatement ps = Util.prepareStatement(
-					"SELECT a.* FROM Productos_Archivos a INNER JOIN Productos p ON p.idProductos=a.idProductos WHERE a.idProductos=?;");
+					"SELECT a.* FROM Productos_Archivos a INNER JOIN Productos p ON p.idProductos=a.idProductos WHERE a.idProductos=? ORDER BY a.Orden;");
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {

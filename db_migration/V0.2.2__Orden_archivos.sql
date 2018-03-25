@@ -1,0 +1,23 @@
+UPDATE `Sucursal`.`Productos_Archivos` SET `Orden`='1' WHERE `idProductos`='26' and`idArchivos`='1';
+UPDATE `Sucursal`.`Productos_Archivos` SET `Orden`='2' WHERE `idProductos`='26' and`idArchivos`='2';
+UPDATE `Sucursal`.`Productos_Archivos` SET `Orden`='1' WHERE `idProductos`='28' and`idArchivos`='1';
+UPDATE `Sucursal`.`Productos_Archivos` SET `Orden`='2' WHERE `idProductos`='28' and`idArchivos`='2';
+UPDATE `Sucursal`.`Productos_Archivos` SET `Orden`='3' WHERE `idProductos`='28' and`idArchivos`='3';
+UPDATE `Sucursal`.`Productos_Archivos` SET `Orden`='4' WHERE `idProductos`='28' and`idArchivos`='4';
+UPDATE `Sucursal`.`Productos_Archivos` SET `Orden`='5' WHERE `idProductos`='28' and`idArchivos`='5';
+UPDATE `Sucursal`.`Productos_Archivos` SET `Orden`='1' WHERE `idProductos`='29' and`idArchivos`='1';
+UPDATE `Sucursal`.`Productos_Archivos` SET `Orden`='2' WHERE `idProductos`='29' and`idArchivos`='2';
+UPDATE `Sucursal`.`Productos_Archivos` SET `Orden`='3' WHERE `idProductos`='29' and`idArchivos`='3';
+UPDATE `Sucursal`.`Productos_Archivos` SET `Orden`='4' WHERE `idProductos`='29' and`idArchivos`='4';
+UPDATE `Sucursal`.`Productos_Archivos` SET `Orden`='5' WHERE `idProductos`='29' and`idArchivos`='5';
+UPDATE `Sucursal`.`Productos_Archivos` SET `Orden`='1' WHERE `idProductos`='30' and`idArchivos`='1';
+UPDATE `Sucursal`.`Productos_Archivos` SET `Orden`='2' WHERE `idProductos`='30' and`idArchivos`='2';
+UPDATE `Sucursal`.`Productos_Archivos` SET `Orden`='3' WHERE `idProductos`='30' and`idArchivos`='3';
+UPDATE `Sucursal`.`Productos_Archivos` SET `Orden`='4' WHERE `idProductos`='30' and`idArchivos`='4';
+ 
+UPDATE `Sucursal`.`Archivos` SET `Nombre`='Im1' WHERE `idArchivos`='1';
+UPDATE `Sucursal`.`Archivos` SET `Nombre`='Im2' WHERE `idArchivos`='2';
+UPDATE `Sucursal`.`Archivos` SET `Nombre`='Im3' WHERE `idArchivos`='3';
+UPDATE `Sucursal`.`Archivos` SET `Nombre`='Im4' WHERE `idArchivos`='4';
+UPDATE `Sucursal`.`Archivos` SET `Nombre`='Im5' WHERE `idArchivos`='5';
+UPDATE `Sucursal`.`Archivos` SET `Nombre`='Im6' WHERE `idArchivos`='6';

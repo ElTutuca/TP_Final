@@ -55,4 +55,27 @@ public class ProdArchivos implements GenericModel {
 		this.orden = orden;
 	}
 
+	@Override
+	public Object[] getFieldsValues() {
+		// TODO Hacer getFieldsValues
+		return null;
+	}
+
+	@Override
+	public String[] getFieldNames() {
+		// TODO Hacer getFieldNames
+		return null;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		ProdArchivos objR = (ProdArchivos) obj;
+		boolean r = true;
+		r = r && getArch().equals(objR.getArch());
+		r = r && getIdProducto() == objR.getIdProducto();
+		r = r && getOrden() == objR.getOrden();
+		
+		return r;
+	}
+
 }

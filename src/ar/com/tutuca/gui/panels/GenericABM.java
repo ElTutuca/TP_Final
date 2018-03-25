@@ -2,6 +2,8 @@ package ar.com.tutuca.gui.panels;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.GroupLayout;
@@ -19,11 +21,10 @@ import ar.com.tutuca.extras.GenericDAO;
 import ar.com.tutuca.extras.GenericModel;
 import ar.com.tutuca.extras.PersistenciaException;
 import ar.com.tutuca.gui.forms.MayoristaForm;
+import ar.com.tutuca.gui.forms.ProductoForm;
 import ar.com.tutuca.gui.forms.SingleForm;
 import ar.com.tutuca.gui.forms.SubcategoriaForm;
 import ar.com.tutuca.gui.tables.ModeloTabla;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class GenericABM extends JPanel {
 	private JTable table;
@@ -129,7 +130,6 @@ public class GenericABM extends JPanel {
 				.addContainerGap()));
 
 		// Setteo de la tabla
-
 		try {
 			table = new JTable(new ModeloTabla(dao.list()));
 			table.addMouseListener(new MouseAdapter() {
@@ -164,7 +164,7 @@ public class GenericABM extends JPanel {
 			form = new MayoristaForm(superFrame, isAlta, dao, table, false);
 			return true;
 		} else if (idForm == PRODUCTO_ID) {
-			// TODO form = new ProductoForm();
+			form = new ProductoForm();
 		} else if (idForm == SUBCATEGORIA_ID) {
 			form = new SubcategoriaForm(superFrame, dao, table, isAlta);
 			return true;

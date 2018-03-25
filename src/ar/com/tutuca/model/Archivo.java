@@ -7,7 +7,7 @@ public class Archivo implements GenericModel {
 	private int idArchivo;
 	private String path;
 	private String nombre;
-	private String mimeType = null;
+	private String mimeType;
 	private int tamaño;
 
 	@Override
@@ -82,5 +82,23 @@ public class Archivo implements GenericModel {
 		Object[] r = { getIdArchivo(), getPath(), getNombre(), getMimeType(), getTamaño() };
 		return r;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		Archivo objR = (Archivo) obj;
+		boolean r = true;
+		r = r && getIdArchivo() == objR.getIdArchivo();
+		r = r && getTamaño() == objR.getTamaño();
+		r = r && getMimeType().equals(objR.getMimeType());
+		r = r && getNombre().equals(objR.getNombre());
+		r = r && getPath().equals(objR.getPath());
+		
+		return r;
+	}
 
+	@Override
+	public String[] getFieldNames() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

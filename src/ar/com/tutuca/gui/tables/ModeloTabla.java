@@ -41,7 +41,7 @@ public class ModeloTabla implements TableModel {
 	@Override
 	public int getColumnCount() {
 		GenericModel gm = (GenericModel) daoList.get(0);
-		return gm.getFieldsValues().length;
+		return gm.getFieldNames().length;
 	}
 
 	@Override
