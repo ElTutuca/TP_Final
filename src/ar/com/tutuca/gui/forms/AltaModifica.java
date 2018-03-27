@@ -29,8 +29,10 @@ import javax.swing.table.DefaultTableModel;
 
 import ar.com.tutuca.dao.ArchivoDAO;
 import ar.com.tutuca.dao.ProdArchivosDAO;
+import ar.com.tutuca.extras.GenericDAO;
 import ar.com.tutuca.extras.PersistenciaException;
 import ar.com.tutuca.extras.Util;
+import ar.com.tutuca.gui.tables.ModeloTabla;
 import ar.com.tutuca.model.Archivo;
 import ar.com.tutuca.model.ProdArchivos;
 
@@ -278,33 +280,14 @@ public class AltaModifica extends JDialog {
 	}
 
 	private void createTable() {
-		// TODO Usar el ModeloTabla
 		// Modelo de tabla
-		DefaultTableModel model = new DefaultTableModel() {
-			public Class<?> getColumnClass(int column) {
-				switch (column) {
-				case 0:
-					return String.class;
-				case 1:
-					return String.class;
-				case 2:
-					return Integer.class;
-				default:
-					return String.class;
-				}
-			}
-
-			public boolean isCellEditable(int row, int column) {
-				return column != 3;
-			}
-		};
+		DefaultTableModel model = new DefaultTableModel();
 		model.addColumn("Path");
 		model.addColumn("Nombre");
 		model.addColumn("Tamaño");
-
+		
 		try {
-			for (ProdArchivos prodArc : prodArchDAO.listPorProducto(id)) {
-				Archivo arc = prodArc.getArch();
+			for (Archivo arc : archDAO.listPorProducto(id)) {
 				model.addRow(new Object[] { arc.getPath(), arc.getNombre(), arc.getTamaño() + " KB" });
 			}
 		} catch (PersistenciaException e) {

@@ -9,6 +9,7 @@ import java.util.List;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -28,7 +29,7 @@ import ar.com.tutuca.gui.tables.ModeloTabla;
 
 public class GenericABM extends JPanel {
 	private JTable table;
-	JFrame form;
+	JDialog form;
 	public static final int MAYORISTA_ID = 1;
 	public static final int CLIENTE_ID = 2;
 	public static final int PRODUCTO_ID = 3;
@@ -50,7 +51,6 @@ public class GenericABM extends JPanel {
 				boolean isOk = setForm(idForm, dao, superFrame, true);
 				if (isOk) {
 					form.setVisible(true);
-					superFrame.setEnabled(false);
 				}
 			}
 		});
@@ -61,7 +61,6 @@ public class GenericABM extends JPanel {
 				boolean isOk = setForm(idForm, dao, superFrame, false);
 				if (isOk) {
 					form.setVisible(true);
-					superFrame.setEnabled(false);
 				}
 			}
 		});
@@ -164,7 +163,8 @@ public class GenericABM extends JPanel {
 			form = new MayoristaForm(superFrame, isAlta, dao, table, false);
 			return true;
 		} else if (idForm == PRODUCTO_ID) {
-			form = new ProductoForm();
+			form = new ProductoForm(isAlta,table);
+			return true;
 		} else if (idForm == SUBCATEGORIA_ID) {
 			form = new SubcategoriaForm(superFrame, dao, table, isAlta);
 			return true;

@@ -79,10 +79,10 @@ public class Archivo implements GenericModel {
 
 	@Override
 	public Object[] getFieldsValues() {
-		Object[] r = { getIdArchivo(), getPath(), getNombre(), getMimeType(), getTamaño() };
+		Object[] r = { getPath(), getNombre(), getTamaño() };
 		return r;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		Archivo objR = (Archivo) obj;
@@ -92,13 +92,13 @@ public class Archivo implements GenericModel {
 		r = r && getMimeType().equals(objR.getMimeType());
 		r = r && getNombre().equals(objR.getNombre());
 		r = r && getPath().equals(objR.getPath());
-		
+
 		return r;
 	}
 
 	@Override
 	public String[] getFieldNames() {
-		// TODO Auto-generated method stub
-		return null;
+		String[] r = { "Direccion", "Nombre", "Tamaño" };
+		return r;
 	}
 }

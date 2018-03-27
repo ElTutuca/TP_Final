@@ -1,6 +1,7 @@
 package ar.com.tutuca.gui.forms;
 
-import java.awt.EventQueue;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -9,15 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 
@@ -30,7 +32,7 @@ import ar.com.tutuca.gui.tables.ModeloTabla;
 import ar.com.tutuca.model.Categoria;
 import ar.com.tutuca.model.Subcategoria;
 
-public class SubcategoriaForm extends JFrame {
+public class SubcategoriaForm extends JDialog {
 
 	private JPanel contentPane;
 	private JTextField txtSub;
@@ -47,16 +49,13 @@ public class SubcategoriaForm extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SubcategoriaForm frame = new SubcategoriaForm(superFrame, dao, table, alta);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		try {
+			SubcategoriaForm dialog = new SubcategoriaForm(superFrame, dao, table, alta);
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -69,11 +68,10 @@ public class SubcategoriaForm extends JFrame {
 		SubcategoriaForm.table = table;
 
 		String accion = alta ? "Crear" : "Modificar";
-		JFrame frame = this;
+		JDialog dialog = this;
 		setAlwaysOnTop(true);
 		setResizable(false);
 		setTitle("Subcategoria");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 341, 145);
 
 		this.addWindowListener(new WindowAdapter() {
@@ -100,7 +98,7 @@ public class SubcategoriaForm extends JFrame {
 							altaModifica(alta, 0);
 							table.setModel(new ModeloTabla(dao.list()));
 							superFrame.setEnabled(true);
-							frame.dispose();
+							dialog.dispose();
 							return;
 						} catch (PersistenciaException e1) {
 							e1.printStackTrace();
@@ -109,7 +107,7 @@ public class SubcategoriaForm extends JFrame {
 						altaModifica(false, selectSubcat.getIdSubcategoria());
 						table.setModel(new ModeloTabla(dao.list()));
 						superFrame.setEnabled(true);
-						frame.dispose();
+						dialog.dispose();
 						return;
 					}
 				} catch (PersistenciaException e2) {
@@ -124,7 +122,7 @@ public class SubcategoriaForm extends JFrame {
 				try {
 					table.setModel(new ModeloTabla(dao.list()));
 					superFrame.setEnabled(true);
-					frame.dispose();
+					dialog.dispose();
 				} catch (PersistenciaException e1) {
 					e1.printStackTrace();
 				}
@@ -207,7 +205,7 @@ public class SubcategoriaForm extends JFrame {
 				JOptionPane.showMessageDialog(this, "Para modificar tiene que elegir una fila de la tabla.",
 						"Precaucion", JOptionPane.WARNING_MESSAGE);
 				superFrame.setEnabled(true);
-				frame.dispose();
+				dialog.dispose();
 			}
 		}
 	}

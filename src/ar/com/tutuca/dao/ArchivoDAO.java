@@ -17,7 +17,7 @@ public class ArchivoDAO implements GenericDAO<Archivo, Integer> {
 		List<Archivo> r = new ArrayList<Archivo>();
 		try {
 			PreparedStatement ps = Util.prepareStatement(
-					"SELECT a.* FROM Archivos a INNER JOIN Productos_Archivos pa ON a.idArchivos=pa.idArchivos WHERE pa.idProductos=?;");
+					"SELECT a.* FROM Archivos a INNER JOIN Productos_Archivos pa ON a.idArchivos=pa.idArchivos WHERE pa.idProductos=? ORDER BY pa.Orden;");
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {

@@ -60,7 +60,6 @@ public class ProductoImagenes extends JDialog {
 	public ProductoImagenes(int id) {
 		table = new JTable();
 		ProductoImagenes.id = id;
-		ProductoImagenes.id = 28;
 
 		setBounds(100, 100, 450, 521);
 		getContentPane().setLayout(new BorderLayout());
@@ -303,38 +302,19 @@ public class ProductoImagenes extends JDialog {
 
 	private void createTable() {
 		// Modelo de tabla
-		DefaultTableModel model = new DefaultTableModel() {
-			public Class<?> getColumnClass(int column) {
-				switch (column) {
-				case 0:
-					return String.class;
-				case 1:
-					return String.class;
-				case 2:
-					return Integer.class;
-				default:
-					return String.class;
-				}
-			}
-
-			public boolean isCellEditable(int row, int column) {
-				return column != 3;
-			}
-		};
+		DefaultTableModel model = new DefaultTableModel();
 		model.addColumn("Path");
 		model.addColumn("Nombre");
 		model.addColumn("Tamaño");
-
+		
 		try {
-			for (ProdArchivos prodArc : prodArchDAO.listPorProducto(id)) {
-				Archivo arc = prodArc.getArch();
+			for (Archivo arc : archDAO.listPorProducto(id)) {
 				model.addRow(new Object[] { arc.getPath(), arc.getNombre(), arc.getTamaño() + " KB" });
 			}
 		} catch (PersistenciaException e) {
 			e.printStackTrace();
 		}
-		m_model = model;
-		table.setModel(m_model);
+		table.setModel(model);
 	}
 
 	private void refreshProdArch() {

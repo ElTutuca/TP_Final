@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
@@ -84,7 +84,7 @@ public class Util {
 		return 1;
 	}
 
-	public static int checkAll(JTextField txt, String name, int isValid, JFrame parent) {
+	public static int checkAll(JTextField txt, String name, int isValid, JDialog parent) {
 		// 2 Significa que esta siendo usado pero no es valido
 		int fin = 2;
 		if (isUsed(txt)) {
@@ -129,11 +129,4 @@ public class Util {
 		}
 		return bi;
 	}
-	
-	public String getMimeType(String name) {
-		String r = name.substring(name.indexOf("."), name.length());
-		if (r.equals("jpg"))
-		return r;
-	}
-
 }

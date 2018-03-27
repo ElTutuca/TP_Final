@@ -1,19 +1,22 @@
 package ar.com.tutuca.gui.forms;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 
@@ -25,11 +28,8 @@ import ar.com.tutuca.extras.Util;
 import ar.com.tutuca.gui.tables.ModeloTabla;
 import ar.com.tutuca.model.Categoria;
 import ar.com.tutuca.model.Marca;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
-public class SingleForm extends JFrame {
-
+public class SingleForm extends JDialog {
 	private JPanel contentPane;
 	private JTextField txtMain;
 	private static String nombre;
@@ -52,8 +52,9 @@ public class SingleForm extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SingleForm frame = new SingleForm(nombre, title, superFrame, alta, dao, table, model, max);
-					frame.setVisible(true);
+					SingleForm dialog = new SingleForm(nombre, title, superFrame, alta, dao, table, model, max);
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					dialog.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -62,7 +63,7 @@ public class SingleForm extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
+	 * Create the dialog.
 	 */
 	public SingleForm(String nombre, String titulo, JFrame superFrame, boolean alta, GenericDAO dao, JTable table,
 			int model, int max) {
@@ -76,11 +77,10 @@ public class SingleForm extends JFrame {
 		SingleForm.max = max;
 
 		String accion = alta ? "Crear" : "Modificar";
-		JFrame frame = this;
+		JDialog dialog = this;
 		setAlwaysOnTop(true);
 		setResizable(false);
 		setTitle(titulo);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 315, 115);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -116,7 +116,7 @@ public class SingleForm extends JFrame {
 						altaModifica(true, 0, name, max);
 						table.setModel(new ModeloTabla(dao.list()));
 						superFrame.setEnabled(true);
-						frame.dispose();
+						dialog.dispose();
 						return;
 					} catch (PersistenciaException e1) {
 						e1.printStackTrace();
@@ -132,7 +132,7 @@ public class SingleForm extends JFrame {
 						altaModifica(false, id, name, max);
 						table.setModel(new ModeloTabla(dao.list()));
 						superFrame.setEnabled(true);
-						frame.dispose();
+						dialog.dispose();
 						return;
 					} catch (PersistenciaException e1) {
 						e1.printStackTrace();
@@ -147,7 +147,7 @@ public class SingleForm extends JFrame {
 				try {
 					table.setModel(new ModeloTabla(dao.list()));
 					superFrame.setEnabled(true);
-					frame.dispose();
+					dialog.dispose();
 				} catch (PersistenciaException e1) {
 					e1.printStackTrace();
 				}
@@ -201,7 +201,7 @@ public class SingleForm extends JFrame {
 				JOptionPane.showMessageDialog(this, "Para modificar tiene que elegir una fila de la tabla.",
 						"Precaucion", JOptionPane.WARNING_MESSAGE);
 				superFrame.setEnabled(true);
-				frame.dispose();
+				dialog.dispose();
 			}
 		}
 	}

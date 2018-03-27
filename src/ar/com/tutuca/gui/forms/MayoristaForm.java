@@ -1,6 +1,8 @@
 package ar.com.tutuca.gui.forms;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -10,6 +12,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,12 +33,9 @@ import ar.com.tutuca.model.CategoriaIva;
 import ar.com.tutuca.model.Cliente;
 import ar.com.tutuca.model.Mayorista;
 
-public class MayoristaForm extends JFrame {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1834122103150408730L;
+public class MayoristaForm extends JDialog {
+
+	private final JPanel contentPanel = new JPanel();
 	private CategoriaIvaDAO catIvaDAO = new CategoriaIvaDAO();
 	private MayoristaDAO mayDAO = new MayoristaDAO(catIvaDAO);
 	private ClienteDAO clDAO = new ClienteDAO(catIvaDAO);
@@ -57,6 +57,7 @@ public class MayoristaForm extends JFrame {
 	private Cliente selectCliente;
 	private static boolean isMayorista;
 
+
 	/**
 	 * Launch the application.
 	 */
@@ -64,8 +65,9 @@ public class MayoristaForm extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MayoristaForm frame = new MayoristaForm(superFrame, alta, dao, table, isMayorista);
-					frame.setVisible(true);
+					MayoristaForm dialog = new MayoristaForm(superFrame, alta, dao, table, isMayorista);
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					dialog.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -83,11 +85,10 @@ public class MayoristaForm extends JFrame {
 		MayoristaForm.alta = alta;
 		MayoristaForm.superFrame = superFrame;
 		String accion = alta ? "Crear" : "Modificar";
-		JFrame frame = this;
+		JDialog dialog = this;
 		setAlwaysOnTop(true);
 		setResizable(false);
 		setTitle((isMayorista ? "Mayorista" : "Cliente"));
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 630, 176);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -97,7 +98,6 @@ public class MayoristaForm extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				try {
 					table.setModel(new ModeloTabla(dao.list()));
-					superFrame.setEnabled(true);
 				} catch (PersistenciaException e1) {
 					e1.printStackTrace();
 				}
@@ -160,7 +160,7 @@ public class MayoristaForm extends JFrame {
 					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
-		
+
 		String[] ivas = new String[nombres.size()];
 		ivas = nombres.toArray(ivas);
 		// Poner "ivas" en ..JComboBox<String>(*aca*);
@@ -178,8 +178,7 @@ public class MayoristaForm extends JFrame {
 					try {
 						altaModifica(true, 0);
 						table.setModel(new ModeloTabla(dao.list()));
-						superFrame.setEnabled(true);
-						frame.dispose();
+						dialog.dispose();
 						return;
 					} catch (PersistenciaException e1) {
 						e1.printStackTrace();
@@ -189,8 +188,7 @@ public class MayoristaForm extends JFrame {
 						int id = isMayorista ? selectMayorista.getIdMayorista() : selectCliente.getIdCliente();
 						altaModifica(false, id);
 						table.setModel(new ModeloTabla(dao.list()));
-						superFrame.setEnabled(true);
-						frame.dispose();
+						dialog.dispose();
 						return;
 					} catch (PersistenciaException e1) {
 						e1.printStackTrace();
@@ -205,8 +203,7 @@ public class MayoristaForm extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					table.setModel(new ModeloTabla(dao.list()));
-					superFrame.setEnabled(true);
-					frame.dispose();
+					dialog.dispose();
 				} catch (PersistenciaException e1) {
 					e1.printStackTrace();
 				}
@@ -261,8 +258,7 @@ public class MayoristaForm extends JFrame {
 			} else {
 				JOptionPane.showMessageDialog(this, "Para modificar tiene que elegir una fila de la tabla.",
 						"Precaucion", JOptionPane.WARNING_MESSAGE);
-				superFrame.setEnabled(true);
-				frame.dispose();
+				dialog.dispose();
 			}
 		}
 	}
@@ -293,7 +289,8 @@ public class MayoristaForm extends JFrame {
 			estaSeguro = true;
 		}
 
-		int direccion = Util.checkAll(txtDireccion, "\"Direccion\"", Util.isValid(txtDireccion.getText(), 6, 60, 3), this);
+		int direccion = Util.checkAll(txtDireccion, "\"Direccion\"", Util.isValid(txtDireccion.getText(), 6, 60, 3),
+				this);
 		if (direccion == 2) {
 			return;
 		} else if (direccion == 3) {
@@ -334,28 +331,28 @@ public class MayoristaForm extends JFrame {
 			if (alta) {
 				if (isMayorista) {
 					Mayorista entidad = new Mayorista(txtNombre.getText(), Util.isNull(txtNombreDeFantasia),
-							Util.isNull(txtDireccion), Util.isNull(txtTelefono), Util.isNull(txtNmroDeIngresos), Util.isNull(txtCuit),
-							selectCatIva);
+							Util.isNull(txtDireccion), Util.isNull(txtTelefono), Util.isNull(txtNmroDeIngresos),
+							Util.isNull(txtCuit), selectCatIva);
 					mayDAO.insert(entidad);
 					return;
 				} else {
 					Cliente entidad = new Cliente(txtNombre.getText(), Util.isNull(txtNombreDeFantasia),
-							Util.isNull(txtDireccion), Util.isNull(txtTelefono), Util.isNull(txtNmroDeIngresos), Util.isNull(txtCuit),
-							selectCatIva);
+							Util.isNull(txtDireccion), Util.isNull(txtTelefono), Util.isNull(txtNmroDeIngresos),
+							Util.isNull(txtCuit), selectCatIva);
 					clDAO.insert(entidad);
 					return;
 				}
 			} else {
 				if (isMayorista) {
 					Mayorista entidad = new Mayorista(id, txtNombre.getText(), Util.isNull(txtNombreDeFantasia),
-							Util.isNull(txtDireccion), Util.isNull(txtTelefono), Util.isNull(txtNmroDeIngresos), Util.isNull(txtCuit),
-							selectCatIva);
+							Util.isNull(txtDireccion), Util.isNull(txtTelefono), Util.isNull(txtNmroDeIngresos),
+							Util.isNull(txtCuit), selectCatIva);
 					mayDAO.update(entidad);
 					return;
 				} else {
 					Cliente entidad = new Cliente(id, txtNombre.getText(), Util.isNull(txtNombreDeFantasia),
-							Util.isNull(txtDireccion), Util.isNull(txtTelefono), Util.isNull(txtNmroDeIngresos), Util.isNull(txtCuit),
-							selectCatIva);
+							Util.isNull(txtDireccion), Util.isNull(txtTelefono), Util.isNull(txtNmroDeIngresos),
+							Util.isNull(txtCuit), selectCatIva);
 					clDAO.update(entidad);
 					return;
 				}

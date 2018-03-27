@@ -7,17 +7,17 @@ public class ProdArchivos implements GenericModel {
 	private int idProducto;
 	private Archivo arch;
 	private int orden;
-	
+
 	@Override
 	public String toString() {
 		return String.format("idProducto: (%s), idArchivo: (%s), Orden: %s", getIdProducto(), getArch().getIdArchivo(),
 				getOrden());
 	}
-	
+
 	// Constructores
 	public ProdArchivos() {
 	}
-	
+
 	public ProdArchivos(Archivo arch, int orden) {
 		setArch(arch);
 		setOrden(orden);
@@ -58,15 +58,17 @@ public class ProdArchivos implements GenericModel {
 	@Override
 	public Object[] getFieldsValues() {
 		// TODO Hacer getFieldsValues
-		return null;
+		Object[] r = { getOrden() };
+		return r;
 	}
 
 	@Override
 	public String[] getFieldNames() {
 		// TODO Hacer getFieldNames
-		return null;
+		String[] r = { "Orden" };
+		return r;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		ProdArchivos objR = (ProdArchivos) obj;
@@ -74,7 +76,7 @@ public class ProdArchivos implements GenericModel {
 		r = r && getArch().equals(objR.getArch());
 		r = r && getIdProducto() == objR.getIdProducto();
 		r = r && getOrden() == objR.getOrden();
-		
+
 		return r;
 	}
 
