@@ -57,35 +57,53 @@ public class Util {
 		int type = 1;
 
 		if (tipo == 1) {
-			// Busca solo por letras. Devuelve 2 si encuentra numeros
+			/**
+			 * Busca solo por letras. Devuelve 2 si encuentra numeros
+			 */
 			type = str.matches("[a-zA-Z\\\\s-?(?)?:?=?.?,?-?/?]+") ? 1 : 2;
 		} else if (tipo == 2) {
-			// Busca solo por numeros. Devuelve 3 si encuentra alguna letra
+			/**
+			 * Busca solo por numeros. Devuelve 3 si encuentra alguna letra
+			 */
 			type = str.matches("[\\d-?(?)?:?=?.?,?-?/?]+") ? 1 : 3;
 		}
 
 		if ((!minMax) && type == 2) {
-			// Contiene un numero (no deberia) y no cumple con el min o max de chars
+			/**
+			 * Contiene un numero (no deberia) y no cumple con el min o max de chars
+			 */
 			return 6;
 		} else if ((!minMax) && type == 3) {
-			// Contiene una letra (no deberia) y no cumple con el min o max de chars
+			/**
+			 * Contiene una letra (no deberia) y no cumple con el min o max de chars
+			 */
 			return 5;
 		} else if (!minMax) {
-			// No cumple con el min o max de chars
+			/**
+			 * No cumple con el min o max de chars
+			 */
 			return 4;
 		} else if (type == 2) {
-			// Contiene numeros y solo deberia contener Letras
+			/**
+			 * Contiene numeros y solo deberia contener Letras
+			 */
 			return 3;
 		} else if (type == 3) {
-			// Contiene letras y solo deberia contener numeros
+			/**
+			 * Contiene letras y solo deberia contener numeros
+			 */
 			return 2;
 		}
-		// Todo esta bien
+		/**
+		 * Todo esta bien
+		 */
 		return 1;
 	}
 
 	public static int checkAll(JTextField txt, String name, int isValid, JDialog parent) {
-		// 2 Significa que esta siendo usado pero no es valido
+		/**
+		 * 2 Significa que esta siendo usado pero no es valido
+		 */
 		int fin = 2;
 		if (isUsed(txt)) {
 			if (isValid == 2) {
@@ -104,11 +122,15 @@ public class Util {
 				String r = name + " no puede contener numeros y se escapa del limite minimo o maximo de caracteres.";
 				JOptionPane.showMessageDialog(parent, r, "Precaucion", JOptionPane.WARNING_MESSAGE);
 			} else {
-				// 1 Significa que esta todo bien.
+				/**
+				 * 1 Significa que esta todo bien.
+				 */
 				fin = 1;
 			}
 		} else {
-			// 3 Significa que no esta siendo usado.
+			/**
+			 * 3 Significa que no esta siendo usado.
+			 */
 			fin = 3;
 		}
 		return fin;

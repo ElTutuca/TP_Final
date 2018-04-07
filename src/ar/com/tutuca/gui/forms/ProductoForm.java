@@ -2,6 +2,7 @@ package ar.com.tutuca.gui.forms;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,10 @@ import ar.com.tutuca.dao.MayoristaDAO;
 import ar.com.tutuca.dao.ProdArchivosDAO;
 import ar.com.tutuca.dao.ProductoDAO;
 import ar.com.tutuca.dao.SubcategoriaDAO;
+import ar.com.tutuca.extras.GenericDAO;
 import ar.com.tutuca.extras.PersistenciaException;
+import ar.com.tutuca.extras.Util;
+import ar.com.tutuca.gui.tables.ModeloTabla;
 import ar.com.tutuca.model.Marca;
 import ar.com.tutuca.model.Mayorista;
 import ar.com.tutuca.model.Producto;
@@ -50,7 +54,7 @@ public class ProductoForm extends JDialog {
 	private JTable subTable;
 	private JTable mayTable;
 	private JComboBox<String> comboMarca;
-	private String toggleButton = "Eliminado";
+	private String toggleButton = "No Eliminado";
 	private SubcategoriaDAO subDAO = new SubcategoriaDAO();
 	private MayoristaDAO mayDAO = new MayoristaDAO(new CategoriaIvaDAO());
 	private ArchivoDAO archDAO = new ArchivoDAO();
@@ -58,6 +62,9 @@ public class ProductoForm extends JDialog {
 	private ProductoDAO prodDAO = new ProductoDAO(mayDAO, subDAO, paDAO);
 	private MarcaDAO marcaDAO = new MarcaDAO();
 	private Producto selectProducto;
+	private ProductoImagenes prodI;
+	private JToggleButton tglbtnEliminado;
+	private Marca selectMarca;
 	private static boolean isAlta;
 	private static JTable superTable;
 
@@ -75,10 +82,11 @@ public class ProductoForm extends JDialog {
 	 * Create the frame.
 	 */
 	public ProductoForm(boolean isAlta, JTable superTable) {
+		JDialog dialog = this;
 		ProductoForm.isAlta = isAlta;
 		ProductoForm.superTable = superTable;
+		String accion = isAlta ? "Crear" : "Modificar";
 
-		setAlwaysOnTop(true);
 		setResizable(false);
 		setTitle("Producto");
 		setBounds(100, 100, 601, 443);
@@ -144,33 +152,36 @@ public class ProductoForm extends JDialog {
 				marcas.add(mar.getNombre());
 			}
 		} catch (PersistenciaException e2) {
-			JOptionPane.showMessageDialog(this, "Error al recibir las Marcas.", "Error",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Error al recibir las Marcas.", "Error", JOptionPane.ERROR_MESSAGE);
 			e2.printStackTrace();
 		}
-		String[] marcaStrings = (String[]) marcas.toArray();
-		comboMarca = new JComboBox<String>(marcaStrings);
+		String[] marcaStrings = new String[marcas.size()];
+		marcaStrings = marcas.toArray(marcaStrings);
 
-		JToggleButton tglbtnEliminado = new JToggleButton(toggleButton);
+		// Poner "marcaStrings" en ...JComboBox<String>(*ACA*)
+		comboMarca = new JComboBox<String>(marcaStrings);
+		comboMarca.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					selectMarca = marcaDAO.list().get(comboMarca.getSelectedIndex());
+				} catch (PersistenciaException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+		tglbtnEliminado = new JToggleButton(toggleButton);
 		tglbtnEliminado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (tglbtnEliminado.isSelected()) {
-					toggleButton = "Eliminado";
-				} else {
-					toggleButton = "No Eliminado";
-				}
+				toggleButton = tglbtnEliminado.isSelected() ? "Eliminado" : "No Eliminado";
 				tglbtnEliminado.setText(toggleButton);
 			}
 		});
 
-		JButton btnCrear = new JButton("Crear");
+		JButton btnCrear = new JButton(accion);
 		btnCrear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				for (int i = 0; i < subTable.getRowCount(); i++) {
-					boolean checked = Boolean.valueOf(subTable.getValueAt(i, 0).toString());
-					String col = subTable.getValueAt(i, 1).toString();
-					System.out.println(checked);
-				}
+				accion(dialog);
 			}
 		});
 
@@ -181,12 +192,19 @@ public class ProductoForm extends JDialog {
 		JButton btnImagenes = new JButton("Imagenes");
 		btnImagenes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ProductoImagenes prodI = null;
-				if (isAlta) {
-					prodI = new ProductoImagenes(selectProducto.getIdProductos());
-				} else {
-					prodI = new ProductoImagenes(-1);
+				// TODO Hacer Imagenes
+				int response = JOptionPane.showConfirmDialog(null,
+						"Las imagenes deben ser lo ultimo en ser agregado. Esta seguro?", "Confirme",
+						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				if (response == JOptionPane.NO_OPTION) {
+					return;
 				}
+
+				/**
+				 * Las imagens tienen que ir al final de todo! Cuando se quiera poner imagenes,
+				 * se va a tener que insertar el producto para tener el id y pasarlo como
+				 * parametro.
+				 */
 				prodI.setVisible(true);
 			}
 		});
@@ -340,12 +358,21 @@ public class ProductoForm extends JDialog {
 					txtStock.setText(Integer.toString(selectProducto.getStock()));
 					txtDescuento.setText(selectProducto.getDescuento().toString());
 					txtPorcentajeIva.setText(selectProducto.getPorcentajeIva().toString());
+					comboMarca.setSelectedItem(selectProducto.getMarca().getNombre());
+					prodI = new ProductoImagenes(selectProducto.getIdProductos(), isAlta);
 
+					boolean elim = selectProducto.isEliminado();
+					tglbtnEliminado.setSelected(elim);
+					toggleButton = elim ? "Eliminado" : "No Eliminado";
+					tglbtnEliminado.setText(toggleButton);
 				} else {
 					JOptionPane.showMessageDialog(this, "Para modificar tiene que elegir una fila de la tabla.",
 							"Precaucion", JOptionPane.WARNING_MESSAGE);
 					this.dispose();
 				}
+			} else {
+				tglbtnEliminado.setEnabled(false);
+				prodI = new ProductoImagenes(-1, isAlta);
 			}
 		} catch (PersistenciaException e1) {
 			e1.printStackTrace();
@@ -394,8 +421,21 @@ public class ProductoForm extends JDialog {
 		model.addColumn("Subcategoria");
 
 		try {
-			for (Subcategoria sub : subDAO.list()) {
-				model.addRow(new Object[] { false, sub.getSubcategoria() });
+			if (isAlta) {
+				for (Subcategoria sub : subDAO.list()) {
+					model.addRow(new Object[] { false, sub.getSubcategoria() });
+				}
+			} else {
+				List<Subcategoria> subList = selectProducto.getSubcategoria();
+				for (Subcategoria sub : subDAO.list()) {
+					boolean boolState = false;
+					for (Subcategoria subcategoria : subList) {
+						if (sub.equals(subcategoria)) {
+							boolState = true;
+						}
+					}
+					model.addRow(new Object[] { boolState, sub.getSubcategoria() });
+				}
 			}
 		} catch (PersistenciaException e) {
 			e.printStackTrace();
@@ -427,12 +467,224 @@ public class ProductoForm extends JDialog {
 		model.addColumn("Mayorista");
 
 		try {
-			for (Mayorista may : mayDAO.list()) {
-				model.addRow(new Object[] { false, may.getNombre(), may.getNombreDeFantasia() });
+			if (isAlta) {
+				for (Mayorista may : mayDAO.list()) {
+					model.addRow(new Object[] { false, may.getNombre(), may.getNombreDeFantasia() });
+				}
+			} else {
+				List<Mayorista> mayList = selectProducto.getMayoristas();
+				for (Mayorista mayorista1 : mayDAO.list()) {
+					boolean boolState = false;
+					for (Mayorista mayorista2 : mayList) {
+						if (mayorista1.equals(mayorista2)) {
+							boolState = true;
+						}
+					}
+					model.addRow(new Object[] { boolState, mayorista1.getNombre(), mayorista1.getNombreDeFantasia() });
+				}
 			}
 		} catch (PersistenciaException e) {
 			e.printStackTrace();
 		}
 		mayTable.setModel(model);
 	}
+
+	private void altaModifica(boolean alta, int id) {
+		// TODO Hacer boton crear
+
+		/*
+		 * Falta hacer los checks
+		 */
+
+		// Control de Codigo
+		boolean estaSeguro = false;
+		int codigo = Util.checkAll(txtCodigo, "\"Codigo\"", Util.isValid(txtCodigo.getText(), 2, 8, 3), this);
+		if (codigo == 3) {
+			JOptionPane.showMessageDialog(this, "El campo \"Codigo\" esta vacio.", "Precaucion",
+					JOptionPane.WARNING_MESSAGE);
+			return;
+		} else if (codigo == 2) {
+			return;
+		}
+
+		// Control de Precio
+		int precio = Util.checkAll(txtPrecio, "\"Precio\"", Util.isValid(txtPrecio.getText(), 1, 9, 2), this);
+		if (precio == 3) {
+			JOptionPane.showMessageDialog(this, "El campo \"Precio\" esta vacio.", "Precaucion",
+					JOptionPane.WARNING_MESSAGE);
+			return;
+		} else if (precio == 2) {
+			return;
+		}
+
+		// Control de Nombre
+		int nombre = Util.checkAll(txtNombre, "\"Nombre\"", Util.isValid(txtNombre.getText(), 1, 45, 3), this);
+		if (nombre == 3) {
+			JOptionPane.showMessageDialog(this, "El campo \"Nombre\" esta vacio.", "Precaucion",
+					JOptionPane.WARNING_MESSAGE);
+			return;
+		} else if (nombre == 2) {
+			return;
+		}
+
+		// Control de Stock
+		int stock = Util.checkAll(txtStock, "\"Stock\"", Util.isValid(txtStock.getText(), 1, 7, 2), this);
+		if (stock == 3) {
+			JOptionPane.showMessageDialog(this, "El campo \"Stock\" esta vacio.", "Precaucion",
+					JOptionPane.WARNING_MESSAGE);
+			return;
+		} else if (stock == 2) {
+			return;
+		}
+
+		// Control de Porcentaje Iva
+		int porcentIva = Util.checkAll(txtPorcentajeIva, "\"Porcentaje Iva\"",
+				Util.isValid(txtPorcentajeIva.getText(), 1, 4, 2), this);
+		if (porcentIva == 3) {
+			JOptionPane.showMessageDialog(this, "El campo \"Porcentaje Iva\" esta vacio.", "Precaucion",
+					JOptionPane.WARNING_MESSAGE);
+			return;
+		} else if (porcentIva == 2) {
+			return;
+		}
+
+		// Control de SelectMarca
+		if (selectMarca == null) {
+			JOptionPane.showMessageDialog(this, "Tiene que seleccionar una Categoria Iva.", "Precaucion",
+					JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+
+		// Control de Ubicacion
+		int ubicacion = Util.checkAll(txtUbicacion, "\"Ubicacion\"", Util.isValid(txtUbicacion.getText(), 1, 20, 3),
+				this);
+		if (ubicacion == 2) {
+			return;
+		} else if (ubicacion == 3) {
+			estaSeguro = true;
+		}
+		
+		// Control de StockMax
+		int stockMax = Util.checkAll(txtStockMax, "\"Stock Max\"", Util.isValid(txtStockMax.getText(), 1, 7, 2), this);
+		if (stockMax == 2) {
+			return;
+		} else if (stockMax == 3) {
+			estaSeguro = true;
+		}
+
+		// Control de StockMin
+		int stockMin = Util.checkAll(txtStockMin, "\"Stock Min\"", Util.isValid(txtStockMin.getText(), 1, 7, 2), this);
+		if (stockMin == 2) {
+			return;
+		} else if (stockMin == 3) {
+			estaSeguro = true;
+		}
+		
+		// Control de StockIdeal
+		int stockIdeal = Util.checkAll(txtStockIdeal, "\"Stock Ideal\"", Util.isValid(txtStockIdeal.getText(), 1, 7, 2),
+				this);
+		if (stockIdeal == 2) {
+			return;
+		} else if (stockIdeal == 3) {
+			estaSeguro = true;
+		}
+
+		// Control de Descuento
+		int descuento = Util.checkAll(txtDescuento, "\"Descuento\"", Util.isValid(txtDescuento.getText(), 1, 4, 2),
+				this);
+		if (descuento == 2) {
+			return;
+		}
+		
+		Producto prod = new Producto(txtCodigo.getText(), Double.parseDouble(txtPrecio.getText()), txtNombre.getText(),
+				txtUbicacion.getText(), Integer.parseInt(txtStockMax.getText()),
+				Integer.parseInt(txtStockMin.getText()), Integer.parseInt(txtStockIdeal.getText()),
+				Integer.parseInt(txtStock.getText()), new BigDecimal(txtDescuento.getText()),
+				tglbtnEliminado.isSelected(), new BigDecimal(txtPorcentajeIva.getText()), selectMarca);
+		if (!alta) {
+			prod.setIdProductos(selectProducto.getIdProductos());
+		}
+
+		// Subcategorias
+		List<Subcategoria> subCatList = null;
+		try {
+			subCatList = subDAO.list();
+		} catch (PersistenciaException e1) {
+			e1.printStackTrace();
+			return;
+		}
+		List<Subcategoria> returnSubCatList = new ArrayList<Subcategoria>();
+		for (int i = 0; i < subTable.getRowCount(); i++) {
+			boolean checked = Boolean.valueOf(subTable.getValueAt(i, 0).toString());
+			if (checked) {
+				returnSubCatList.add(subCatList.get(i));
+			}
+		}
+
+		if(returnSubCatList.size() == 0) {
+			JOptionPane.showMessageDialog(this, "Tiene que elegir al menos una subcategoria.", "Precaucion",
+					JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		prod.setSubcategoria(returnSubCatList);
+
+		// Mayoristas
+		List<Mayorista> mayList = null;
+		try {
+			mayList = mayDAO.list();
+		} catch (PersistenciaException e1) {
+			e1.printStackTrace();
+			return;
+		}
+		List<Mayorista> returnMayList = new ArrayList<Mayorista>();
+		for (int i = 0; i < mayTable.getRowCount(); i++) {
+			boolean checked = Boolean.valueOf(mayTable.getValueAt(i, 0).toString());
+			if (checked) {
+				returnMayList.add(mayList.get(i));
+			}
+		}
+		
+		if(returnMayList.size() == 0) {
+			JOptionPane.showMessageDialog(this, "Tiene que elegir al menos un Mayorista.", "Precaucion",
+					JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		prod.setMayoristas(returnMayList);
+
+		// Insert / Update
+		if (alta) {
+			try {
+				prodDAO.insert(prod);
+			} catch (PersistenciaException e) {
+				JOptionPane.showMessageDialog(this, "Error insertando el producto.", "Precaucion",
+						JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				prodDAO.update(prod);
+			} catch (PersistenciaException e) {
+				JOptionPane.showMessageDialog(this, "Error modificando el producto.", "Precaucion",
+						JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void accion(JDialog dialog) {
+		if (isAlta) {
+			altaModifica(true, 0);
+		} else {
+			altaModifica(false, selectProducto.getIdProductos());
+		}
+
+		GenericDAO dao = (GenericDAO) prodDAO;
+		try {
+			superTable.setModel(new ModeloTabla(dao.list()));
+		} catch (PersistenciaException e1) {
+			e1.printStackTrace();
+		}
+		dialog.dispose();
+	}
+
 }

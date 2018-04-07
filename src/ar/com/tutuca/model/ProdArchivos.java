@@ -57,14 +57,12 @@ public class ProdArchivos implements GenericModel {
 
 	@Override
 	public Object[] getFieldsValues() {
-		// TODO Hacer getFieldsValues
 		Object[] r = { getOrden() };
 		return r;
 	}
 
 	@Override
 	public String[] getFieldNames() {
-		// TODO Hacer getFieldNames
 		String[] r = { "Orden" };
 		return r;
 	}

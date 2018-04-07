@@ -35,7 +35,6 @@ import ar.com.tutuca.model.Mayorista;
 
 public class MayoristaForm extends JDialog {
 
-	private final JPanel contentPanel = new JPanel();
 	private CategoriaIvaDAO catIvaDAO = new CategoriaIvaDAO();
 	private MayoristaDAO mayDAO = new MayoristaDAO(catIvaDAO);
 	private ClienteDAO clDAO = new ClienteDAO(catIvaDAO);

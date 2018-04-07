@@ -69,9 +69,26 @@ public class CategoriaIva implements GenericModel {
 
 	@Override
 	public Object[] getFieldsValues() {
-		Object[] r = { getIdCategoriasIVA(), getNombre(), getTasa(), isDiscrimina() };
+		Object[] r = { getNombre(), getTasa(), isDiscrimina() };
 		return r;
 
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		CategoriaIva objR = (CategoriaIva) obj;
+		boolean r = true;
+		r = r && getIdCategoriasIVA() == objR.getIdCategoriasIVA();
+		r = r && getNombre().equals(objR.getNombre());
+		r = r && getTasa().equals(objR.getTasa());
+		r = r && isDiscrimina() == objR.isDiscrimina();
+		return r;
+	}
+
+	@Override
+	public String[] getFieldNames() {
+		String[] r = { "Nombre", "Tasa", "Discrimina" };
+		return null;
 	}
 
 }

@@ -109,7 +109,7 @@ public class ProductoDAO implements GenericDAO<Producto, Integer> {
 	public Producto update(Producto entidad) throws PersistenciaException {
 		try {
 			PreparedStatement ps = Util.prepareStatement(
-					"UPDATE `Sucursal`.`Productos` SET `Codigo`=?, `Precio`=?', `Nombre`=?, `Ubicacion`=?, `StockMaximo`=?', `StockMinimo`=?, `StockIdeal`=?, `Stock`=?, `Descuento`=?, `Eliminado`=?, `PorcentajeIVA`=?, `idMarca`=? WHERE `idProductos`=?;");
+					"UPDATE `Sucursal`.`Productos` SET `Codigo`=?, `Precio`=?, `Nombre`=?, `Ubicacion`=?, `StockMaximo`=?, `StockMinimo`=?, `StockIdeal`=?, `Stock`=?, `Descuento`=?, `Eliminado`=?, `PorcentajeIVA`=?, `idMarca`=? WHERE `idProductos`=?;");
 			ps.setString(1, entidad.getCodigo());
 			ps.setDouble(2, entidad.getPrecio());
 			ps.setString(3, entidad.getNombre());

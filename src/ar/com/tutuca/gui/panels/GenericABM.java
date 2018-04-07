@@ -131,14 +131,6 @@ public class GenericABM extends JPanel {
 		// Setteo de la tabla
 		try {
 			table = new JTable(new ModeloTabla(dao.list()));
-			table.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					if (arg0.getClickCount() == 2) {
-						// TODO JDialog a Producto
-					}
-				}
-			});
 		} catch (PersistenciaException e1) {
 			e1.printStackTrace();
 		}

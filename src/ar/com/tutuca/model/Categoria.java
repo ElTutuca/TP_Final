@@ -53,5 +53,15 @@ public class Categoria implements GenericModel {
 	public void setIdCategoria(int idCategoria) {
 		this.idCategoria = idCategoria;
 	}
-
+	
+	@Override
+	public boolean equals(Object obj) {
+		Categoria objR = (Categoria) obj;
+		boolean r = true;
+		
+		r = r && getCategoria().equals(objR.getCategoria());
+		r = r && getIdCategoria() == objR.getIdCategoria();
+		
+		return r;
+	}
 }

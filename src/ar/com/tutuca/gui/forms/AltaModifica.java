@@ -1,6 +1,7 @@
 package ar.com.tutuca.gui.forms;
 
 import java.awt.BorderLayout;
+
 import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -29,10 +30,8 @@ import javax.swing.table.DefaultTableModel;
 
 import ar.com.tutuca.dao.ArchivoDAO;
 import ar.com.tutuca.dao.ProdArchivosDAO;
-import ar.com.tutuca.extras.GenericDAO;
 import ar.com.tutuca.extras.PersistenciaException;
 import ar.com.tutuca.extras.Util;
-import ar.com.tutuca.gui.tables.ModeloTabla;
 import ar.com.tutuca.model.Archivo;
 import ar.com.tutuca.model.ProdArchivos;
 
@@ -41,7 +40,6 @@ public class AltaModifica extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtPath;
 	private JTextField txtNombre;
-	private String titulo;
 	private ArchivoDAO archDAO = new ArchivoDAO();
 	private ProdArchivosDAO prodArchDAO = new ProdArchivosDAO(archDAO);
 	private static boolean isAlta;

@@ -128,4 +128,13 @@ public class Mayorista implements GenericModel {
 		return r;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		Mayorista objR = (Mayorista) obj;
+		boolean r = true;
+		r = r && getIdMayorista() == objR.getIdMayorista();
+
+		return r;
+	}
+
 }

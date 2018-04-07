@@ -66,5 +66,17 @@ public class Subcategoria implements GenericModel {
 		String[] r = { "Subcategoria", "Categoria" };
 		return r;
 	}
-
+	
+	@Override
+	public boolean equals(Object obj) {
+		Subcategoria objR = (Subcategoria) obj;
+		boolean r = true;
+		
+		r = r && getCategoria().equals(objR.getCategoria());
+		r = r && getSubcategoria().equals(objR.getSubcategoria());
+		r = r && getIdSubcategoria() == objR.getIdSubcategoria();
+		
+		return r;
+	}
+	
 }
