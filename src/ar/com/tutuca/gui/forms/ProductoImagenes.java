@@ -570,7 +570,7 @@ class AltaModifica extends JDialog {
 				}
 			} else {
 				/**
-				 * Solo se puede cambiar el nombe cuando se esta modificando
+				 * Solo se puede cambiar el nombre cuando se esta modificando
 				 */
 				selectArch.setNombre(txtNombre.getText());
 				ProdArchivos selectProdArch = new ProdArchivos(id, selectArch, orden);

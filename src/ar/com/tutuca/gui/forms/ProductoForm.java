@@ -3,6 +3,7 @@ package ar.com.tutuca.gui.forms;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class ProductoForm extends JDialog {
 	private JTextField txtStock;
 	private JTextField txtDescuento;
 	private JTextField txtPorcentajeIva;
+	private boolean exit = true;
 	private JTable subTable;
 	private JTable mayTable;
 	private JComboBox<String> comboMarca;
@@ -192,20 +194,29 @@ public class ProductoForm extends JDialog {
 		JButton btnImagenes = new JButton("Imagenes");
 		btnImagenes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Hacer Imagenes
-				int response = JOptionPane.showConfirmDialog(null,
-						"Las imagenes deben ser lo ultimo en ser agregado. Esta seguro?", "Confirme",
-						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-				if (response == JOptionPane.NO_OPTION) {
-					return;
+					// TODO Cuando haces un nuevo producto e insertas imagens tira error de persistencia
+				if (isAlta) {
+					int response = JOptionPane.showConfirmDialog(null,
+							"Las imagenes deben ser lo ultimo en ser agregado. Esta seguro?", "Confirme",
+							JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+					if (response == JOptionPane.NO_OPTION) {
+						return;
+					} else {
+						accion(dialog);
+					}
+				} else {
+					accion(dialog);
 				}
-
 				/**
 				 * Las imagens tienen que ir al final de todo! Cuando se quiera poner imagenes,
 				 * se va a tener que insertar el producto para tener el id y pasarlo como
 				 * parametro.
 				 */
-				prodI.setVisible(true);
+				if (!exit) {
+					prodI = new ProductoImagenes(selectProducto.getIdProductos(), isAlta);
+
+					prodI.setVisible(true);
+				}
 			}
 		});
 
@@ -372,7 +383,6 @@ public class ProductoForm extends JDialog {
 				}
 			} else {
 				tglbtnEliminado.setEnabled(false);
-				prodI = new ProductoImagenes(-1, isAlta);
 			}
 		} catch (PersistenciaException e1) {
 			e1.printStackTrace();
@@ -489,12 +499,8 @@ public class ProductoForm extends JDialog {
 		mayTable.setModel(model);
 	}
 
-	private void altaModifica(boolean alta, int id) {
-		// TODO Hacer boton crear
-
-		/*
-		 * Falta hacer los checks
-		 */
+	private void altaModifica(boolean alta, int id, JDialog dialog) {
+		exit = true;
 
 		// Control de Codigo
 		boolean estaSeguro = false;
@@ -539,7 +545,7 @@ public class ProductoForm extends JDialog {
 
 		// Control de Porcentaje Iva
 		int porcentIva = Util.checkAll(txtPorcentajeIva, "\"Porcentaje Iva\"",
-				Util.isValid(txtPorcentajeIva.getText(), 1, 4, 2), this);
+				Util.isValid(txtPorcentajeIva.getText(), 1, 5, 2), this);
 		if (porcentIva == 3) {
 			JOptionPane.showMessageDialog(this, "El campo \"Porcentaje Iva\" esta vacio.", "Precaucion",
 					JOptionPane.WARNING_MESSAGE);
@@ -563,7 +569,7 @@ public class ProductoForm extends JDialog {
 		} else if (ubicacion == 3) {
 			estaSeguro = true;
 		}
-		
+
 		// Control de StockMax
 		int stockMax = Util.checkAll(txtStockMax, "\"Stock Max\"", Util.isValid(txtStockMax.getText(), 1, 7, 2), this);
 		if (stockMax == 2) {
@@ -579,7 +585,7 @@ public class ProductoForm extends JDialog {
 		} else if (stockMin == 3) {
 			estaSeguro = true;
 		}
-		
+
 		// Control de StockIdeal
 		int stockIdeal = Util.checkAll(txtStockIdeal, "\"Stock Ideal\"", Util.isValid(txtStockIdeal.getText(), 1, 7, 2),
 				this);
@@ -590,16 +596,15 @@ public class ProductoForm extends JDialog {
 		}
 
 		// Control de Descuento
-		int descuento = Util.checkAll(txtDescuento, "\"Descuento\"", Util.isValid(txtDescuento.getText(), 1, 4, 2),
+		int descuento = Util.checkAll(txtDescuento, "\"Descuento\"", Util.isValid(txtDescuento.getText(), 1, 5, 2),
 				this);
 		if (descuento == 2) {
 			return;
 		}
-		
+
 		Producto prod = new Producto(txtCodigo.getText(), Double.parseDouble(txtPrecio.getText()), txtNombre.getText(),
-				txtUbicacion.getText(), Integer.parseInt(txtStockMax.getText()),
-				Integer.parseInt(txtStockMin.getText()), Integer.parseInt(txtStockIdeal.getText()),
-				Integer.parseInt(txtStock.getText()), new BigDecimal(txtDescuento.getText()),
+				Util.isNull(txtUbicacion), Util.isNullInt(txtStockMax), Util.isNullInt(txtStockMin),
+				Util.isNullInt(txtStockIdeal), Util.isNullInt(txtStock), Util.isNullBigDecimal(txtDescuento),
 				tglbtnEliminado.isSelected(), new BigDecimal(txtPorcentajeIva.getText()), selectMarca);
 		if (!alta) {
 			prod.setIdProductos(selectProducto.getIdProductos());
@@ -621,7 +626,7 @@ public class ProductoForm extends JDialog {
 			}
 		}
 
-		if(returnSubCatList.size() == 0) {
+		if (returnSubCatList.size() == 0) {
 			JOptionPane.showMessageDialog(this, "Tiene que elegir al menos una subcategoria.", "Precaucion",
 					JOptionPane.WARNING_MESSAGE);
 			return;
@@ -643,22 +648,33 @@ public class ProductoForm extends JDialog {
 				returnMayList.add(mayList.get(i));
 			}
 		}
-		
-		if(returnMayList.size() == 0) {
+
+		if (returnMayList.size() == 0) {
 			JOptionPane.showMessageDialog(this, "Tiene que elegir al menos un Mayorista.", "Precaucion",
 					JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 		prod.setMayoristas(returnMayList);
 
+		// Ultimo checkeo
+		if (estaSeguro == true) {
+			int response = JOptionPane.showConfirmDialog(this, "Faltan algunos campos. Esta seguro?", "Confirme",
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			if (response != JOptionPane.YES_OPTION) {
+				return;
+			}
+		}
+
 		// Insert / Update
 		if (alta) {
 			try {
 				prodDAO.insert(prod);
-			} catch (PersistenciaException e) {
+				selectProducto.setIdProductos(Util.lastId());
+			} catch (PersistenciaException | ClassNotFoundException | SQLException e) {
 				JOptionPane.showMessageDialog(this, "Error insertando el producto.", "Precaucion",
 						JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
+				return;
 			}
 		} else {
 			try {
@@ -667,15 +683,18 @@ public class ProductoForm extends JDialog {
 				JOptionPane.showMessageDialog(this, "Error modificando el producto.", "Precaucion",
 						JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
+				return;
 			}
 		}
+		exit = false;
+		dialog.dispose();
 	}
 
 	private void accion(JDialog dialog) {
 		if (isAlta) {
-			altaModifica(true, 0);
+			altaModifica(true, 0, dialog);
 		} else {
-			altaModifica(false, selectProducto.getIdProductos());
+			altaModifica(false, selectProducto.getIdProductos(), dialog);
 		}
 
 		GenericDAO dao = (GenericDAO) prodDAO;
@@ -684,7 +703,5 @@ public class ProductoForm extends JDialog {
 		} catch (PersistenciaException e1) {
 			e1.printStackTrace();
 		}
-		dialog.dispose();
 	}
-
 }

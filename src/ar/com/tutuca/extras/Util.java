@@ -3,6 +3,7 @@ package ar.com.tutuca.extras;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -42,11 +43,19 @@ public class Util {
 	}
 
 	public static String isNull(JTextField txt) {
-		return isUsed(txt) ? txt.getText() : null;
+		return isUsed(txt.getText()) ? txt.getText() : null;
 	}
 
-	public static boolean isUsed(JTextField txt) {
-		return (!txt.getText().equals(""));
+	public static BigDecimal isNullBigDecimal(JTextField txt) {
+		return isUsed(txt.getText()) ? new BigDecimal(txt.getText()) : new BigDecimal(0);
+	}
+
+	public static int isNullInt(JTextField txt) {
+		return isUsed(txt.getText()) ? Integer.parseInt(txt.getText()) : 0;
+	}
+
+	public static boolean isUsed(String txt) {
+		return (!txt.equals(""));
 	}
 
 	public static int isValid(String str, int min, int max, int tipo) {
@@ -105,7 +114,7 @@ public class Util {
 		 * 2 Significa que esta siendo usado pero no es valido
 		 */
 		int fin = 2;
-		if (isUsed(txt)) {
+		if (isUsed(txt.getText())) {
 			if (isValid == 2) {
 				String r = name + " no puede contener letras.";
 				JOptionPane.showMessageDialog(parent, r, "Precaucion", JOptionPane.WARNING_MESSAGE);
