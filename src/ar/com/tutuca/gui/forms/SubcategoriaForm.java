@@ -36,7 +36,6 @@ public class SubcategoriaForm extends JDialog {
 
 	private JPanel contentPane;
 	private JTextField txtSub;
-	private static JFrame superFrame;
 	private static boolean alta;
 	private static GenericDAO dao;
 	private static JTable table;
@@ -50,7 +49,7 @@ public class SubcategoriaForm extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			SubcategoriaForm dialog = new SubcategoriaForm(superFrame, dao, table, alta);
+			SubcategoriaForm dialog = new SubcategoriaForm(dao, table, alta);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -61,10 +60,9 @@ public class SubcategoriaForm extends JDialog {
 	/**
 	 * Create the frame.
 	 */
-	public SubcategoriaForm(JFrame superFrame, GenericDAO dao, JTable table, boolean alta) {
+	public SubcategoriaForm(GenericDAO dao, JTable table, boolean alta) {
 		SubcategoriaForm.alta = alta;
 		SubcategoriaForm.dao = dao;
-		SubcategoriaForm.superFrame = superFrame;
 		SubcategoriaForm.table = table;
 
 		String accion = alta ? "Crear" : "Modificar";
@@ -78,7 +76,6 @@ public class SubcategoriaForm extends JDialog {
 			public void windowClosing(WindowEvent e) {
 				try {
 					table.setModel(new ModeloTabla(dao.list()));
-					superFrame.setEnabled(true);
 				} catch (PersistenciaException e1) {
 					e1.printStackTrace();
 				}
@@ -97,7 +94,6 @@ public class SubcategoriaForm extends JDialog {
 						try {
 							altaModifica(alta, 0);
 							table.setModel(new ModeloTabla(dao.list()));
-							superFrame.setEnabled(true);
 							dialog.dispose();
 							return;
 						} catch (PersistenciaException e1) {
@@ -106,7 +102,6 @@ public class SubcategoriaForm extends JDialog {
 					} else {
 						altaModifica(false, selectSubcat.getIdSubcategoria());
 						table.setModel(new ModeloTabla(dao.list()));
-						superFrame.setEnabled(true);
 						dialog.dispose();
 						return;
 					}
@@ -121,7 +116,6 @@ public class SubcategoriaForm extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					table.setModel(new ModeloTabla(dao.list()));
-					superFrame.setEnabled(true);
 					dialog.dispose();
 				} catch (PersistenciaException e1) {
 					e1.printStackTrace();
@@ -204,7 +198,6 @@ public class SubcategoriaForm extends JDialog {
 			} else {
 				JOptionPane.showMessageDialog(this, "Para modificar tiene que elegir una fila de la tabla.",
 						"Precaucion", JOptionPane.WARNING_MESSAGE);
-				superFrame.setEnabled(true);
 				dialog.dispose();
 			}
 		}

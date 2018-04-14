@@ -18,7 +18,7 @@ public class TipoDeComprobanteDAO implements GenericDAO<TipoDeComprobante, Integ
 		try {
 			ResultSet rs = Util.createStatement().executeQuery("SELECT * FROM TiposDeComprobantes;");
 			while (rs.next()) {
-				r.add(new TipoDeComprobante(rs.getInt("idTipoDeComprov"), rs.getString("Nombre"), rs.getString("Letra"),
+				r.add(new TipoDeComprobante(rs.getInt("idTiposDeComprob"), rs.getString("Nombre"), rs.getString("Letra"),
 						rs.getString("Abreviatura")));
 			}
 		} catch (Exception e) {

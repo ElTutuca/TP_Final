@@ -194,7 +194,6 @@ public class ProductoForm extends JDialog {
 		JButton btnImagenes = new JButton("Imagenes");
 		btnImagenes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-					// TODO Cuando haces un nuevo producto e insertas imagens tira error de persistencia
 				if (isAlta) {
 					int response = JOptionPane.showConfirmDialog(null,
 							"Las imagenes deben ser lo ultimo en ser agregado. Esta seguro?", "Confirme",
@@ -214,7 +213,6 @@ public class ProductoForm extends JDialog {
 				 */
 				if (!exit) {
 					prodI = new ProductoImagenes(selectProducto.getIdProductos(), isAlta);
-
 					prodI.setVisible(true);
 				}
 			}
@@ -668,9 +666,8 @@ public class ProductoForm extends JDialog {
 		// Insert / Update
 		if (alta) {
 			try {
-				prodDAO.insert(prod);
-				selectProducto.setIdProductos(Util.lastId());
-			} catch (PersistenciaException | ClassNotFoundException | SQLException e) {
+				selectProducto = prodDAO.insert(prod);
+			} catch (PersistenciaException e) {
 				JOptionPane.showMessageDialog(this, "Error insertando el producto.", "Precaucion",
 						JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();

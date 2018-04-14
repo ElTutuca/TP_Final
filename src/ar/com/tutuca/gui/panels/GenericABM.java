@@ -21,6 +21,7 @@ import javax.swing.ListSelectionModel;
 import ar.com.tutuca.extras.GenericDAO;
 import ar.com.tutuca.extras.GenericModel;
 import ar.com.tutuca.extras.PersistenciaException;
+import ar.com.tutuca.gui.forms.ComprobanteForm;
 import ar.com.tutuca.gui.forms.MayoristaForm;
 import ar.com.tutuca.gui.forms.ProductoForm;
 import ar.com.tutuca.gui.forms.SingleForm;
@@ -36,6 +37,7 @@ public class GenericABM extends JPanel {
 	public static final int SUBCATEGORIA_ID = 4;
 	public static final int CATEGORIA_ID = 5;
 	public static final int MARCA_ID = 6;
+	public static final int COMPROBANTE_ID = 7;
 
 	/**
 	 * Create the panel.
@@ -130,6 +132,7 @@ public class GenericABM extends JPanel {
 
 		// Setteo de la tabla
 		try {
+			List<GenericDAO> list = dao.list();
 			table = new JTable(new ModeloTabla(dao.list()));
 		} catch (PersistenciaException e1) {
 			e1.printStackTrace();
@@ -158,13 +161,16 @@ public class GenericABM extends JPanel {
 			form = new ProductoForm(isAlta,table);
 			return true;
 		} else if (idForm == SUBCATEGORIA_ID) {
-			form = new SubcategoriaForm(superFrame, dao, table, isAlta);
+			form = new SubcategoriaForm(dao, table, isAlta);
 			return true;
 		} else if (idForm == CATEGORIA_ID) {
 			form = new SingleForm("Categoria", "Categoria", superFrame, isAlta, dao, table, 1, 45);
 			return true;
 		} else if (idForm == MARCA_ID) {
 			form = new SingleForm("Marca", "Marca", superFrame, isAlta, dao, table, 2, 45);
+			return true;
+		} else if (idForm == COMPROBANTE_ID) {
+			form = new ComprobanteForm(isAlta, table);
 			return true;
 		}
 		return false;

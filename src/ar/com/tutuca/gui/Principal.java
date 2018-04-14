@@ -19,6 +19,7 @@ import javax.swing.border.EmptyBorder;
 import ar.com.tutuca.dao.CategoriaIvaDAO;
 import ar.com.tutuca.dao.ClienteDAO;
 import ar.com.tutuca.dao.MayoristaDAO;
+import ar.com.tutuca.gui.panels.FacturacionPanel;
 import ar.com.tutuca.gui.panels.GenericABM;
 import ar.com.tutuca.gui.panels.HomePanel;
 import ar.com.tutuca.gui.panels.ProductosPanel;
@@ -36,6 +37,7 @@ public class Principal extends JFrame {
 	private JPanel clPanel;
 	private JPanel contentPane;
 	private JPanel prodPanel;
+	private JPanel facturPanel;
 
 	/**
 	 * Launch the application.
@@ -90,6 +92,12 @@ public class Principal extends JFrame {
 		panelIzquierda.add(lblProductos);
 
 		JButton btnFacturacion = new JButton("");
+		btnFacturacion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CardLayout cl = (CardLayout) (panelDerecha.getLayout());
+				cl.show(panelDerecha, "facturacion");
+			}
+		});
 		btnFacturacion.setBounds(12, 251, 90, 90);
 		panelIzquierda.add(btnFacturacion);
 
@@ -111,12 +119,15 @@ public class Principal extends JFrame {
 		mayPanel = new GenericABM("Mayoristas", mayDAO, this, GenericABM.MAYORISTA_ID);
 		clPanel = new GenericABM("Clientes", clDAO, this, GenericABM.CLIENTE_ID);
 		prodPanel = new ProductosPanel(this);
+		facturPanel = new FacturacionPanel(this);
 
 		panelDerecha.setLayout(new CardLayout(0, 0));
 		panelDerecha.add(homePanel, "home");
 		panelDerecha.add(mayPanel, "mayorista");
 		panelDerecha.add(clPanel, "cliente");
 		panelDerecha.add(prodPanel, "productos");
+		panelDerecha.add(facturPanel, "facturacion");
+		
 
 		CardLayout cl = (CardLayout) (panelDerecha.getLayout());
 		cl.show(panelDerecha, "homePanel");

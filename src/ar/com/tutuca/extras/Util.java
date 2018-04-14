@@ -69,7 +69,7 @@ public class Util {
 			/**
 			 * Busca solo por letras. Devuelve 2 si encuentra numeros
 			 */
-			type = str.matches("[a-zA-Z\\\\s-?(?)?:?=?.?,?-?/?]+") ? 1 : 2;
+			type = str.matches("[a-zA-Z\\s(?)?:?=?.?,?-?/?]+") ? 1 : 2;
 		} else if (tipo == 2) {
 			/**
 			 * Busca solo por numeros. Devuelve 3 si encuentra alguna letra

@@ -66,4 +66,16 @@ public class TipoDeComprobante implements GenericModel {
 		this.nombre = nombre;
 	}
 
+	@Override
+	public Object[] getFieldsValues() {
+		Object[] r = {getNombre(), getAbreviatura(),getLetra()};
+		return r;
+	}
+
+	@Override
+	public String[] getFieldNames() {
+		String[] r = {"Nombre","Abreviatura","Letra"};
+		return r;
+	}
+
 }
