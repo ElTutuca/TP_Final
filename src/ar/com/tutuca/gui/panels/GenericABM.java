@@ -38,6 +38,7 @@ public class GenericABM extends JPanel {
 	public static final int CATEGORIA_ID = 5;
 	public static final int MARCA_ID = 6;
 	public static final int COMPROBANTE_ID = 7;
+	public static final int METODO_PAGO_ID = 8;
 
 	/**
 	 * Create the panel.
@@ -158,19 +159,22 @@ public class GenericABM extends JPanel {
 			form = new MayoristaForm(superFrame, isAlta, dao, table, false);
 			return true;
 		} else if (idForm == PRODUCTO_ID) {
-			form = new ProductoForm(isAlta,table);
+			form = new ProductoForm(isAlta, table);
 			return true;
 		} else if (idForm == SUBCATEGORIA_ID) {
 			form = new SubcategoriaForm(dao, table, isAlta);
 			return true;
 		} else if (idForm == CATEGORIA_ID) {
-			form = new SingleForm("Categoria", "Categoria", superFrame, isAlta, dao, table, 1, 45);
+			form = new SingleForm("Categoria", "Categoria", superFrame, isAlta, dao, table, SingleForm.CATEGORIA_MODEL, 45);
 			return true;
 		} else if (idForm == MARCA_ID) {
-			form = new SingleForm("Marca", "Marca", superFrame, isAlta, dao, table, 2, 45);
+			form = new SingleForm("Marca", "Marca", superFrame, isAlta, dao, table, SingleForm.MARCA_MODEL, 45);
 			return true;
 		} else if (idForm == COMPROBANTE_ID) {
 			form = new ComprobanteForm(isAlta, table);
+			return true;
+		} else if (idForm == METODO_PAGO_ID) {
+			form = new SingleForm("Metodo", "Metodo de pago", superFrame, isAlta, dao, table, SingleForm.METODO_PAGO_MODEL, 45);
 			return true;
 		}
 		return false;

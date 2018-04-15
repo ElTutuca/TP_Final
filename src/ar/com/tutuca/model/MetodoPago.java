@@ -43,4 +43,16 @@ public class MetodoPago implements GenericModel {
 		this.idMetodo = idMetodo;
 	}
 
+	@Override
+	public Object[] getFieldsValues() {
+		Object[] r = { getDescripcion() };
+		return r;
+	}
+
+	@Override
+	public String[] getFieldNames() {
+		String[] r = { "Descripcion" };
+		return r;
+	}
+
 }

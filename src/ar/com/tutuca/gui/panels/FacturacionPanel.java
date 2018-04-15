@@ -6,12 +6,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import ar.com.tutuca.dao.MetodoPagoDAO;
 import ar.com.tutuca.dao.TipoDeComprobanteDAO;
 import ar.com.tutuca.extras.GenericDAO;
 import javax.swing.JLabel;
 
 public class FacturacionPanel extends JPanel {
 	private TipoDeComprobanteDAO comprobDAO = new TipoDeComprobanteDAO();
+	private MetodoPagoDAO pagoDAO = new MetodoPagoDAO();
 
 	/**
 	 * Create the panel.
@@ -45,7 +47,7 @@ public class FacturacionPanel extends JPanel {
 		JPanel categoriasIvaPane = new JPanel();
 		tabbedPane.addTab("Categorias iva", null, categoriasIvaPane, null);
 		
-		JPanel metodosPagoPane = new JPanel();
+		JPanel metodosPagoPane = new GenericABM("Metodos de Pago", (GenericDAO) pagoDAO, superFrame, GenericABM.METODO_PAGO_ID);
 		tabbedPane.addTab("Metodos de pago", null, metodosPagoPane, null);
 		setLayout(groupLayout);
 

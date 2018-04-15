@@ -22,12 +22,16 @@ import javax.swing.border.EmptyBorder;
 
 import ar.com.tutuca.dao.CategoriaDAO;
 import ar.com.tutuca.dao.MarcaDAO;
+import ar.com.tutuca.dao.MetodoPagoDAO;
+import ar.com.tutuca.dao.TipoDeComprobanteDAO;
 import ar.com.tutuca.extras.GenericDAO;
 import ar.com.tutuca.extras.PersistenciaException;
 import ar.com.tutuca.extras.Util;
 import ar.com.tutuca.gui.tables.ModeloTabla;
 import ar.com.tutuca.model.Categoria;
 import ar.com.tutuca.model.Marca;
+import ar.com.tutuca.model.MetodoPago;
+import ar.com.tutuca.model.TipoDeComprobante;
 
 public class SingleForm extends JDialog {
 	private JPanel contentPane;
@@ -41,9 +45,12 @@ public class SingleForm extends JDialog {
 	private static int model;
 	private Categoria selectCat;
 	private Marca selectMarca;
+	private MetodoPago selectMetodo;
 	private static int max;
-	private static final int CATEGORIA_MODEL = 1;
-	private static final int MARCA_MODEL = 2;
+	public static final int CATEGORIA_MODEL = 1;
+	public static final int MARCA_MODEL = 2;
+	public static final int METODO_PAGO_MODEL = 3;
+	// TODO Implementar METODO_PAGO_MODEL
 
 	/**
 	 * Launch the application.
@@ -110,6 +117,8 @@ public class SingleForm extends JDialog {
 					name = "Categoria";
 				} else if (model == MARCA_MODEL) {
 					name = "Nombre";
+				} else if (model == METODO_PAGO_MODEL) {
+					name = "Metodo";
 				}
 				if (alta) {
 					try {
@@ -127,6 +136,8 @@ public class SingleForm extends JDialog {
 						id = selectCat.getIdCategoria();
 					} else if (model == MARCA_MODEL) {
 						id = selectMarca.getIdMarca();
+					} else if (model == METODO_PAGO_MODEL) {
+						id = selectMetodo.getIdMetodo();
 					}
 					try {
 						altaModifica(false, id, name, max);
@@ -196,6 +207,15 @@ public class SingleForm extends JDialog {
 					} catch (PersistenciaException e1) {
 						e1.printStackTrace();
 					}
+				} else if (model == METODO_PAGO_MODEL) {
+					try {
+						MetodoPagoDAO pagoDAO = new MetodoPagoDAO();
+						List<MetodoPago> pagoList = pagoDAO.list();
+						selectMetodo = pagoList.get(table.getSelectedRow());
+						txtMain.setText(selectMetodo.getDescripcion());
+					} catch (PersistenciaException e1) {
+						e1.printStackTrace();
+					}
 				}
 			} else {
 				JOptionPane.showMessageDialog(this, "Para modificar tiene que elegir una fila de la tabla.",
@@ -207,10 +227,10 @@ public class SingleForm extends JDialog {
 	}
 
 	private void altaModifica(boolean alta, int id, String name, int max) {
-		int valid = Util.isValid(txtMain.getText(), 3, max, 3);
+		int valid = Util.isValid(txtMain.getText(), 2, max, 3);
 		int nombre = Util.checkAll(txtMain, "\"" + name + "\"", valid, this);
 		if (nombre == 3) {
-			JOptionPane.showMessageDialog(this, "El campo \"Nombre\" esta vacio.", "Precaucion",
+			JOptionPane.showMessageDialog(this, "El campo \"" + name + "\" esta vacio.", "Precaucion",
 					JOptionPane.WARNING_MESSAGE);
 			return;
 		} else if (nombre == 2) {
@@ -225,6 +245,9 @@ public class SingleForm extends JDialog {
 				} else if (model == MARCA_MODEL) {
 					Marca entidad = new Marca(txtMain.getText());
 					dao.insert(entidad);
+				} else if (model == METODO_PAGO_MODEL) {
+					MetodoPago entidad = new MetodoPago(txtMain.getText());
+					dao.insert(entidad);
 				}
 			} else {
 				if (model == CATEGORIA_MODEL) {
@@ -232,6 +255,9 @@ public class SingleForm extends JDialog {
 					dao.update(entidad);
 				} else if (model == MARCA_MODEL) {
 					Marca entidad = new Marca(id, txtMain.getText());
+					dao.update(entidad);
+				} else if (model == METODO_PAGO_MODEL) {
+					MetodoPago entidad = new MetodoPago(id, txtMain.getText());
 					dao.update(entidad);
 				}
 			}
