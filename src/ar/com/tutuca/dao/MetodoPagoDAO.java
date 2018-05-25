@@ -11,6 +11,7 @@ import ar.com.tutuca.extras.PersistenciaException;
 import ar.com.tutuca.extras.Util;
 import ar.com.tutuca.model.Compra;
 import ar.com.tutuca.model.MetodoPago;
+import ar.com.tutuca.model.Venta;
 
 public class MetodoPagoDAO implements GenericDAO<MetodoPago, Integer> {
 
@@ -21,6 +22,20 @@ public class MetodoPagoDAO implements GenericDAO<MetodoPago, Integer> {
 						"INSERT INTO `Sucursal`.`Metodo_Pago_De_Compras` (`idMetodo`, `idCompra`) VALUES (?, ?);");
 				ps.setInt(1, mp.getIdMetodo());
 				ps.setInt(2, c.getIdCompra());
+				ps.execute();
+			} catch (ClassNotFoundException | SQLException e) {
+				throw new PersistenciaException(e.getMessage(), e);
+			}
+		}
+	}
+	
+	public void inserEnMetodoVenta(Venta v) throws PersistenciaException {
+		for (MetodoPago mp : v.getMetodosPago()) {
+			try {
+				PreparedStatement ps = Util.prepareStatement(
+						"INSERT INTO `Sucursal`.`Metodo_Pago_De_Ventas` (`idMetodo`, `idVenta`) VALUES (?, ?);");
+				ps.setInt(1, mp.getIdMetodo());
+				ps.setInt(2, v.getIdVenta());
 				ps.execute();
 			} catch (ClassNotFoundException | SQLException e) {
 				throw new PersistenciaException(e.getMessage(), e);

@@ -88,25 +88,70 @@ public class VentaDetalleDAO implements GenericDAO<VentaDetalle, Integer> {
 
 	@Override
 	public VentaDetalle insert(VentaDetalle entidad) throws PersistenciaException {
-		// TODO Auto-generated method stub
-		return null;
+		/*
+		 * Antes de llamar a este metodo se deberia insertar una 'Vemta', y a
+		 * continuacion se debera crear un 'VentaDetalle' con el id de la venta
+		 * insertada para ser insertado.
+		 */
+
+		try {
+			PreparedStatement ps = Util.prepareStatement(
+					"INSERT INTO `Sucursal`.`Ventas_Detalle` (`idVenta`, `idProductos`, `Cantidad`, `PrecioUnitario`, `Descuento`, `Neto`, `PorcentajeIVA`) VALUES (?,?,?,?,?,?,?);");
+			ps.setInt(1, entidad.getVenta().getIdVenta());
+			ps.setInt(2, entidad.getProducto().getIdProductos());
+			ps.setInt(3, entidad.getCantidad());
+			ps.setDouble(4, entidad.getPrecioUnitario());
+			ps.setInt(5, entidad.getDescuento());
+			ps.setDouble(6, entidad.getNeto());
+			ps.setBigDecimal(7, entidad.getPorcentajeIva());
+			ps.execute();
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
+		}
+		return entidad;
 	}
 
 	@Override
 	public VentaDetalle update(VentaDetalle entidad) throws PersistenciaException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			PreparedStatement ps = Util.prepareStatement(
+					"UPDATE `Sucursal`.`Ventas_Detalle` SET `idVenta`=?, `idProductos`=?, `Cantidad`=?, `PrecioUnitario`=?, `Descuento`=?, `Neto`=?, `PorcentajeIVA`=? WHERE `idVenta`=? and`idProductos`=?;");
+			ps.setInt(1, entidad.getVenta().getIdVenta());
+			ps.setInt(2, entidad.getProducto().getIdProductos());
+			ps.setInt(3, entidad.getCantidad());
+			ps.setDouble(4, entidad.getPrecioUnitario());
+			ps.setInt(5, entidad.getDescuento());
+			ps.setDouble(6, entidad.getNeto());
+			ps.setBigDecimal(7, entidad.getPorcentajeIva());
+			ps.setInt(8, entidad.getVenta().getIdVenta());
+			ps.setInt(9, entidad.getProducto().getIdProductos());
+
+			ps.execute();
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
+		}
+		return entidad;
 	}
 
 	@Override
 	public void delete(VentaDetalle entidad) throws PersistenciaException {
-		// TODO Auto-generated method stub
-
+		try {
+			PreparedStatement ps = Util.prepareStatement(
+					"DELETE FROM `Sucursal`.`Ventas_Detalle` WHERE `idVenta`=? and`idProductos`=?;");
+			ps.setInt(1, entidad.getVenta().getIdVenta());
+			ps.setInt(2, entidad.getProducto().getIdProductos());
+			ps.execute();
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
+		}
 	}
 
 	@Override
 	public VentaDetalle load(Integer id) throws PersistenciaException {
-		// TODO Auto-generated method stub
+		/**
+		 * Usless method, use listPorVenta instead
+		 * 
+		 */
 		return null;
 	}
 
