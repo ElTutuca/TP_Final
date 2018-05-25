@@ -6,7 +6,7 @@ import ar.com.tutuca.extras.GenericModel;
 
 public class VentaDetalle implements GenericModel {
 
-	private Venta venta;
+	private int idVenta;
 	private Producto producto;
 	private int cantidad;
 	private Double precioUnitario;
@@ -35,9 +35,9 @@ public class VentaDetalle implements GenericModel {
 		setPorcentajeIva(porcentajeIva);
 	}
 
-	public VentaDetalle(Venta venta, int cantidad, double precioUnitario, int descuento, double neto,
+	public VentaDetalle(int idVenta, int cantidad, double precioUnitario, int descuento, double neto,
 			BigDecimal porcentajeIva) {
-		setVenta(venta);
+		setIdVenta(idVenta);
 		setCantidad(cantidad);
 		setPrecioUnitario(precioUnitario);
 		setDescuento(descuento);
@@ -45,9 +45,9 @@ public class VentaDetalle implements GenericModel {
 		setPorcentajeIva(porcentajeIva);
 	}
 
-	public VentaDetalle(Venta venta, Producto producto, int cantidad, double precioUnitario, int descuento, double neto,
+	public VentaDetalle(int idVenta, Producto producto, int cantidad, double precioUnitario, int descuento, double neto,
 			BigDecimal porcentajeIva) {
-		setVenta(venta);
+		setIdVenta(idVenta);
 		setProducto(producto);
 		setCantidad(cantidad);
 		setPrecioUnitario(precioUnitario);
@@ -94,8 +94,8 @@ public class VentaDetalle implements GenericModel {
 		return producto;
 	}
 
-	public Venta getVenta() {
-		return venta;
+	public int getIdVenta() {
+		return idVenta;
 	}
 
 	// Setters
@@ -123,8 +123,8 @@ public class VentaDetalle implements GenericModel {
 		this.producto = producto;
 	}
 
-	public void setVenta(Venta venta) {
-		this.venta = venta;
+	public void setIdVenta(int idVenta) {
+		this.idVenta = idVenta;
 	}
 
 }

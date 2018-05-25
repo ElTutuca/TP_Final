@@ -22,7 +22,7 @@ public class VentaDAO implements GenericDAO<Venta, Integer> {
 	private TipoDeComprobanteDAO tCompDAO = new TipoDeComprobanteDAO();
 	private MetodoPagoDAO mpDAO = new MetodoPagoDAO();
 	private ProductoDAO proDAO;
-	private VentaDetalleDAO ventDetDAO = new VentaDetalleDAO(this, proDAO);
+	private VentaDetalleDAO ventDetDAO = new VentaDetalleDAO(proDAO);
 
 	public VentaDAO(ProductoDAO proDAO) {
 		this.proDAO = proDAO;
@@ -86,7 +86,7 @@ public class VentaDAO implements GenericDAO<Venta, Integer> {
 
 			mpDAO.inserEnMetodoVenta(v);
 			for (VentaDetalle vd : v.getVentasDetalle()) {
-				vd.setVenta(v);
+				vd.setIdVenta(v.getIdVenta());
 				ventDetDAO.insert(vd);
 			}
 		} catch (ClassNotFoundException | SQLException e) {
@@ -134,6 +134,9 @@ public class VentaDAO implements GenericDAO<Venta, Integer> {
 			PreparedStatement ps = Util.prepareStatement("SELECT * FROM Ventas WHERE idVenta=?;");
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
+			
+			// System.out.println("FetchSize: "+rs.getFetchSize());
+			
 			if (rs.next()) {
 				
 				int idVenta = rs.getInt("idVenta");
@@ -149,14 +152,13 @@ public class VentaDAO implements GenericDAO<Venta, Integer> {
 				double iva2100 = rs.getDouble("Iva2100");
 				double iva2700 = rs.getDouble("Iva2700");
 				double total = rs.getDouble("Total");
-
-				Venta vent = new Venta(idVenta, cl, tComp, fecha, nmroComp, puntoVenta, neto1050, neto2100, neto2700,
-						iva1050, iva2100, iva2700, total);
-
-				vent.setMetodosPago(mpDAO.listPorVenta(idVenta));
-				vent.setVentasDetalle(ventDetDAO.listPorVenta(idVenta));
 				
-				r = vent;
+				r = new Venta(idVenta, cl, tComp, fecha, nmroComp, puntoVenta, neto1050, neto2100, neto2700,
+						iva1050, iva2100, iva2700, total);
+				r.setMetodosPago(mpDAO.listPorVenta(idVenta));
+				r.setVentasDetalle(ventDetDAO.listPorVenta(idVenta));
+				
+				System.out.println(r);
 			}
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new PersistenciaException(e.getMessage(), e);

@@ -32,6 +32,7 @@ import ar.com.tutuca.gui.tables.ModeloTabla;
 public class GenericABM extends JPanel {
 	private JTable table;
 	JDialog form;
+	
 	public static final int MAYORISTA_ID = 1;
 	public static final int CLIENTE_ID = 2;
 	public static final int PRODUCTO_ID = 3;
@@ -41,6 +42,7 @@ public class GenericABM extends JPanel {
 	public static final int COMPROBANTE_ID = 7;
 	public static final int METODO_PAGO_ID = 8;
 	public static final int CATEGORIA_IVA_ID = 9;
+	public static final int VENTA_ID = 9;
 	
 	/**
 	 * Create the panel.
@@ -180,6 +182,10 @@ public class GenericABM extends JPanel {
 			return true;
 		} else if (idForm == CATEGORIA_IVA_ID) {
 			form = new CategoriaIvaForm(isAlta, table);
+			return true;
+		} else if (idForm == VENTA_ID) {
+			// TODO Hacer form para venta
+			form = null;
 			return true;
 		}
 		return false;

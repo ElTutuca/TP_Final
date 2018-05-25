@@ -1,7 +1,6 @@
 package ar.com.tutuca.dao;
 
 import java.sql.PreparedStatement;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,6 +9,7 @@ import java.util.List;
 import ar.com.tutuca.extras.GenericDAO;
 import ar.com.tutuca.extras.PersistenciaException;
 import ar.com.tutuca.extras.Util;
+import ar.com.tutuca.model.CategoriaIva;
 import ar.com.tutuca.model.Cliente;
 
 public class ClienteDAO implements GenericDAO<Cliente, Integer> {
@@ -105,13 +105,21 @@ public class ClienteDAO implements GenericDAO<Cliente, Integer> {
 		try {
 			PreparedStatement ps = Util.prepareStatement("SELECT * FROM Clientes WHERE idCliente=?;");
 			ps.setInt(1, id);
+			System.out.println("IdCliente: " + id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				Cliente c = new Cliente(rs.getInt("idCliente"), rs.getString("Nombre"),
-						rs.getString("NombreDeFantasia"), rs.getString("Direccion"), rs.getString("Telefono"),
-						rs.getString("NmroIngresosBrutos"), rs.getString("CUIT"),
-						catIvaDAO.load(rs.getInt("idCategoriasIVA")));
-				r = c;
+
+				int idCliente = rs.getInt("idCliente");
+				String nombre = rs.getString("Nombre");
+				String nombreDeFantasia = rs.getString("NombreDeFantasia");
+				String direccion = rs.getString("Direccion");
+				String telefono = rs.getString("Telefono");
+				String nmroIngresosBrutos = rs.getString("NmroIngresosBrutos");
+				String cuit = rs.getString("CUIT");
+				CategoriaIva catIva = catIvaDAO.load(rs.getInt("idCategoriasIVA"));
+
+				r = new Cliente(idCliente, nombre, nombreDeFantasia, direccion, telefono, nmroIngresosBrutos, cuit,
+						catIva);
 			}
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new PersistenciaException(e.getMessage(), e);

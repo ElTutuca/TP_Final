@@ -11,27 +11,16 @@ import ar.com.tutuca.extras.GenericDAO;
 import ar.com.tutuca.extras.PersistenciaException;
 import ar.com.tutuca.extras.Util;
 import ar.com.tutuca.model.Producto;
-import ar.com.tutuca.model.Venta;
 import ar.com.tutuca.model.VentaDetalle;
 
 public class VentaDetalleDAO implements GenericDAO<VentaDetalle, Integer> {
 
 	private ProductoDAO proDAO;
-	private VentaDAO ventaDAO;
 
 	public VentaDetalleDAO() {
 	}
 
 	public VentaDetalleDAO(ProductoDAO proDAO) {
-		this.proDAO = proDAO;
-	}
-
-	public VentaDetalleDAO(VentaDAO ventaDAO) {
-		this.ventaDAO = ventaDAO;
-	}
-
-	public VentaDetalleDAO(VentaDAO ventaDAO, ProductoDAO proDAO) {
-		this.ventaDAO = ventaDAO;
 		this.proDAO = proDAO;
 	}
 
@@ -43,15 +32,14 @@ public class VentaDetalleDAO implements GenericDAO<VentaDetalle, Integer> {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 
-				Venta venta = ventaDAO.load(rs.getInt("idVenta"));
-				Producto prod = proDAO.load(rs.getInt("idProductos"));
 				int cant = rs.getInt("Cantidad");
 				double precioUnitario = rs.getDouble("PrecioUnitario");
 				int descuento = rs.getInt("Descuento");
 				double neto = rs.getDouble("Neto");
 				BigDecimal porcentajeIva = rs.getBigDecimal("PorcentajeIVA");
-
-				VentaDetalle ventDet = new VentaDetalle(venta, prod, cant, precioUnitario, descuento, neto,
+				Producto prod = proDAO.load(rs.getInt("idProductos"));
+				
+				VentaDetalle ventDet = new VentaDetalle(idVenta, prod, cant, precioUnitario, descuento, neto,
 						porcentajeIva);
 				r.add(ventDet);
 			}
@@ -68,7 +56,7 @@ public class VentaDetalleDAO implements GenericDAO<VentaDetalle, Integer> {
 			ResultSet rs = Util.createStatement().executeQuery("SELECT * FROM Ventas_Detalle;");
 			while (rs.next()) {
 
-				Venta venta = ventaDAO.load(rs.getInt("idVenta"));
+				int idVenta = rs.getInt("idVenta");
 				Producto prod = proDAO.load(rs.getInt("idProductos"));
 				int cant = rs.getInt("Cantidad");
 				double precioUnitario = rs.getDouble("PrecioUnitario");
@@ -76,7 +64,7 @@ public class VentaDetalleDAO implements GenericDAO<VentaDetalle, Integer> {
 				double neto = rs.getDouble("Neto");
 				BigDecimal porcentajeIva = rs.getBigDecimal("PorcentajeIVA");
 
-				VentaDetalle ventDet = new VentaDetalle(venta, prod, cant, precioUnitario, descuento, neto,
+				VentaDetalle ventDet = new VentaDetalle(idVenta, prod, cant, precioUnitario, descuento, neto,
 						porcentajeIva);
 				r.add(ventDet);
 			}
@@ -97,7 +85,7 @@ public class VentaDetalleDAO implements GenericDAO<VentaDetalle, Integer> {
 		try {
 			PreparedStatement ps = Util.prepareStatement(
 					"INSERT INTO `Sucursal`.`Ventas_Detalle` (`idVenta`, `idProductos`, `Cantidad`, `PrecioUnitario`, `Descuento`, `Neto`, `PorcentajeIVA`) VALUES (?,?,?,?,?,?,?);");
-			ps.setInt(1, entidad.getVenta().getIdVenta());
+			ps.setInt(1, entidad.getIdVenta());
 			ps.setInt(2, entidad.getProducto().getIdProductos());
 			ps.setInt(3, entidad.getCantidad());
 			ps.setDouble(4, entidad.getPrecioUnitario());
@@ -116,14 +104,14 @@ public class VentaDetalleDAO implements GenericDAO<VentaDetalle, Integer> {
 		try {
 			PreparedStatement ps = Util.prepareStatement(
 					"UPDATE `Sucursal`.`Ventas_Detalle` SET `idVenta`=?, `idProductos`=?, `Cantidad`=?, `PrecioUnitario`=?, `Descuento`=?, `Neto`=?, `PorcentajeIVA`=? WHERE `idVenta`=? and`idProductos`=?;");
-			ps.setInt(1, entidad.getVenta().getIdVenta());
+			ps.setInt(1, entidad.getIdVenta());
 			ps.setInt(2, entidad.getProducto().getIdProductos());
 			ps.setInt(3, entidad.getCantidad());
 			ps.setDouble(4, entidad.getPrecioUnitario());
 			ps.setInt(5, entidad.getDescuento());
 			ps.setDouble(6, entidad.getNeto());
 			ps.setBigDecimal(7, entidad.getPorcentajeIva());
-			ps.setInt(8, entidad.getVenta().getIdVenta());
+			ps.setInt(8, entidad.getIdVenta());
 			ps.setInt(9, entidad.getProducto().getIdProductos());
 
 			ps.execute();
@@ -138,7 +126,7 @@ public class VentaDetalleDAO implements GenericDAO<VentaDetalle, Integer> {
 		try {
 			PreparedStatement ps = Util.prepareStatement(
 					"DELETE FROM `Sucursal`.`Ventas_Detalle` WHERE `idVenta`=? and`idProductos`=?;");
-			ps.setInt(1, entidad.getVenta().getIdVenta());
+			ps.setInt(1, entidad.getIdVenta());
 			ps.setInt(2, entidad.getProducto().getIdProductos());
 			ps.execute();
 		} catch (ClassNotFoundException | SQLException e) {

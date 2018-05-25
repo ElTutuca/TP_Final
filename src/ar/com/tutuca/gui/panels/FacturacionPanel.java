@@ -6,17 +6,31 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import ar.com.tutuca.dao.ArchivoDAO;
 import ar.com.tutuca.dao.CategoriaIvaDAO;
+import ar.com.tutuca.dao.MayoristaDAO;
 import ar.com.tutuca.dao.MetodoPagoDAO;
+import ar.com.tutuca.dao.ProdArchivosDAO;
+import ar.com.tutuca.dao.ProductoDAO;
+import ar.com.tutuca.dao.SubcategoriaDAO;
 import ar.com.tutuca.dao.TipoDeComprobanteDAO;
+import ar.com.tutuca.dao.VentaDAO;
 import ar.com.tutuca.extras.GenericDAO;
-import javax.swing.JLabel;
 
 public class FacturacionPanel extends JPanel {
+	
 	private TipoDeComprobanteDAO comprobDAO = new TipoDeComprobanteDAO();
 	private MetodoPagoDAO pagoDAO = new MetodoPagoDAO();
 	private CategoriaIvaDAO catIvaDAO = new CategoriaIvaDAO();
-	// TODO Hacer daos de Venta
+	
+	private ArchivoDAO archDAO = new ArchivoDAO();
+	private ProdArchivosDAO paDAO = new ProdArchivosDAO(archDAO);
+	private SubcategoriaDAO scDAO = new SubcategoriaDAO();
+	private MayoristaDAO mDAO = new MayoristaDAO(catIvaDAO);
+	
+	private ProductoDAO proDAO = new ProductoDAO(mDAO, scDAO, paDAO);
+	
+	private VentaDAO ventaDAO = new VentaDAO(proDAO);
 
 	/**
 	 * Create the panel.
@@ -35,7 +49,8 @@ public class FacturacionPanel extends JPanel {
 		tabbedPane.addTab("Compras", null, comprasPane, null);
 
 		// TODO Hacer ventas
-		JPanel ventasPane = new JPanel();
+		JPanel ventasPane = new GenericABM("Ventas", (GenericDAO) ventaDAO, superFrame,
+				GenericABM.VENTA_ID);
 		tabbedPane.addTab("Ventas", null, ventasPane, null);
 
 		JPanel comprobantesPane = new GenericABM("Tipo de Comprobantes", (GenericDAO) comprobDAO, superFrame,
