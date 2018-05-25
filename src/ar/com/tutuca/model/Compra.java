@@ -39,7 +39,7 @@ public class Compra implements GenericModel {
 
 	public void mostrarComprasDetalle() {
 		for (CompraDetalle compraDetalle : comprasDetalle) {
-			System.out.printf("ComprasDetalle: (%s), Prod: (%s)", compraDetalle.getIdCompra(),
+			System.out.printf("ComprasDetalle: (%s), Prod: (%s)", compraDetalle.getCompra().getIdCompra(),
 					compraDetalle.getProd().getIdProductos());
 		}
 	}
@@ -197,10 +197,15 @@ public class Compra implements GenericModel {
 
 	@Override
 	public Object[] getFieldsValues() {
-		Object[] r = { getIdCompra(), getMayorista(), getTipoDeComprob(), getFecha(), getNmroDeComprobante(),
-				getNeto1050(), getNeto2100(), getNeto2700(), getIva1050(), getIva2100(), getIva2700(), getTotal(),
-				getMetodosPago(), getComprasDetalle() };
+		Object[] r = { getMayorista(), getTipoDeComprob(), getFecha(), getNmroDeComprobante(), getNeto1050(),
+				getNeto2100(), getNeto2700(), getIva1050(), getIva2100(), getIva2700(), getTotal() };
 		return r;
 	}
 
+	@Override
+	public String[] getFieldNames() {
+		String[] r = { "Mayorista", "Tipo de Comprobante", "Fecha", "Nmro de Comprobante", "Neto 10.50", "Neto 21",
+				"Neto 27", "Iva 10.50", "Iva 21", "Iva 27", "Total" };
+		return r;
+	}
 }

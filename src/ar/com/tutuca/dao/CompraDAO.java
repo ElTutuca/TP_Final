@@ -38,7 +38,7 @@ public class CompraDAO implements GenericDAO<Compra, Integer> {
 						rs.getDouble("Neto2700"), rs.getDouble("Iva1050"), rs.getDouble("Iva2100"),
 						rs.getDouble("Iva2700"), rs.getDouble("Total"));
 				comp.setComprasDetalle(cdDAO.listPorCompra(comp));
-				comp.setMetodosPago(mpDAO.listPorCompra(comp));
+				comp.setMetodosPago(mpDAO.listPorCompra(rs.getInt("idCompra")));
 				r.add(comp);
 			}
 		} catch (ClassNotFoundException | SQLException e) {
@@ -66,10 +66,10 @@ public class CompraDAO implements GenericDAO<Compra, Integer> {
 			ps.setDouble(11, entidad.getTotal());
 			ps.execute();
 			c.setIdCompra(Util.lastId());
-			
+
 			mpDAO.inserEnMetodoCompra(c);
 			for (CompraDetalle cd : c.getComprasDetalle()) {
-				cd.setIdCompra(c.getIdCompra());
+				cd.setCompra(c);
 				cdDAO.insert(cd);
 			}
 		} catch (ClassNotFoundException | SQLException e) {
@@ -111,7 +111,7 @@ public class CompraDAO implements GenericDAO<Compra, Integer> {
 		 * (ClassNotFoundException | SQLException e) { throw new
 		 * PersistenciaException(e.getMessage(), e); }
 		 */
-		
+
 		/**
 		 * Useless method due to the protection of the db integrity.
 		 */
@@ -131,7 +131,7 @@ public class CompraDAO implements GenericDAO<Compra, Integer> {
 						rs.getDouble("Neto2700"), rs.getDouble("Iva1050"), rs.getDouble("Iva2100"),
 						rs.getDouble("Iva2700"), rs.getDouble("Total"));
 				comp.setComprasDetalle(cdDAO.listPorCompra(comp));
-				comp.setMetodosPago(mpDAO.listPorCompra(comp));
+				comp.setMetodosPago(mpDAO.listPorCompra(rs.getInt("idCompra")));
 				r = comp;
 			}
 		} catch (ClassNotFoundException | SQLException e) {

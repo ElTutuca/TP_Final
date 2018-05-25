@@ -50,7 +50,6 @@ public class SingleForm extends JDialog {
 	public static final int CATEGORIA_MODEL = 1;
 	public static final int MARCA_MODEL = 2;
 	public static final int METODO_PAGO_MODEL = 3;
-	// TODO Implementar METODO_PAGO_MODEL
 
 	/**
 	 * Launch the application.

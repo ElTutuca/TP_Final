@@ -67,9 +67,7 @@ public class ComprobanteForm extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 
 		JLabel lblNombre = new JLabel("Nombre:");
-
 		JLabel lblLetra = new JLabel("Letra:");
-
 		JLabel lblAbreviatura = new JLabel("Abreviatura:");
 
 		txtNombre = new JTextField();

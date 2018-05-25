@@ -13,11 +13,12 @@ import ar.com.tutuca.model.Compra;
 import ar.com.tutuca.model.MetodoPago;
 
 public class MetodoPagoDAO implements GenericDAO<MetodoPago, Integer> {
-	
+
 	public void inserEnMetodoCompra(Compra c) throws PersistenciaException {
 		for (MetodoPago mp : c.getMetodosPago()) {
 			try {
-				PreparedStatement ps = Util.prepareStatement("INSERT INTO `Sucursal`.`Metodo_Pago_De_Compras` (`idMetodo`, `idCompra`) VALUES (?, ?);");
+				PreparedStatement ps = Util.prepareStatement(
+						"INSERT INTO `Sucursal`.`Metodo_Pago_De_Compras` (`idMetodo`, `idCompra`) VALUES (?, ?);");
 				ps.setInt(1, mp.getIdMetodo());
 				ps.setInt(2, c.getIdCompra());
 				ps.execute();
@@ -27,11 +28,29 @@ public class MetodoPagoDAO implements GenericDAO<MetodoPago, Integer> {
 		}
 	}
 
-	public List<MetodoPago> listPorCompra(Compra c) throws PersistenciaException {
+	public List<MetodoPago> listPorCompra(int idCompra) throws PersistenciaException {
 		List<MetodoPago> r = new ArrayList<MetodoPago>();
 		try {
-			PreparedStatement ps = Util.prepareStatement("SELECT mp.* FROM Metodo_Pago mp INNER JOIN Metodo_Pago_De_Compras mpc ON mpc.idMetodo=mp.idMetodo WHERE mpc.idCompra=?;");
-			ps.setInt(1, c.getIdCompra());
+			PreparedStatement ps = Util.prepareStatement(
+					"SELECT mp.* FROM Metodo_Pago mp INNER JOIN Metodo_Pago_De_Compras mpc ON mpc.idMetodo=mp.idMetodo WHERE mpc.idCompra=?;");
+			ps.setInt(1, idCompra);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				MetodoPago mp = new MetodoPago(rs.getInt("idMetodo"), rs.getString("Descripcion"));
+				r.add(mp);
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new PersistenciaException(e.getMessage(), e);
+		}
+		return r;
+	}
+
+	public List<MetodoPago> listPorVenta(int idVenta) throws PersistenciaException {
+		List<MetodoPago> r = new ArrayList<MetodoPago>();
+		try {
+			PreparedStatement ps = Util.prepareStatement(
+					"SELECT mp.* FROM Metodo_Pago mp INNER JOIN Metodo_Pago_De_Ventas mpv ON mpv.idMetodo=mp.idMetodo WHERE mpv.idVenta=?;");
+			ps.setInt(1, idVenta);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				MetodoPago mp = new MetodoPago(rs.getInt("idMetodo"), rs.getString("Descripcion"));

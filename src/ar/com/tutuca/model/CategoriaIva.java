@@ -88,7 +88,7 @@ public class CategoriaIva implements GenericModel {
 	@Override
 	public String[] getFieldNames() {
 		String[] r = { "Nombre", "Tasa", "Discrimina" };
-		return null;
+		return r;
 	}
 
 }

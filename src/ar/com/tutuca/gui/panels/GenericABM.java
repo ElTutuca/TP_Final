@@ -21,6 +21,7 @@ import javax.swing.ListSelectionModel;
 import ar.com.tutuca.extras.GenericDAO;
 import ar.com.tutuca.extras.GenericModel;
 import ar.com.tutuca.extras.PersistenciaException;
+import ar.com.tutuca.gui.forms.CategoriaIvaForm;
 import ar.com.tutuca.gui.forms.ComprobanteForm;
 import ar.com.tutuca.gui.forms.MayoristaForm;
 import ar.com.tutuca.gui.forms.ProductoForm;
@@ -39,7 +40,8 @@ public class GenericABM extends JPanel {
 	public static final int MARCA_ID = 6;
 	public static final int COMPROBANTE_ID = 7;
 	public static final int METODO_PAGO_ID = 8;
-
+	public static final int CATEGORIA_IVA_ID = 9;
+	
 	/**
 	 * Create the panel.
 	 */
@@ -175,6 +177,9 @@ public class GenericABM extends JPanel {
 			return true;
 		} else if (idForm == METODO_PAGO_ID) {
 			form = new SingleForm("Metodo", "Metodo de pago", superFrame, isAlta, dao, table, SingleForm.METODO_PAGO_MODEL, 45);
+			return true;
+		} else if (idForm == CATEGORIA_IVA_ID) {
+			form = new CategoriaIvaForm(isAlta, table);
 			return true;
 		}
 		return false;
