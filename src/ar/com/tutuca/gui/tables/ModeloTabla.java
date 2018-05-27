@@ -14,10 +14,12 @@ import ar.com.tutuca.extras.PersistenciaException;
 public class ModeloTabla implements TableModel {
 
 	private List<GenericDAO> daoList;
+	private GenericModel gm0;
 
 	// Constructor
-	public ModeloTabla( List<GenericDAO> daoList) {
+	public ModeloTabla(List<GenericDAO> daoList) {
 		this.daoList = daoList;
+		gm0 = (GenericModel) daoList.get(0);
 	}
 
 	@Override
@@ -52,8 +54,11 @@ public class ModeloTabla implements TableModel {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Object[] r = null;
-			GenericModel gm = (GenericModel) daoList.get(rowIndex);
-			r = gm.getFieldsValues();
+		GenericModel gm = (GenericModel) daoList.get(rowIndex);
+		r = gm.getFieldsValues();
+		
+		// System.out.println("ColIndex: " + columnIndex + "RowIndex: " + rowIndex + "Value: " + r[columnIndex]);
+		
 		return r[columnIndex];
 	}
 

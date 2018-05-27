@@ -137,7 +137,6 @@ public class GenericABM extends JPanel {
 
 		// Setteo de la tabla
 		try {
-			List<GenericDAO> list = dao.list();
 			table = new JTable(new ModeloTabla(dao.list()));
 		} catch (PersistenciaException e1) {
 			e1.printStackTrace();

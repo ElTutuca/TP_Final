@@ -37,8 +37,12 @@ public class VentaDetalleDAO implements GenericDAO<VentaDetalle, Integer> {
 				int descuento = rs.getInt("Descuento");
 				double neto = rs.getDouble("Neto");
 				BigDecimal porcentajeIva = rs.getBigDecimal("PorcentajeIVA");
-				Producto prod = proDAO.load(rs.getInt("idProductos"));
+
+				int idProd= rs.getInt("idProductos");
+				System.out.println("IdProductos: "+idProd);
 				
+				Producto prod = proDAO.load(idProd);
+
 				VentaDetalle ventDet = new VentaDetalle(idVenta, prod, cant, precioUnitario, descuento, neto,
 						porcentajeIva);
 				r.add(ventDet);

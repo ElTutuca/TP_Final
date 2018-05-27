@@ -176,6 +176,7 @@ public class ProductoDAO implements GenericDAO<Producto, Integer> {
 
 			if (rs.next()) {
 				Marca marca = new Marca(rs.getInt("idMarca"), rs.getString("Marca"));
+				
 				Producto producto = new Producto(rs.getInt("idProductos"), rs.getString("Codigo"),
 						rs.getDouble("Precio"), rs.getString("Nombre"), rs.getString("Ubicacion"),
 						rs.getInt("StockMaximo"), rs.getInt("StockMinimo"), rs.getInt("StockIdeal"), rs.getInt("Stock"),

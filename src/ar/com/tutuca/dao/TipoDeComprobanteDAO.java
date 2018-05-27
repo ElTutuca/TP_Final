@@ -78,7 +78,7 @@ public class TipoDeComprobanteDAO implements GenericDAO<TipoDeComprobante, Integ
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				r = (new TipoDeComprobante(rs.getInt("idTipoDeComprov"), rs.getString("Nombre"), rs.getString("Letra"),
+				r = (new TipoDeComprobante(rs.getInt("idTiposDeComprob"), rs.getString("Nombre"), rs.getString("Letra"),
 						rs.getString("Abreviatura")));
 			}
 		} catch (Exception e) {

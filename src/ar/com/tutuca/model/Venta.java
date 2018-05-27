@@ -7,7 +7,6 @@ import ar.com.tutuca.extras.GenericModel;
 
 public class Venta implements GenericModel {
 
-	private int idVenta;
 	private Cliente cliente;
 	private TipoDeComprobante tipoDeComprob;
 	private Timestamp fecha;
@@ -20,6 +19,7 @@ public class Venta implements GenericModel {
 	private double iva2100;
 	private double iva2700;
 	private double total;
+	private int idVenta;
 	private List<MetodoPago> metodosPago;
 	private List<VentaDetalle> ventasDetalle;
 
@@ -28,18 +28,48 @@ public class Venta implements GenericModel {
 
 	public Venta(Cliente cliente, TipoDeComprobante tipoDeComprobante, Timestamp fecha, String nmroDeComprobante,
 			String puntoDeVenta, double neto1050, double neto2100, double neto2700, double iva1050, double iva2100,
-			double iva2700, double total, List<MetodoPago> metodosPago) {
+			double iva2700, double total) {
+
+		setCliente(cliente);
+		setTipoDeComprob(tipoDeComprobante);
+		setFecha(fecha);
+		setNmroDeComprobante(nmroDeComprobante);
+		setPuntoDeVenta(puntoDeVenta);
+		setNeto1050(neto1050);
+		setNeto2100(neto2100);
+		setNeto2700(neto2700);
+		setIva1050(iva1050);
+		setIva2100(iva2100);
+		setIva2700(iva2700);
+		setTotal(total);
+
 	}
 
 	public Venta(int idVenta, Cliente cliente, TipoDeComprobante tipoDeComprobante, Timestamp fecha,
 			String nmroDeComprobante, String puntoDeVenta, double neto1050, double neto2100, double neto2700,
-			double iva1050, double iva2100, double iva2700, double tota) {
+			double iva1050, double iva2100, double iva2700, double total) {
+
+		setIdVenta(idVenta);
+		setCliente(cliente);
+		setTipoDeComprob(tipoDeComprobante);
+		setFecha(fecha);
+		setNmroDeComprobante(nmroDeComprobante);
+		setPuntoDeVenta(puntoDeVenta);
+		setNeto1050(neto1050);
+		setNeto2100(neto2100);
+		setNeto2700(neto2700);
+		setIva1050(iva1050);
+		setIva2100(iva2100);
+		setIva2700(iva2700);
+		setTotal(total);
+
 	}
 
 	@Override
 	public Object[] getFieldsValues() {
-		Object[] r = { getCliente(), getTipoDeComprob(), getFecha(), getNmroDeComprobante(), getPuntoDeVenta(),
-				getNeto1050(), getNeto2100(), getNeto2700(), getIva1050(), getIva2100(), getIva2700(), getTotal() };
+		Object[] r = { getCliente().getNombre(), getTipoDeComprob().getAbreviatura(), getFecha(),
+				getNmroDeComprobante(), getPuntoDeVenta(), getNeto1050(), getNeto2100(), getNeto2700(), getIva1050(),
+				getIva2100(), getIva2700(), getTotal() };
 		return r;
 	}
 
