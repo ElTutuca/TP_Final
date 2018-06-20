@@ -9,32 +9,29 @@ import java.util.List;
 import ar.com.tutuca.extras.GenericDAO;
 import ar.com.tutuca.extras.PersistenciaException;
 import ar.com.tutuca.extras.Util;
-import ar.com.tutuca.model.Compra;
 import ar.com.tutuca.model.CompraDetalle;
 import ar.com.tutuca.model.Producto;
 
 public class CompraDetalleDAO implements GenericDAO<CompraDetalle, Integer> {
 
 	private ProductoDAO proDAO;
-	private CompraDAO compDAO;
 
-	public CompraDetalleDAO(ProductoDAO productoDAO, CompraDAO compDAO) {
+	public CompraDetalleDAO(ProductoDAO productoDAO) {
 		this.proDAO = productoDAO;
-		this.compDAO = compDAO;
 	}
 
-	public List<CompraDetalle> listPorCompra(Compra c) throws PersistenciaException {
+	public List<CompraDetalle> listPorCompra(int idCompra) throws PersistenciaException {
 		List<CompraDetalle> r = new ArrayList<CompraDetalle>();
 		try {
 			PreparedStatement ps = Util.prepareStatement("SELECT * FROM Compras_Detalle WHERE idCompra=?;");
-			ps.setInt(1, c.getIdCompra());
+			ps.setInt(1, idCompra);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				Compra comp = compDAO.load(rs.getInt("idCompra"));
+				
 				Producto prod = proDAO.load(rs.getInt("idProductos"));
 				int cant = rs.getInt("Cantidad");
 
-				r.add(new CompraDetalle(comp, prod, cant));
+				r.add(new CompraDetalle(idCompra, prod, cant));
 			}
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new PersistenciaException(e.getMessage(), e);
@@ -48,11 +45,12 @@ public class CompraDetalleDAO implements GenericDAO<CompraDetalle, Integer> {
 		try {
 			ResultSet rs = Util.createStatement().executeQuery("SELECT * FROM Compras_Detalle;");
 			while (rs.next()) {
-				Compra comp = compDAO.load(rs.getInt("idCompra"));
+				
+				int idCompra = rs.getInt("idCompra");
 				Producto prod = proDAO.load(rs.getInt("idProductos"));
 				int cant = rs.getInt("Cantidad");
 
-				r.add(new CompraDetalle(comp, prod, cant));			}
+				r.add(new CompraDetalle(idCompra, prod, cant));			}
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new PersistenciaException(e.getMessage(), e);
 		}
@@ -70,7 +68,7 @@ public class CompraDetalleDAO implements GenericDAO<CompraDetalle, Integer> {
 		try {
 			PreparedStatement ps = Util.prepareStatement(
 					"INSERT INTO `Sucursal`.`Compras_Detalle` (`idCompra`, `idProductos`, `Cantidad`) VALUES (?, ?, ?);");
-			ps.setInt(1, entidad.getCompra().getIdCompra());
+			ps.setInt(1, entidad.getIdCompra());
 			ps.setInt(2, entidad.getProd().getIdProductos());
 			ps.setInt(3, entidad.getCantidad());
 			ps.execute();
@@ -85,10 +83,10 @@ public class CompraDetalleDAO implements GenericDAO<CompraDetalle, Integer> {
 		try {
 			PreparedStatement ps = Util.prepareStatement(
 					"UPDATE `Sucursal`.`Compras_Detalle` SET `idCompra`=?, `idProductos`=?, `Cantidad`=? WHERE `idCompra`=? and`idProductos`=?;");
-			ps.setInt(1, entidad.getCompra().getIdCompra());
+			ps.setInt(1, entidad.getIdCompra());
 			ps.setInt(2, entidad.getProd().getIdProductos());
 			ps.setInt(3, entidad.getCantidad());
-			ps.setInt(4, entidad.getCompra().getIdCompra());
+			ps.setInt(4, entidad.getIdCompra());
 			ps.setInt(5, entidad.getProd().getIdProductos());
 			ps.execute();
 		} catch (ClassNotFoundException | SQLException e) {
@@ -102,7 +100,7 @@ public class CompraDetalleDAO implements GenericDAO<CompraDetalle, Integer> {
 		try {
 			PreparedStatement ps = Util.prepareStatement(
 					"DELETE FROM `Sucursal`.`Compras_Detalle` WHERE `idCompra`=? and`idProductos`=?;");
-			ps.setInt(1, entidad.getCompra().getIdCompra());
+			ps.setInt(1, entidad.getIdCompra());
 			ps.setInt(2, entidad.getProd().getIdProductos());
 			ps.execute();
 		} catch (ClassNotFoundException | SQLException e) {

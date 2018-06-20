@@ -30,10 +30,6 @@ public class VentaDAO implements GenericDAO<Venta, Integer> {
 
 	private VentaDetalleDAO ventDetDAO = new VentaDetalleDAO(proDAO);
 
-	public VentaDAO(ProductoDAO proDAO) {
-		this.proDAO = proDAO;
-	}
-
 	@Override
 	public List<Venta> list() throws PersistenciaException {
 		List<Venta> r = new ArrayList<Venta>();

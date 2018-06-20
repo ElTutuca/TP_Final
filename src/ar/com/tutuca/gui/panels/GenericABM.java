@@ -27,12 +27,13 @@ import ar.com.tutuca.gui.forms.MayoristaForm;
 import ar.com.tutuca.gui.forms.ProductoForm;
 import ar.com.tutuca.gui.forms.SingleForm;
 import ar.com.tutuca.gui.forms.SubcategoriaForm;
+import ar.com.tutuca.gui.forms.VentaForm;
 import ar.com.tutuca.gui.tables.ModeloTabla;
 
 public class GenericABM extends JPanel {
 	private JTable table;
 	JDialog form;
-	
+
 	public static final int MAYORISTA_ID = 1;
 	public static final int CLIENTE_ID = 2;
 	public static final int PRODUCTO_ID = 3;
@@ -42,8 +43,9 @@ public class GenericABM extends JPanel {
 	public static final int COMPROBANTE_ID = 7;
 	public static final int METODO_PAGO_ID = 8;
 	public static final int CATEGORIA_IVA_ID = 9;
-	public static final int VENTA_ID = 9;
-	
+	public static final int VENTA_ID = 10;
+	public static final int COMPRA_ID = 11;
+
 	/**
 	 * Create the panel.
 	 */
@@ -137,7 +139,11 @@ public class GenericABM extends JPanel {
 
 		// Setteo de la tabla
 		try {
-			table = new JTable(new ModeloTabla(dao.list()));
+			if (dao.list().isEmpty()) {
+				table = new JTable();
+			} else {
+				table = new JTable(new ModeloTabla(dao.list()));
+			}
 		} catch (PersistenciaException e1) {
 			e1.printStackTrace();
 		}
@@ -168,7 +174,8 @@ public class GenericABM extends JPanel {
 			form = new SubcategoriaForm(dao, table, isAlta);
 			return true;
 		} else if (idForm == CATEGORIA_ID) {
-			form = new SingleForm("Categoria", "Categoria", superFrame, isAlta, dao, table, SingleForm.CATEGORIA_MODEL, 45);
+			form = new SingleForm("Categoria", "Categoria", superFrame, isAlta, dao, table, SingleForm.CATEGORIA_MODEL,
+					45);
 			return true;
 		} else if (idForm == MARCA_ID) {
 			form = new SingleForm("Marca", "Marca", superFrame, isAlta, dao, table, SingleForm.MARCA_MODEL, 45);
@@ -177,16 +184,22 @@ public class GenericABM extends JPanel {
 			form = new ComprobanteForm(isAlta, table);
 			return true;
 		} else if (idForm == METODO_PAGO_ID) {
-			form = new SingleForm("Metodo", "Metodo de pago", superFrame, isAlta, dao, table, SingleForm.METODO_PAGO_MODEL, 45);
+			form = new SingleForm("Metodo", "Metodo de pago", superFrame, isAlta, dao, table,
+					SingleForm.METODO_PAGO_MODEL, 45);
 			return true;
 		} else if (idForm == CATEGORIA_IVA_ID) {
 			form = new CategoriaIvaForm(isAlta, table);
 			return true;
 		} else if (idForm == VENTA_ID) {
 			// TODO Hacer form para venta
+			form = new VentaForm(isAlta, table);
+			return true;
+		} else if (idForm == COMPRA_ID) {
+			// TODO Hacer form para compra
 			form = null;
 			return true;
 		}
+
 		return false;
 	}
 }

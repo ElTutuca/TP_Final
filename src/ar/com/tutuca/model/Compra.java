@@ -7,7 +7,6 @@ import ar.com.tutuca.extras.GenericModel;
 
 public class Compra implements GenericModel {
 
-	private int idCompra;
 	private Mayorista mayorista;
 	private TipoDeComprobante tipoDeComprob;
 	private Timestamp fecha;
@@ -19,6 +18,7 @@ public class Compra implements GenericModel {
 	private double iva2100;
 	private double iva2700;
 	private double total;
+	private int idCompra;
 	private List<MetodoPago> metodosPago;
 	private List<CompraDetalle> comprasDetalle;
 
@@ -39,9 +39,24 @@ public class Compra implements GenericModel {
 
 	public void mostrarComprasDetalle() {
 		for (CompraDetalle compraDetalle : comprasDetalle) {
-			System.out.printf("ComprasDetalle: (%s), Prod: (%s)", compraDetalle.getCompra().getIdCompra(),
+			System.out.printf("ComprasDetalle: (%s), Prod: (%s)", compraDetalle.getIdCompra(),
 					compraDetalle.getProd().getIdProductos());
 		}
+	}
+	
+
+	@Override
+	public Object[] getFieldsValues() {
+		Object[] r = { getMayorista().getNombre(), getTipoDeComprob().getAbreviatura(), getFecha(), getNmroDeComprobante(), getNeto1050(),
+				getNeto2100(), getNeto2700(), getIva1050(), getIva2100(), getIva2700(), getTotal() };
+		return r;
+	}
+
+	@Override
+	public String[] getFieldNames() {
+		String[] r = { "Mayorista", "Tipo de Comprobante", "Fecha", "Nmro de Comprobante", "Neto 10.50", "Neto 21",
+				"Neto 27", "Iva 10.50", "Iva 21", "Iva 27", "Total" };
+		return r;
 	}
 
 	// Constructores
@@ -195,17 +210,4 @@ public class Compra implements GenericModel {
 		this.total = total;
 	}
 
-	@Override
-	public Object[] getFieldsValues() {
-		Object[] r = { getMayorista(), getTipoDeComprob(), getFecha(), getNmroDeComprobante(), getNeto1050(),
-				getNeto2100(), getNeto2700(), getIva1050(), getIva2100(), getIva2700(), getTotal() };
-		return r;
-	}
-
-	@Override
-	public String[] getFieldNames() {
-		String[] r = { "Mayorista", "Tipo de Comprobante", "Fecha", "Nmro de Comprobante", "Neto 10.50", "Neto 21",
-				"Neto 27", "Iva 10.50", "Iva 21", "Iva 27", "Total" };
-		return r;
-	}
 }

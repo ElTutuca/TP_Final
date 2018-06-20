@@ -8,6 +8,7 @@ import javax.swing.JTabbedPane;
 
 import ar.com.tutuca.dao.ArchivoDAO;
 import ar.com.tutuca.dao.CategoriaIvaDAO;
+import ar.com.tutuca.dao.CompraDAO;
 import ar.com.tutuca.dao.MayoristaDAO;
 import ar.com.tutuca.dao.MetodoPagoDAO;
 import ar.com.tutuca.dao.ProdArchivosDAO;
@@ -23,14 +24,9 @@ public class FacturacionPanel extends JPanel {
 	private MetodoPagoDAO pagoDAO = new MetodoPagoDAO();
 	private CategoriaIvaDAO catIvaDAO = new CategoriaIvaDAO();
 	
-	private ArchivoDAO archDAO = new ArchivoDAO();
-	private ProdArchivosDAO paDAO = new ProdArchivosDAO(archDAO);
-	private SubcategoriaDAO scDAO = new SubcategoriaDAO();
-	private MayoristaDAO mDAO = new MayoristaDAO(catIvaDAO);
+	private VentaDAO ventaDAO = new VentaDAO();
 	
-	private ProductoDAO proDAO = new ProductoDAO(mDAO, scDAO, paDAO);
-	
-	private VentaDAO ventaDAO = new VentaDAO(proDAO);
+	private CompraDAO compraDAO = new CompraDAO();
 
 	/**
 	 * Create the panel.
@@ -44,11 +40,10 @@ public class FacturacionPanel extends JPanel {
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(tabbedPane,
 				GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE));
 
-		// TODO Hacer compras
-		JPanel comprasPane = new JPanel();
+		JPanel comprasPane = new GenericABM("Compras", (GenericDAO) compraDAO, superFrame,
+				GenericABM.COMPRA_ID);
 		tabbedPane.addTab("Compras", null, comprasPane, null);
 
-		// TODO Hacer ventas
 		JPanel ventasPane = new GenericABM("Ventas", (GenericDAO) ventaDAO, superFrame,
 				GenericABM.VENTA_ID);
 		tabbedPane.addTab("Ventas", null, ventasPane, null);
